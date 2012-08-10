@@ -28,6 +28,7 @@ import org.wso2.andes.common.AMQPFilterTypes;
 import org.wso2.andes.exchange.ExchangeDefaults;
 import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
+import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.queue.AMQQueue;
 import org.wso2.andes.server.queue.BaseQueue;
 import org.wso2.andes.server.virtualhost.VirtualHost;
@@ -200,7 +201,9 @@ public class TopicExchange extends AbstractExchange
 
     public ArrayList<BaseQueue> doRoute(InboundMessage payload)
     {
-
+        //we need to do this only if a topic routes the message
+        ClusterResourceHolder.getInstance().getCassandraMessageStore().addTopicExchangeMessageIds(
+                payload.getRoutingKey(), payload.getMessageNumber());
         final AMQShortString routingKey = payload.getRoutingKey() == null
                                           ? AMQShortString.EMPTY_STRING
                                           : new AMQShortString(payload.getRoutingKey());

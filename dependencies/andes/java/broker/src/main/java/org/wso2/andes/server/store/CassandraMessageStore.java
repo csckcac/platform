@@ -19,12 +19,7 @@ package org.wso2.andes.server.store;
 
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Set;
-import java.util.SortedMap;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
@@ -34,11 +29,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicLong;
 
-import me.prettyprint.cassandra.serializers.ByteBufferSerializer;
-import me.prettyprint.cassandra.serializers.BytesArraySerializer;
-import me.prettyprint.cassandra.serializers.IntegerSerializer;
-import me.prettyprint.cassandra.serializers.LongSerializer;
-import me.prettyprint.cassandra.serializers.StringSerializer;
+import me.prettyprint.cassandra.serializers.*;
 import me.prettyprint.hector.api.Cluster;
 import me.prettyprint.hector.api.Keyspace;
 import me.prettyprint.hector.api.beans.ColumnSlice;
@@ -61,19 +52,10 @@ import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.pool.AndesExecuter;
 import org.wso2.andes.server.ClusterResourceHolder;
-import org.wso2.andes.server.cassandra.AndesConsistantLevelPolicy;
-import org.wso2.andes.server.cassandra.CassandraQueueMessage;
-import org.wso2.andes.server.cassandra.CassandraTopicPublisherManager;
-import org.wso2.andes.server.cassandra.ClusteringEnabledSubscriptionManager;
-import org.wso2.andes.server.cassandra.DefaultClusteringEnabledSubscriptionManager;
-import org.wso2.andes.server.cassandra.OnceInOrderEnabledSubscriptionManager;
+import org.wso2.andes.server.cassandra.*;
 import org.wso2.andes.server.cluster.ClusterManagementInformationMBean;
 import org.wso2.andes.server.cluster.ClusterManager;
-import org.wso2.andes.server.cluster.coordination.MessageIdGenerator;
-import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManager;
-import org.wso2.andes.server.cluster.coordination.SubscriptionCoordinationManagerImpl;
-import org.wso2.andes.server.cluster.coordination.TimeStampBasedMessageIdGenerator;
-import org.wso2.andes.server.cluster.coordination.TopicSubscriptionCoordinationManager;
+import org.wso2.andes.server.cluster.coordination.*;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.information.management.QueueManagementInformationMBean;
@@ -161,13 +143,14 @@ public class CassandraMessageStore implements MessageStore {
 
     private ConcurrentHashMap<String,ArrayList<String>> topicSubscribersMap = new ConcurrentHashMap<String, ArrayList<String>>();
 
+    private CassandraMessageContentCache messageCacheForCassandra = null;
+
     private ContentRemoverTask messageContentRemovalTask = null;
     private PubSubMessageContentRemoverTask pubSubMessageContentRemoverTask = null;
     private ClusterManagementInformationMBean clusterManagementMBean;
     private QueueManagementInformationMBean queueManagementMBean;
 
     private boolean configured = false;
-
 
 
     private static StringSerializer stringSerializer = StringSerializer.get();
@@ -801,72 +784,82 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 //    }
 
 
-
-    private int getContent(String messageId, int offsetValue, ByteBuffer dst) {
+    public int getContent(String messageId, int offsetValue, ByteBuffer dst) {
 
         int written = 0;
         int chunkSize = 65534;
-        try {
+        byte[] content = null;
+        //read from cache.
+        //written = messageCacheForCassandra.getContent(messageId,offsetValue,dst);
+        //If entry is not there written value won't change
+        if(written == 0) {
+            //load from DB and add entry to the cache
+            try {
 
-            String rowKey = "mid" + messageId;
-            if (offsetValue == 0) {
+                String rowKey = "mid" + messageId;
+                if (offsetValue == 0) {
 
-                ColumnQuery columnQuery = HFactory.createColumnQuery(keyspace, stringSerializer,
-                        integerSerializer, byteBufferSerializer);
-                columnQuery.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
-                columnQuery.setKey(rowKey.trim());
-                columnQuery.setName(offsetValue);
+                    ColumnQuery columnQuery = HFactory.createColumnQuery(keyspace, stringSerializer,
+                            integerSerializer, byteBufferSerializer);
+                    columnQuery.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
+                    columnQuery.setKey(rowKey.trim());
+                    columnQuery.setName(offsetValue);
 
-                QueryResult<HColumn<Integer, ByteBuffer>> result = columnQuery.execute();
-                HColumn<Integer, ByteBuffer> column = result.get();
-                if (column != null) {
-                    int offset = column.getName();
-                    byte[] content = bytesArraySerializer.fromByteBuffer(column.getValue());
+                    QueryResult<HColumn<Integer, ByteBuffer>> result = columnQuery.execute();
+                    HColumn<Integer, ByteBuffer> column = result.get();
+                    if (column != null) {
+                        int offset = column.getName();
+                        content = bytesArraySerializer.fromByteBuffer(column.getValue());
 
+                        final int size = (int) content.length;
+                        int posInArray = offset + written - offset;
+                        int count = size - posInArray;
+                        if (count > dst.remaining()) {
+                            count = dst.remaining();
+                        }
+                        dst.put(content, 0, count);
+                        written = count;
+                    } else {
+                        throw new RuntimeException("Unexpected Error , content already deleted");
+                    }
+                } else {
+                    ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
+                    int k = offsetValue / chunkSize;
+                    SliceQuery query = HFactory.createSliceQuery(keyspace, stringSerializer,
+                            integerSerializer, byteBufferSerializer);
+                    query.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
+                    query.setKey(rowKey.trim());
+                    query.setRange(k * chunkSize, (k + 1) * chunkSize + 1, false, 10);
+
+                    QueryResult<ColumnSlice<Integer, ByteBuffer>> result = query.execute();
+                    ColumnSlice<Integer, ByteBuffer> columnSlice = result.get();
+                    boolean added = false;
+                    for (HColumn<Integer, ByteBuffer> column : columnSlice.getColumns()) {
+                        added = true;
+                        byteOutputStream.write(bytesArraySerializer.fromByteBuffer(column.getValue()));
+                    }
+                    content = byteOutputStream.toByteArray();
                     final int size = (int) content.length;
-                    int posInArray = offset + written - offset;
+                    int posInArray = offsetValue - (k * chunkSize);
                     int count = size - posInArray;
                     if (count > dst.remaining()) {
                         count = dst.remaining();
                     }
-                    dst.put(content, 0, count);
-                    return count;
-                } else {
-                    throw new RuntimeException("Unexpected Error , content already deleted");
-                }
-            } else {
-                ByteArrayOutputStream byteOutputStream = new ByteArrayOutputStream();
-                int k = offsetValue / chunkSize;
-                SliceQuery query = HFactory.createSliceQuery(keyspace, stringSerializer,
-                        integerSerializer, byteBufferSerializer);
-                query.setColumnFamily(MESSAGE_CONTENT_COLUMN_FAMILY);
-                query.setKey(rowKey.trim());
-                query.setRange(k * chunkSize, (k + 1) * chunkSize + 1, false, 10);
 
-                QueryResult<ColumnSlice<Integer, ByteBuffer>> result = query.execute();
-                ColumnSlice<Integer, ByteBuffer> columnSlice = result.get();
-                boolean added = false;
-                for (HColumn<Integer, ByteBuffer> column : columnSlice.getColumns()) {
-                    added =  true;
-                    byteOutputStream.write(bytesArraySerializer.fromByteBuffer(column.getValue()));
-                }
-                byte[] content = byteOutputStream.toByteArray();
-                final int size = (int) content.length;
-                int posInArray = offsetValue  - (k * chunkSize);
-                int count = size - posInArray;
-                if (count > dst.remaining()) {
-                    count = dst.remaining();
+                    dst.put(content, posInArray, count);
+
+                    written += count;
                 }
 
-                dst.put(content, posInArray, count);
+                // add a new entry to the cache. If cache is full eldest entry will be removed.
+                /*byte[] cacheValue = new byte[content.length];
+                System.arraycopy(content, 0, cacheValue, 0, content.length);
+                messageCacheForCassandra.addEntryToCache(messageId,offsetValue, cacheValue);*/
 
-                written += count;
-                return written;
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("Error in reading content", e);
             }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            log.error("Error in reading content",e);
         }
         return written;
     }
@@ -1604,6 +1597,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 //        contentWriter.setName(PublishMessageContentWriter.class.getName());
 //        contentWriter.start();
 
+        messageCacheForCassandra = new CassandraMessageContentCache();
 
         AndesConsistantLevelPolicy consistencyLevel = new AndesConsistantLevelPolicy();
 
@@ -1681,9 +1675,12 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
     @Override
     public void close() throws Exception {
-
-        deleteNodeData(""+ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
-
+        if(!ClusterResourceHolder.getInstance().getClusterManager().isClusteringEnabled()) {
+            ClusterResourceHolder.getInstance().getClusterManager().shutDownMyNode();
+        }
+        if(ClusterResourceHolder.getInstance().getClusterManager().isClusteringEnabled()) {
+            deleteNodeData(""+ClusterResourceHolder.getInstance().getClusterManager().getNodeId());
+        }
         if(messageContentRemovalTask != null && messageContentRemovalTask.isRunning()) {
             messageContentRemovalTask.setRunning(false);
         }
@@ -1994,7 +1991,6 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         private final long _messageId;
         private StorableMessageMetaData metaData; 
         
-
         private StoredCassandraMessage(long messageId, StorableMessageMetaData metaData) {
             this._messageId = messageId;
             this.metaData = metaData; 

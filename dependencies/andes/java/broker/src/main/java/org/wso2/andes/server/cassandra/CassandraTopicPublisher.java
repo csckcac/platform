@@ -96,9 +96,16 @@ public class CassandraTopicPublisher extends Thread{
                     }
                 }
                 messageStore.removeDeliveredMessageIds(publishedMids, queue.getName());
+            } else {
+                try {
+                    Thread.sleep(ClusterResourceHolder.getInstance().getClusterConfiguration().
+                            getQueueWorkerInterval());
+                } catch (InterruptedException e) {
+                    //silently ignore
+                }
             }
         } catch (AMQStoreException e) {
-            log.error("Error removing delivered Message Ids from Message store " ,e);
+            log.error("Error removing delivered Message Ids from Message store ", e);
         } finally {
             working = false;
         }

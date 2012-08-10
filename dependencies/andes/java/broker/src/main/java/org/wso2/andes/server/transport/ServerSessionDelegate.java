@@ -283,8 +283,8 @@ public class ServerSessionDelegate extends SessionDelegate
         MessageTransferMessage message = new MessageTransferMessage(storeMessage, ((ServerSession)ssn).getReference());
 
         ArrayList<? extends BaseQueue> queues = exchange.route(message);
-        ClusterResourceHolder.getInstance().getCassandraMessageStore().addTopicExchangeMessageIds(
-                messageMetaData.getRoutingKey(), storeMessage.getMessageNumber());
+        /*ClusterResourceHolder.getInstance().getCassandraMessageStore().addTopicExchangeMessageIds(
+                messageMetaData.getRoutingKey(), storeMessage.getMessageNumber());*/
 
 
      /*   if(queues != null && queues.size() != 0)

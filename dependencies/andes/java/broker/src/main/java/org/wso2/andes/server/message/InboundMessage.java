@@ -34,4 +34,6 @@ public interface InboundMessage extends Filterable
     boolean isRedelivered();
 
     long getSize();
+
+    Long getMessageNumber();
 }

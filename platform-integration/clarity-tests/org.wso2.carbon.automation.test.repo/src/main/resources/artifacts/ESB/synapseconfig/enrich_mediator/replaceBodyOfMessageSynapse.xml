@@ -13,17 +13,29 @@
                 </log>
 
                 <enrich>
-                    <source type="inline" clone="true">
-                        <m:request xmlns:m="http://services.samples">
-                            <m:symbol>IBM</m:symbol>
-                        </m:request>
-                    </source>
-                    <target type="property" property="test"/>/>
+                    <source type="custom"
+                            xpath="//m:getQuote/m:testRequest/m:testSymbol/text()"
+                            xmlns:m="http://services.samples"/>
+                    <target type="property" property="symbol"/>
                 </enrich>
 
+                <log level="full"/>
                 <enrich>
-                    <source type="property" property="test"/>
-                    <target type="body" action="child" />
+                    <source type="inline">
+                        <m:getQuote xmlns:m="http://services.samples">
+                            <m:request>
+                                <m:symbol>wso2</m:symbol>
+                            </m:request>
+                        </m:getQuote>
+                    </source>
+                    <target type="body" action="replace"/>
+                </enrich>
+
+                <log level="full" />
+                <enrich>
+                    <source type="property" property="symbol"/>
+                    <target xmlns:m="http://services.samples" action="replace"
+                            xpath="//m:getQuote/m:request/m:symbol/text()"/>
                 </enrich>
 
                 <log level="full" />

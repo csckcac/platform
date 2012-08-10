@@ -7,23 +7,27 @@
         <target>
             <inSequence>
                 <log level="full" />
-                <log level="custom">
-                    <property xmlns:m="http://services.samples"
-                              name="TEST" expression="//m:getQuote"/>
-                </log>
 
                 <enrich>
-                    <source type="inline" clone="true">
-                        <m:request xmlns:m="http://services.samples">
-                            <m:symbol>IBM</m:symbol>
-                        </m:request>
+                    <source type="body"/>
+                    <target type="property" property="ORIGINAL_BODY"/>
+                </enrich>
+
+                <log level="full"/>
+                <enrich>
+                    <source type="inline">
+                        <m:getQuote xmlns:m="http://services.samples">
+                            <m:testRequest>
+                                <m:test>wso2</m:test>
+                            </m:testRequest>
+                        </m:getQuote>
                     </source>
-                    <target type="property" property="test"/>/>
+                    <target type="body" action="replace"/>
                 </enrich>
 
                 <enrich>
-                    <source type="property" property="test"/>
-                    <target type="body" action="child" />
+                    <source type="property" property="ORIGINAL_BODY"/>
+                    <target type="body" action="replace"/>
                 </enrich>
 
                 <log level="full" />

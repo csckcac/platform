@@ -95,11 +95,6 @@
             <groupId>commons-pool.wso2</groupId>
             <artifactId>commons-pool</artifactId>
         </dependency>
-         <dependency>
-            <groupId>org.apache-extras.cassandra-jdbc.wso2</groupId>
-            <artifactId>cassandra-jdbc</artifactId>
-            <version>1.1.1.wso2v1</version>
-        </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.event.server.feature</artifactId>
@@ -135,7 +130,7 @@
                         </goals>
                         <configuration>
                             <id>org.wso2.carbon.dataservices.server</id>
-                            <propertiesFile>../../etc/feature.properties</propertiesFile>
+                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:console</propertyDef>
@@ -160,7 +155,6 @@
                                 <bundleDef>org.htmlcleaner.wso2:htmlcleaner</bundleDef>
                                 <bundleDef>commons-dbcp.wso2:commons-dbcp</bundleDef>
                                 <bundleDef>commons-pool.wso2:commons-pool</bundleDef>
-                                <bundleDef>org.apache-extras.cassandra-jdbc.wso2:cassandra-jdbc</bundleDef>                                
                             </bundles>
 				<importFeatures>
                                 <importFeatureDef>org.wso2.carbon.service.mgt.server

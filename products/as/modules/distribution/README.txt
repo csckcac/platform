@@ -174,7 +174,7 @@ Training
 --------
 
 WSO2 Inc. offers a variety of professional Training Programs, including
-training on general Web services as well as WSO2 AppServer, Apache Axis2,
+training on general Web services as well as WSO2 Application Server, Apache Axis2,
 Data Services and a number of other products.
 
 For additional support information please refer to

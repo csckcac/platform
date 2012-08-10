@@ -77,6 +77,7 @@ import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.ServerException;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+import org.wso2.carbon.utils.multitenancy.CarbonApplicationContextHolder;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
@@ -845,7 +846,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     }
 
     private void deleteServiceGroup(String serviceGroupName) throws AxisFault {
-
+        CarbonApplicationContextHolder carbonApplicationContextHolder =
+                CarbonApplicationContextHolder.getThreadLocalCarbonApplicationContextHolder();
+        carbonApplicationContextHolder.startApplicationFlow();
         AxisConfiguration axisConfig = getAxisConfig();
         AxisServiceGroup asGroup = axisConfig.getServiceGroup(serviceGroupName);
 
@@ -866,8 +869,11 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             if (fn != null) {
                 fileName = fn.getPath();
             }
+            carbonApplicationContextHolder.setApplicationName(serviceGroupName);
             // removing the service from axis configuration
             axisConfig.removeService(axisService.getName());
+            //adding log per service in order to notify user about the service's state when viewing logs.
+            log.info("Undeploying Axis2 Service: " + axisService.getName());
         }
         // remove the service group from axis config and config context
         AxisServiceGroup serviceGroup = axisConfig.removeServiceGroup(asGroup.getServiceGroupName());
@@ -927,6 +933,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         if (ghostFile != null && ghostFile.exists() && !ghostFile.delete()) {
             log.error("Error while deleting ghost service file : " + ghostFile.getAbsolutePath());
         }
+        carbonApplicationContextHolder.endApplicationFlow();
     }
 
     public ServiceMetaData getServiceData(String serviceName) throws Exception {

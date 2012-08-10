@@ -34,11 +34,17 @@
         defined in contextXml descriptor </description>
 
     <dependencies>
-        <dependency>
+       <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
             <artifactId>tomcat-embed-core</artifactId>
             <version>${version.tomcat}</version>
-        </dependency>
+            <scope>provided</scope>
+       </dependency>
+       <dependency>
+	    <groupId>mysql</groupId>
+	    <artifactId>mysql-connector-java</artifactId>
+	    <version>5.1.18</version>
+       </dependency>
     </dependencies>
 
     <build>
@@ -68,36 +74,6 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.1-beta-1</version>
-                <configuration>
-                    <warName>wso2appserver-sample-jdbc-data-source-1.0</warName>
-                    <packagingIncludes>
-                        META-INF/*,
-                        WEB-INF/classes/**,
-                        WEB-INF/*,
-                        WEB-INF/lib/mysql-connector-java-5.1.18-bin.jar,
-                        **/*.java,
-                        **/jsp*/**,
-                        **/*.class,
-                        **/*.html,
-                        **/*.jsp
-                    </packagingIncludes>
-                    <packagingExcludes>
-                        WEB-INF/classes/WEB-INF/,
-                        WEB-INF/classes/META-INF/,
-                    </packagingExcludes>
-                    <webResources>
-                        <resource>
-                            <!-- this is relative to the pom.xml directory -->
-                            <directory>src/main/resources</directory>
-                        </resource>
-                    </webResources>
                 </configuration>
             </plugin>
         </plugins>

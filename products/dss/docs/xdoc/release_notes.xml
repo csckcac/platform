@@ -24,7 +24,7 @@
         <h1>WSO2 Data Services Server 3.0.0
             Release Notes</h1>
 
-        <h3>30 May 2011</h3>
+        <h3>@buildNumber@</h3>
 
         <p>The WSO2 Data Services Server is an extremely simple and elegant mechanism to take data
             and make it available as a set of WS-* style Web services or as a set of REST style Web
@@ -35,54 +35,64 @@
 
         <h2>What's New In This Release</h2>
         <ul>
-            <li>UDT (User Defined Type) Support</li>
-            <li>Complex Results</li>
-            <li>Auto Generated Keys Support</li>
-            <li>Distributed Transactions</li>
-            <li>Improved Boxcarring Support</li>
-            <li>Improved Batch Request Support</li>
-            <li>Scheduled Tasks</li>
-            <li>Registry Integration for Excel,CSV,XSLT</li>
-            <li>Web Scraping Support</li>
-            <li>Multiple SQL Dialect Support</li>
-            <li>DB -> DS Generation</li>
-            <li>Data Service Query Improvements</li>
-            <li>Service Group/Hierarchy Support </li>
-            <li>Database Explorer</li>
-            <li>Data as a Service Features - DSS Stratos Service</li>
-                 <ul>
-                     <li>Cassandra Integration</li>
-                     <li>RDS Provisioning</li>
-                 </ul>    
-        </ul>
-        <h2>Key Features</h2>
+	     <li>Datasource Component Improvements</li>
+		<ul>
+		  <li>Use of Tomcat JDBC Pool Connection Pooling</li>
+		  <li>Support for External Data Source Implementations</li>
+		  <li>New Extensible Global Data Source Configurations</li>
+		</ul>
+	     <li>SQL Parser for Spreadsheets</li>
+		<ul>
+		  <li>Supports Excel / Google Spreadsheets</li>
+		  <li>Full Read/Write query support</li>
+		</ul>
+	     <li>Dynamic Database User Authentication</li>
+	     <li>Carbon Secure Vault Integration</li>
+	     <li>Scheduled Task Improvements</li>
+	     	<ul>
+		 <li>Supports Java class implementations</li>
+		 <li>API for Calling Data Services Directly</li>
+		 <li>Transaction Support</li>
+	     	</ul>
+	</ul>
 
+        <h2>Key Features</h2>
         <ul>
-            <li>Support for large XML outputs</li>
-            <li>Content Filtering based on User's role</li>
-            <li>Support for named parameters</li>
-            <li>Ability to configure schema type for output elements</li>
-            <li>Mixing multiple data sources in nested queries</li>
-            <li>Distributed transaction support</li>
-            <li>Oracle Ref Cursor support</li>
-            <li>Support for multiple data source types</li>
-            <li>Clustering support for High Availability and High Scalability</li>
-            <li>Full support for WS-Security, WS-Trust, WS-Policy and WS-Secure Conversation and XKMS</li>
-            <li>JMX and Web interface based monitoring and management</li>
-            <li>WS-* and REST support</li>
-            <li>Data validations</li>
+             <li>Support for large XML outputs</li>
+	     <li>Content Filtering Support</li>
+	     <li>Distributed transaction support</li>
+	     <li>Oracle Ref Cursor support</li>
+	     <li>Support for multiple data source types</li>
+	     <li>Clustering support for High Availability and High Scalability</li>
+	     <li>Oracle Ref Cursor support</li>
+	     <li>WS-* and REST support</li>
+	     <li>Data validations</li>
+	     <li>UDT (User Defined Type) Support</li>
+	     <li>Complex Results</li>
+	     <li>Auto Generated Keys Support</li>
+	     <li>Boxcarring Support</li>
+	     <li>Batch Request Support</li>
+	     <li>Scheduled Tasks</li>
+	     <li>DB -> DS Generation</li>
+	     <li>Database Explorer</li>
+	     <li>Distributed transaction support</li>
+	     <li>Data as a Service Features - DSS Stratos Service</li>
+		<ul>
+		  <li>Cassandra Integration</li>
+		  <li>RDS Provisioning</li>
+		</ul>
         </ul>
 
 
         <p>
             The full feature list is available at
-            <a href="http://wso2.org/projects/solutions/data-services/java/features">
-                http://wso2.org/projects/solutions/data-services/java/features
+            <a href="http://wso2.com/products/data-services-server/">
+                http://wso2.com/products/data-services-server/
             </a>
         </p>
 
         <h2>Known Issues</h2>
-        <p>All known issues have been recorded at <a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10516">
+        <p>All known issues have been recorded at <a href="https://wso2.org/jira/secure/IssueNavigator.jspa?mode=hide&amp;requestId=10620">
         dss-3.0.0-outstanding-issues</a></p>
 
         <h2>Reporting Problems</h2>
@@ -94,10 +104,10 @@
         WSO2 Data Services Server developers can be contacted via the mailing lists:
         <br/>
         <strong>For Users:</strong>
-        <a href="mailto:ds-java-user@wso2.org">ds-java-user@wso2.org</a>
+        <a href="mailto:user@wso2.org">user@wso2.org</a>
         <br/>
         <strong>For Developers:</strong>
-        <a href="mailto:carbon-dev@wso2.org">carbon-dev@wso2.org</a>
+        <a href="mailto:dev@wso2.org">dev@wso2.org</a>
         <br/>
         For details on subscriptions see
         <a href="http://wso2.org/mail">

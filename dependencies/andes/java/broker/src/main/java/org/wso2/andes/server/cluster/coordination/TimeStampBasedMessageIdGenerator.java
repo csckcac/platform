@@ -115,6 +115,7 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator {
     
     int nodeID = 0; 
     long lastTimestamp = 0; 
+    long lastID = 0;
     private AtomicInteger offsetOnthisslot = new AtomicInteger();
     private long referenaceStart = 41*365*24*60*60*10000; //this is 2011
 
@@ -125,7 +126,7 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator {
      * @return
      */
     
-    public long getNextId() {
+    public synchronized long getNextId() {
         nodeID = ClusterResourceHolder.getInstance().getClusterManager().getNodeId();
         long ts = System.currentTimeMillis();
         int offset = 0; 
@@ -135,7 +136,18 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator {
             offsetOnthisslot.set(0);
         }
         lastTimestamp = ts;
-        return (ts - referenaceStart) * 256* 1024 + nodeID * 1024 + offset;
+        long id = (ts - referenaceStart) * 256* 1024 + nodeID * 1024 + offset;
+        if(lastID == id){
+            throw new RuntimeException("duplicate ids detected. This should never happen"); 
+        }
+        lastID = id;
+        return id; 
+    }
+    
+    public static void main(String[] args) {
+        long bitmask = 0x3FF;
+        System.out.println(bitmask & 351974976074826752l);
+        //System.out.println( );
     }
     
 }

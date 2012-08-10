@@ -1693,6 +1693,9 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
     @Override
     public <T extends StorableMessageMetaData> StoredMessage<T> addMessage(T metaData) {
         long mid = messageIdGenerator.getNextId();
+        if(log.isDebugEnabled()){
+            log.debug("MessageID generated:"+ mid); 
+        }
         return new StoredCassandraMessage(mid, metaData);
     }
 

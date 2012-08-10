@@ -64,9 +64,9 @@ public class QueueSubscriptionAcknowledgementHandler {
         this.cassandraMessageStore = cassandraMessageStore;
     }
 
-    public boolean checkAndRegisterSent(long deliveryTag, long messageId, String queue) {
+    public boolean checkAndRegisterSent(long deliveryTag, long messageId, String queue, int channelID) {
         if (!old) {
-            return messageTracker.testAndAddMessage(deliveryTag, messageId, queue);
+            return messageTracker.testAndAddMessage(deliveryTag, messageId, queue, channelID);
         } else {
             synchronized (this) {
                 if (!sentMessagesMap.containsKey(messageId) && !timeStampAckedMessageIdMap.containsValue(messageId)) {
@@ -98,13 +98,13 @@ public class QueueSubscriptionAcknowledgementHandler {
         }
     }
 
-    public void handleAcknowledgement(long deliveryTag) {
+    public void handleAcknowledgement(long deliveryTag, int channelID) {
         if (!old) {
             try {
                 try {
                     // We first delete the message so even this fails here, no harm
                     // done
-                    MsgData msgData = messageTracker.ackReceived(deliveryTag);
+                    MsgData msgData = messageTracker.ackReceived(deliveryTag,channelID);
                     cassandraMessageStore.removeMessageFromUserQueue(msgData.queue, msgData.msgID);
                     // then update the tracker
                     cassandraMessageStore.addContentDeletionTask(msgData.msgID);

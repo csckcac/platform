@@ -20,6 +20,7 @@
  */
 package org.wso2.andes.server;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -389,7 +390,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                             // write messageID to queue
                             messageQueue.enqueueMessage(incomingMessage, destinationQueues);
                             if(_logger.isDebugEnabled()){
-                                _logger.debug("metadata written and message written to global queue "
+                                _logger.debug("metadata and message written to global queue "
                                         + incomingMessage.getStoredMessage().getMessageNumber() + ", channel ID "
                                         + getChannelId());
                             }
@@ -893,7 +894,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                 } else {
                     QueueSubscriptionAcknowledgementHandler acknowledgementHandler = ClusterResourceHolder.getInstance().
                             getSubscriptionManager().getAcknowledgementHandlerMap().get(this);
-                    acknowledgementHandler.handleAcknowledgement(deliveryTag);
+                    acknowledgementHandler.handleAcknowledgement(deliveryTag, getChannelId());
                 }
             } catch (Exception e) {
                 throw new AMQException(e.getMessage(), e);

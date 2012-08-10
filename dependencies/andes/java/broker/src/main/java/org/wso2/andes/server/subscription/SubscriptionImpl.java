@@ -52,6 +52,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Lock;
@@ -99,6 +100,7 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
     private UUID _id;
     private final AtomicLong _deliveredCount = new AtomicLong(0);
     private long _createTime = System.currentTimeMillis();
+    private static Map<Integer, AtomicLong> deliveryTagMap = new ConcurrentHashMap<Integer, AtomicLong>();
 
 
     public static final class BrowserSubscription extends SubscriptionImpl
@@ -253,7 +255,20 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
             // The send may of course still fail, in which case, as
             // the message is unacked, it will be lost.
             long deliveryTag = 0;
-            deliveryTag = getChannel().getNextDeliveryTag();
+            
+            //TODO move this away. We do this have a unique delivery tag per channel.
+            //Otherwise, we endup creating new delivery tags every time we load the subscription from cassandra.
+            //we need to cleanup the whole thing
+            AtomicLong deliveryTagCounter = null;
+            synchronized (deliveryTagMap) {
+                deliveryTagCounter = deliveryTagMap.get(getChannel().getChannelId()); 
+                if(deliveryTagCounter == null){
+                    deliveryTagCounter = new AtomicLong();
+                    deliveryTagMap.put(getChannel().getChannelId(), deliveryTagCounter);
+                }
+            }
+            //deliveryTag = getChannel().getNextDeliveryTag();
+            deliveryTag = deliveryTagCounter.incrementAndGet();
 
             try {
                 recordMessageDelivery(entry, deliveryTag);
@@ -280,9 +295,9 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
 
                     }
 
+                    String queue = entry.getQueue().getResourceName() + "_" + ClusterResourceHolder.getInstance().getClusterManager().getNodeId(); 
                     if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
-                            entry.getQueue().getResourceName() + "_" + ClusterResourceHolder.getInstance().
-                                    getClusterManager().getNodeId())) {
+                            queue, getChannel().getChannelId())) {
                         
                         ByteBuffer buf = ByteBuffer.allocate(100); 
                         int readCount = entry.getMessage().getContent(buf, 0);

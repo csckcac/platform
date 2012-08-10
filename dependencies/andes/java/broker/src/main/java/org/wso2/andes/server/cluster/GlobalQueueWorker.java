@@ -17,6 +17,7 @@
 */
 package org.wso2.andes.server.cluster;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Queue;
@@ -102,7 +103,9 @@ public class GlobalQueueWorker implements Runnable{
 
                         addedMsgs.add(msg.getMessageId());
                         cassandraMessages.add(msg);
-
+                        if(log.isDebugEnabled()){
+                            log.debug("global worker moved "+msg.getMessageId() + " to subscription "+ s);    
+                        }
                     }
 
                     cassandraMessageStore.transferMessageBatchFromGlobalQueueToUserQueue(cassandraMessages.

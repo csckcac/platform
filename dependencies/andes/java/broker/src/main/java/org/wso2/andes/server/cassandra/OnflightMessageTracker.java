@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Semaphore;
@@ -26,21 +22,20 @@ public class OnflightMessageTracker {
 
     private int acktimeout = 10000; 
     private Map<Long,MsgData> msgId2MsgData = new LinkedHashMap<Long,MsgData>(); 
-    //private TreeMap<Long, Long> timesortedMsgIds = new TreeMap<Long, Long>();
-    private Map<Long,Long> deliveryTag2MsgID = new HashMap<Long,Long>();
+    private Map<String,Long> deliveryTag2MsgID = new HashMap<String,Long>();
     
     public class MsgData{
-        long msgID; 
+        final long msgID; 
         boolean ackreceived = false;
-        String queue; 
-        long timestamp; 
-        long deliveryTag; 
-        public MsgData(long msgID, boolean ackreceived, String queue, long timestamp, long deliveryTag) {
+        final String queue; 
+        final long timestamp; 
+        final String deliveryID; 
+        public MsgData(long msgID, boolean ackreceived, String queue, long timestamp, String deliveryID) {
             this.msgID = msgID;
             this.ackreceived = ackreceived;
             this.queue = queue; 
             this.timestamp = timestamp;
-            this.deliveryTag = deliveryTag;
+            this.deliveryID = deliveryID;
         }
     }
     
@@ -63,54 +58,13 @@ public class OnflightMessageTracker {
                 MsgData msgData = eldest.getValue(); 
                 boolean todelete = (System.currentTimeMillis() - msgData.timestamp) > (acktimeout*3);
                 if(todelete){
-                    if(deliveryTag2MsgID.remove(msgData.deliveryTag) == null){
-                        log.error("Cannot find delivery tag " + msgData.deliveryTag + " in "+ deliveryTag2MsgID);
+                    if(deliveryTag2MsgID.remove(msgData.deliveryID) == null){
+                        log.error("Cannot find delivery tag " + msgData.deliveryID + " for message id "+ msgData.msgID);
                     }
                 }
                 return todelete;
             }
-        };
-        
-//        new Thread(new Runnable() {
-//            
-//            @Override
-//            public void run() {
-//                while(true){
-//                    try {
-//                        synchronized (this) {
-//                            SortedMap<Long, Long> entries2Remove = timesortedMsgIds.headMap(System.currentTimeMillis()
-//                                    - acktimeout * 3);
-//                            Iterator<Entry<Long, Long>> items2Remove = entries2Remove.entrySet().iterator();
-//                            while (items2Remove.hasNext()) {
-//                                Long mesageID = items2Remove.next().getValue();
-//                                items2Remove.remove();
-//                                MsgData msgData = msgId2MsgData.remove(mesageID);
-//                                if (msgData == null) {
-//                                    log.error("Cannot find key " + mesageID
-//                                            + " to remove from msgId2MsgData: timesortedMsgIds="
-//                                            + timesortedMsgIds.size() + " msgId2MsgData=" + msgId2MsgData.size()
-//                                            + " deliveryTag2MsgID=" + deliveryTag2MsgID.size());
-//                                } else {
-//                                    if(!msgData.ackreceived){
-//                                        log.warn("No ack received for deliverytag"+ msgData.deliveryTag + " and "+ msgData.msgID); 
-//                                    }
-//                                    if (deliveryTag2MsgID.remove(msgData.deliveryTag) == null) {
-//                                        log.error("Cannot find delivery tag " + deliveryTag2MsgID);
-//                                    }
-//                                    System.out.println("removed delivery tag " + msgData.deliveryTag);
-//                                }
-//                            }
-//                            log.info("timesortedMsgIds="
-//                                            + timesortedMsgIds.size() + " msgId2MsgData=" + msgId2MsgData.size()
-//                                            + " deliveryTag2MsgID=" + deliveryTag2MsgID.size());
-//                        }
-//                        Thread.sleep(60000);
-//                    } catch (Throwable e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        }).start();
+        };        
     }
     
     public synchronized boolean testMessage(long messageId){
@@ -125,31 +79,35 @@ public class OnflightMessageTracker {
     }
     
     
-    public synchronized boolean testAndAddMessage(long deliveryTag, long messageId, String queue){
+    public synchronized boolean testAndAddMessage(long deliveryTag, long messageId, String queue, int channelID){
+        String deliveryID = new StringBuffer(String.valueOf(channelID)).append(deliveryTag).toString(); 
         long currentTime = System.currentTimeMillis();
         MsgData mdata = msgId2MsgData.get(messageId); 
+        
+        if(deliveryTag2MsgID.size() != msgId2MsgData.size()){
+            log.error("Two maps are out of sync "+ deliveryTag2MsgID.size() + "!=" + msgId2MsgData.size());
+        }
                 
         if (mdata == null || (!mdata.ackreceived && (currentTime - mdata.timestamp) > acktimeout)) {
+            if (deliveryTag2MsgID.containsKey(deliveryID)) {
+                throw new RuntimeException("Delivery Tag reused, this should not happen");
+            }
             if (mdata != null) {
                 // message has sent once, we will clean that up
-                if (mdata.deliveryTag == deliveryTag) {
-                    throw new RuntimeException("Delivery Tag reused, this should not happen");
-                }
-                //timesortedMsgIds.remove(mdata.timestamp);
-                deliveryTag2MsgID.remove(mdata.deliveryTag); 
+                deliveryTag2MsgID.remove(mdata.deliveryID); 
                 msgId2MsgData.remove(messageId); 
             }
-            deliveryTag2MsgID.put(deliveryTag, messageId);
-            msgId2MsgData.put(new Long(messageId), new MsgData(messageId, false, queue, currentTime, deliveryTag));
-            //timesortedMsgIds.put(currentTime, messageId);
+            deliveryTag2MsgID.put(deliveryID, messageId);
+            msgId2MsgData.put(new Long(messageId), new MsgData(messageId, false, queue, currentTime, deliveryID));
             return true;
         } else {
             return false;
         }
     }
     
-    public synchronized MsgData ackReceived(long deliveryTag){
-        Long messageid = deliveryTag2MsgID.get(deliveryTag); 
+    public synchronized MsgData ackReceived(long deliveryTag, long channelID){
+        String deliveryID = new StringBuffer(String.valueOf(channelID)).append(deliveryTag).toString(); 
+        Long messageid = deliveryTag2MsgID.get(deliveryID); 
         if(messageid != null){
             MsgData msgData = msgId2MsgData.get(messageid);
             if(msgData != null){
@@ -159,7 +117,7 @@ public class OnflightMessageTracker {
                 throw new RuntimeException("No message data found for messageid "+ messageid); 
             }
         }else{
-            throw new RuntimeException("No Message id found for delivery tag "+deliveryTag); 
+            throw new RuntimeException("No Message id found for delivery tag "+deliveryID); 
         }
     }
     
@@ -192,10 +150,10 @@ public class OnflightMessageTracker {
                             synchronized (messagesSent) {
                                 messagesSent.add(msgID);
                             }
-                            if(tracker.testAndAddMessage(deliveryTagnow, msgID, "queue1")){
+                            if(tracker.testAndAddMessage(deliveryTagnow, msgID, "queue1", 1)){
                                 accpetedMessages.add(msgID);
                                 Thread.sleep(random.nextInt(10));
-                                tracker.ackReceived(deliveryTagnow);
+                                tracker.ackReceived(deliveryTagnow,1);
                             } 
                             
                             if(j%10 == 0){

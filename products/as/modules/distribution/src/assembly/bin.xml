@@ -285,13 +285,6 @@
                 <include>*.war</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>../samples/product/TomcatWebApps/JDBCDataSource/target</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/samples/TomcatWebApps/JDBCDataSource</outputDirectory>
-            <includes>
-                <include>*.war</include>
-            </includes>
-        </fileSet>
 
         <!-- copy executables in samples with execute permissions -->
         <fileSet>

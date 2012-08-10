@@ -16,26 +16,6 @@
 
 package org.wso2.carbon.mashup.javascript.hostobjects.system;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.net.SocketException;
-import java.net.URI;
-import java.net.URL;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.xml.stream.XMLStreamException;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -51,21 +31,27 @@ import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.Context;
-import org.mozilla.javascript.EvaluatorException;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.NativeArray;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Undefined;
-import org.mozilla.javascript.UniqueTag;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
+import org.mozilla.javascript.*;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
 import org.wso2.carbon.mashup.utils.MashupUtils;
-import org.jaggeryjs.scriptengine.engine.RhinoEngine;
-import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.NetworkUtils;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.URI;
+import java.net.URL;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * <p/>
@@ -228,8 +214,8 @@ public class SystemHostObject extends ScriptableObject {
                 if (f.exists() && !f.isDirectory()) {
                     reader = new FileReader(f);
                     //TODO : we need to cache this too, store updated time against path as an axis param
-                    engine.exec(reader, JavaScriptEngineUtils.getActiveScope(),
-                            MashupUtils.getScriptCachingContext(configurationContext, f.getAbsolutePath(), f.lastModified()));
+                    engine.exec(reader, JavaScriptEngineUtils.getActiveScope(), MashupUtils.getScriptCachingContext(
+                            axisService, configurationContext, f.getAbsolutePath(), f.lastModified()));
                 } else {
                     // This is not a file.. So we check whether this is a URL
                     //todo need to check this
@@ -717,7 +703,10 @@ public class SystemHostObject extends ScriptableObject {
 
         msTaskInfo.setTaskProperties(resources);
         MSTaskAdmin taskAdmin = new MSTaskAdmin();
-        
+
+        axisService.addParameter(MSTaskConstants.CONTEXT_FACTORY, cx.getFactory());
+        axisService.addParameter(MSTaskConstants.TASK_SCOPE, thisObj);
+
         final Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
         paramMap.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);
@@ -1090,7 +1079,10 @@ public class SystemHostObject extends ScriptableObject {
 
         msTaskInfo.setTaskProperties(resources);
         MSTaskAdmin taskAdmin = new MSTaskAdmin();
-        
+
+        axisService.addParameter(MSTaskConstants.CONTEXT_FACTORY, cx.getFactory());
+        axisService.addParameter(MSTaskConstants.TASK_SCOPE, thisObj);
+
         final Map<String, Object> paramMap = new HashMap<String, Object>();
         paramMap.put(MSTaskConstants.JAVASCRIPT_FUNCTION, jsFunction);
         paramMap.put(MSTaskConstants.FUNCTION_PARAMETERS, functionParams);

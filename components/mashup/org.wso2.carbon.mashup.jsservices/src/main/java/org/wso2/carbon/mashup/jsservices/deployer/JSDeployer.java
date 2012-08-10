@@ -16,46 +16,14 @@
 
 package org.wso2.carbon.mashup.jsservices.deployer;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.StringTokenizer;
-import java.util.TreeMap;
-
-import javax.xml.namespace.QName;
-
 import org.apache.axiom.soap.SOAP11Constants;
 import org.apache.axiom.soap.SOAP12Constants;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.deployment.AbstractDeployer;
-import org.apache.axis2.deployment.DeploymentEngine;
-import org.apache.axis2.deployment.DeploymentErrorMsgs;
-import org.apache.axis2.deployment.DeploymentException;
-import org.apache.axis2.deployment.DescriptionBuilder;
+import org.apache.axis2.deployment.*;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
-import org.apache.axis2.description.AxisBinding;
-import org.apache.axis2.description.AxisBindingMessage;
-import org.apache.axis2.description.AxisBindingOperation;
-import org.apache.axis2.description.AxisEndpoint;
-import org.apache.axis2.description.AxisMessage;
-import org.apache.axis2.description.AxisOperation;
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.description.AxisServiceGroup;
-import org.apache.axis2.description.InOutAxisOperation;
-import org.apache.axis2.description.Parameter;
-import org.apache.axis2.description.TransportInDescription;
-import org.apache.axis2.description.WSDL2Constants;
+import org.apache.axis2.description.*;
 import org.apache.axis2.description.java2wsdl.Java2WSDLConstants;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.i18n.Messages;
@@ -65,6 +33,8 @@ import org.apache.axis2.wsdl.WSDLUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ws.commons.schema.XmlSchemaElement;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.Scriptable;
@@ -78,9 +48,11 @@ import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptReceiver;
 import org.wso2.carbon.mashup.jsservices.JSConstants;
 import org.wso2.carbon.mashup.jsservices.JSUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
-import org.jaggeryjs.scriptengine.engine.RhinoEngine;
-import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.CarbonUtils;
+
+import javax.xml.namespace.QName;
+import java.io.*;
+import java.util.*;
 
 /**
  * This is a custom Axis2 deployer written for deploying JavaScript services.i.e. This deployer will
@@ -148,7 +120,7 @@ public class JSDeployer extends AbstractDeployer {
      */
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
 
-        RhinoEngine.enterContext();
+        JavaScriptEngineUtils.getEngine().enterContext();
 
         String jsFilePath = deploymentFileData.getAbsolutePath();
         /*
@@ -314,7 +286,7 @@ public class JSDeployer extends AbstractDeployer {
                 if (destroy != null) {
                     JavaScriptEngine engine = new JavaScriptEngine(jsFileName);
                     ScriptableObject scope = JavaScriptEngineUtils.getActiveScope();
-                    Context cx = RhinoEngine.enterContext();
+                    Context cx = JavaScriptEngineUtils.getEngine().enterContext();
                     destroy.call(cx, scope, scope, new Object[0]);
                     RhinoEngine.exitContext();
                 }
@@ -555,7 +527,7 @@ public class JSDeployer extends AbstractDeployer {
             undeployment.
             */
             if (init != null) {
-                Context cx = RhinoEngine.enterContext();
+                Context cx = JavaScriptEngineUtils.getEngine().enterContext();
                 init.call(cx, serviceScope, serviceScope, new Object[0]);
                 RhinoEngine.exitContext();
             }
@@ -1000,7 +972,7 @@ public class JSDeployer extends AbstractDeployer {
         function. We need that to get the order of the parameter names in that function.
         Rhino does not preserve the order of parameters as they are held in a map
         */
-        Context cx = RhinoEngine.enterContext();
+        Context cx = JavaScriptEngineUtils.getEngine().enterContext();
         ScriptableObject serviceScope = JavaScriptEngineUtils.getActiveScope();
         String sourceStr =
                 "function org_wso2_mashup_ConvertToString(){ " + "var code = " + functionName +
@@ -1034,6 +1006,7 @@ public class JSDeployer extends AbstractDeployer {
             // Get the paramer names by splitting them using ","
             params = paramString.split(",");
         }
+        RhinoEngine.exitContext();
         return params;
     }
 

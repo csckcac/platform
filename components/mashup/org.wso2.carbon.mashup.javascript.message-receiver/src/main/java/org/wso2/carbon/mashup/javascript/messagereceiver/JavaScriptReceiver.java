@@ -97,7 +97,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
         try {
 
-            RhinoEngine.enterContext();
+            JavaScriptEngineUtils.getEngine().enterContext();
             // Create JS Engine, Inject HostObjects
             String serviceName = inMessage.getAxisService().getName();
             JavaScriptEngine engine = new JavaScriptEngine(serviceName);

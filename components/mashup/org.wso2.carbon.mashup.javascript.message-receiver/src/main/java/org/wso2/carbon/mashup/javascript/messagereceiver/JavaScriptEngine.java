@@ -128,7 +128,7 @@ public class JavaScriptEngine {
         Object functionArgs[];
         RhinoEngine engine = JavaScriptEngineUtils.getEngine();
         ScriptableObject scope = JavaScriptEngineUtils.getActiveScope();
-        Context cx = RhinoEngine.enterContext();
+        Context cx = engine.enterContext();
         try {
             // Handle JSON messages
             if (args instanceof OMSourcedElementImpl) {
@@ -181,8 +181,9 @@ public class JavaScriptEngine {
 
     public Object evaluateFunction(String func, Object[] args) throws ScriptException {
         func = "var x = " + func + ";";
-        ScriptableObject scope = JavaScriptEngineUtils.getEngine().getRuntimeScope();
-        Context cx = RhinoEngine.enterContext();
+        RhinoEngine engine = JavaScriptEngineUtils.getEngine();
+        ScriptableObject scope = engine.getRuntimeScope();
+        Context cx = engine.enterContext();
         cx.evaluateString(scope, func, "Eval Func", 0, null);
         Function function = (Function) scope.get("x", scope);
         Object result = function.call(cx, scope, scope, args);

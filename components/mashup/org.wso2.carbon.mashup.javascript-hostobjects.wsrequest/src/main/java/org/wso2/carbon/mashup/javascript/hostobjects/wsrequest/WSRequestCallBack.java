@@ -22,8 +22,8 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.util.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.Context;
 import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.mozilla.javascript.Context;
 
 import javax.xml.namespace.QName;
 
@@ -74,9 +74,8 @@ public class WSRequestCallBack implements AxisCallback {
         }
         this.wsrequest.readyState = 4;
         if (this.wsrequest.onReadyStateChangeFunction != null) {
-            Context cx = RhinoEngine.enterContext();
-            this.wsrequest.onReadyStateChangeFunction
-                    .call(cx, wsrequest, wsrequest, new Object[0]);
+            Context cx = RhinoEngine.enterContext(this.wsrequest.context.getFactory());
+            this.wsrequest.onReadyStateChangeFunction.call(cx, wsrequest, wsrequest, new Object[0]);
             RhinoEngine.exitContext();
         }
     }
@@ -85,9 +84,8 @@ public class WSRequestCallBack implements AxisCallback {
         this.wsrequest.updateResponse(messageContext.getEnvelope().getBody().getFirstElement());
         this.wsrequest.readyState = 4;
         if (this.wsrequest.onReadyStateChangeFunction != null) {
-            Context cx = RhinoEngine.enterContext();
-            this.wsrequest.onReadyStateChangeFunction
-                    .call(cx, wsrequest, wsrequest, new Object[0]);
+            Context cx = RhinoEngine.enterContext(this.wsrequest.context.getFactory());
+            this.wsrequest.onReadyStateChangeFunction.call(cx, wsrequest, wsrequest, new Object[0]);
             RhinoEngine.exitContext();
         }
     }

@@ -94,14 +94,16 @@ public class MashupUtils {
         String tenantId = Integer.toString(MultitenantUtils.getTenantId(configurationContext));
         String scriptPath = (String) service.getParameterValue(MashupConstants.SERVICE_JS);
         ScriptCachingContext sctx = new ScriptCachingContext(tenantId, "/", "/", scriptPath);
+        sctx.setSecurityDomain(new MashupSecurityDomain(service));
         sctx.setSourceModifiedTime(service.getLastUpdate());
         return sctx;
     }
 
-    public static ScriptCachingContext getScriptCachingContext(ConfigurationContext configurationContext,
+    public static ScriptCachingContext getScriptCachingContext(AxisService service, ConfigurationContext configurationContext,
                                                                String scriptPath, long lastModified) {
         String tenantId = Integer.toString(MultitenantUtils.getTenantId(configurationContext));
         ScriptCachingContext sctx = new ScriptCachingContext(tenantId, "/", "/", scriptPath);
+        sctx.setSecurityDomain(new MashupSecurityDomain(service));
         sctx.setSourceModifiedTime(lastModified);
         return sctx;
     }

@@ -16,31 +16,28 @@
 
 package org.wso2.carbon.mashup.javascript.hostobjects.system;
 
-import java.io.IOException;
-import java.net.URL;
-
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jaggeryjs.scriptengine.engine.RhinoEngine;
 import org.mozilla.javascript.Context;
+import org.mozilla.javascript.ContextFactory;
 import org.mozilla.javascript.Function;
 import org.mozilla.javascript.ScriptableObject;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngine;
-import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
 import org.wso2.carbon.mashup.utils.MashupConstants;
-import org.wso2.carbon.mashup.utils.MashupReader;
-import org.wso2.carbon.mashup.utils.MashupUtils;
 import org.wso2.carbon.ntask.core.AbstractTask;
 import org.wso2.carbon.ntask.core.TaskInfo;
 import org.wso2.carbon.ntask.core.internal.TasksDSComponent;
-import org.jaggeryjs.scriptengine.engine.RhinoEngine;
-import org.jaggeryjs.scriptengine.exceptions.ScriptException;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class MSTask extends AbstractTask {
 
@@ -84,10 +81,8 @@ public class MSTask extends AbstractTask {
             Object jsFunction = axisService.getParameterValue(getProperties().get(MSTaskConstants.TASK_NAME));
             Object[] parameters = (Object[]) MSTaskUtils.fromString(getProperties().get(MSTaskConstants.FUNCTION_PARAMETERS));
 
-
-            String serviceName = axisService.getName();
-            JavaScriptEngine jsEngine = new JavaScriptEngine(serviceName);
-            RhinoEngine.enterContext();
+            ContextFactory factory = (ContextFactory) axisService.getParameterValue(MSTaskConstants.CONTEXT_FACTORY);
+            Context cx = RhinoEngine.enterContext(factory);
             /*
              * Some host objects depend on the data we obtain from the
              * AxisService & ConfigurationContext.. It is possible to get these
@@ -98,8 +93,7 @@ public class MSTask extends AbstractTask {
              * here too..
              */
             RhinoEngine.putContextProperty(MashupConstants.AXIS2_SERVICE, axisService);
-            RhinoEngine.putContextProperty(MashupConstants.AXIS2_CONFIGURATION_CONTEXT,
-                    configurationContext);
+            RhinoEngine.putContextProperty(MashupConstants.AXIS2_CONFIGURATION_CONTEXT, configurationContext);
 
             AxisConfiguration axisConfig = configurationContext.
                     getAxisConfiguration();
@@ -111,11 +105,7 @@ public class MSTask extends AbstractTask {
 
             Object[] args;
 
-            RhinoEngine engine = JavaScriptEngineUtils.getEngine();
-            ScriptableObject scope = engine.getRuntimeScope();
-            //Evaluating the JavaScript service file
-            engine.exec(new MashupReader(axisService), scope, MashupUtils.getScriptCachingContext(configurationContext, axisService));
-            Context cx = RhinoEngine.enterContext();
+            ScriptableObject scope = (ScriptableObject) axisService.getParameterValue(MSTaskConstants.TASK_SCOPE);
             if (jsFunction instanceof Function) {
                 if (parameters != null) {
                     args = parameters;
@@ -128,8 +118,6 @@ public class MSTask extends AbstractTask {
                 String jsString = (String) jsFunction;
                 cx.evaluateString(scope, jsString, "Load JavaScriptString", 0, null);
             }
-        } catch (ScriptException e) {
-            log.error(e.getMessage(), e);
         } catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

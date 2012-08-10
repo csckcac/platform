@@ -15,13 +15,23 @@
  */
 package org.wso2.carbon.mashup.javascript.messagereceiver.internal;
 
-import org.osgi.service.component.ComponentContext;
+import org.apache.axis2.description.AxisService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
-import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
 import org.jaggeryjs.scriptengine.cache.CacheManager;
 import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.jaggeryjs.scriptengine.security.RhinoSecurityController;
+import org.jaggeryjs.scriptengine.security.RhinoSecurityDomain;
+import org.osgi.service.component.ComponentContext;
+import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
+import org.wso2.carbon.mashup.javascript.messagereceiver.JavaScriptEngineUtils;
+import org.wso2.carbon.mashup.utils.MashupConstants;
+import org.wso2.carbon.mashup.utils.MashupSecurityDomain;
+
+import java.io.File;
+import java.io.FilePermission;
+import java.io.IOException;
+import java.security.PermissionCollection;
 
 
 /**
@@ -42,16 +52,31 @@ public class JSMessageReceiverServiceComponent {
      *
      * @param componentContext  <tt>ComponentContext</tt> of the OSGI bundle
      */
-    public void activate(ComponentContext componentContext){
+    public void activate(ComponentContext componentContext) {
         try {
             JavaScriptEngineUtils.setHostObjectService(hostObjectService);
-            String dir = System.getProperty("java.io.tmpdir");
-            if (dir != null) {
-                JavaScriptEngineUtils.setEngine(new RhinoEngine(new CacheManager(null)));
-            } else {
-                String msg = "Please specify java.io.tmpdir system property";
-                log.error(msg);
-            }
+            JavaScriptEngineUtils.setEngine(new RhinoEngine(new CacheManager(null), new RhinoSecurityController() {
+                @Override
+                protected void updatePermissions(PermissionCollection permissions, RhinoSecurityDomain securityDomain) {
+                    MashupSecurityDomain domain = (MashupSecurityDomain) securityDomain;
+                    AxisService service = domain.getService();
+                    File resourcesDir = (File) service.getParameterValue(MashupConstants.RESOURCES_FOLDER);
+                    try {
+                        String resourcesURI = resourcesDir.getCanonicalPath();
+                        // Create a file read permission for web app context directory
+                        if (!resourcesURI.endsWith(File.separator)) {
+                            permissions.add(new FilePermission(resourcesURI, "read"));
+                            resourcesURI = resourcesURI + File.separator;
+                        } else {
+                            permissions.add(new FilePermission(resourcesURI.substring(0, resourcesURI.length() - 1), "read"));
+                        }
+                        resourcesURI = resourcesURI + "-";
+                        permissions.add(new FilePermission(resourcesURI, "read"));
+                    } catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                    }
+                }
+            }));
         } catch (Exception e) {
             log.error("Failed setting the OSGI servce, HostObjectService", e);
         }
@@ -68,7 +93,7 @@ public class JSMessageReceiverServiceComponent {
 
     /**
      * Unset method for the OSGI service, <tt>HostObjectService</tt>.
-     * 
+     *
      * @param hostObjectService  <tt>HostObjectService</tt> instance being unset
      */
     protected void unsetHostObjectService(HostObjectService hostObjectService) {

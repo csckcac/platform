@@ -20,16 +20,16 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.util.Loader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.mozilla.javascript.Function;
-import org.mozilla.javascript.Scriptable;
-import org.mozilla.javascript.ScriptableObject;
-import org.mozilla.javascript.Context;
-import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
-import org.wso2.carbon.mashup.utils.MashupConstants;
 import org.jaggeryjs.scriptengine.engine.JavaScriptHostObject;
 import org.jaggeryjs.scriptengine.engine.JavaScriptMethod;
 import org.jaggeryjs.scriptengine.engine.JavaScriptProperty;
 import org.jaggeryjs.scriptengine.engine.RhinoEngine;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Function;
+import org.mozilla.javascript.Scriptable;
+import org.mozilla.javascript.ScriptableObject;
+import org.wso2.carbon.mashup.javascript.hostobjects.hostobjectservice.service.HostObjectService;
+import org.wso2.carbon.mashup.utils.MashupConstants;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -111,10 +111,7 @@ public class JavaScriptEngineUtils {
     }
 
     public static void setActiveScope(ScriptableObject scope) {
-        Context cx = RhinoEngine.enterContext();
-        cx.evaluateString(scope, "new XML();", "XML() initialization", 0, null);
         RhinoEngine.putContextProperty(MashupConstants.ACTIVE_SCOPE, scope);
-        RhinoEngine.exitContext();
     }
 
     public static void loadHostObjects() throws AxisFault {

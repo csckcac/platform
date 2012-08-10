@@ -28,6 +28,10 @@ public class MSTaskConstants {
 
     public static final String FUNCTION_PARAMETERS = "jsfunctionarguments";
 
+    public static final String CONTEXT_FACTORY = "contextFactory";
+
+    public static final String TASK_SCOPE = "taskJavaScriptScope";
+
     public static final String AXIS_SERVICE = "axisService";
 
     public static final String CONFIGURATION_CONTEXT = "configurationContext";

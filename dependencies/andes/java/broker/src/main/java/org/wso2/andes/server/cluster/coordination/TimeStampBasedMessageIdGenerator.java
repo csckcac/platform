@@ -17,8 +17,9 @@
 */
 package org.wso2.andes.server.cluster.coordination;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.wso2.andes.server.ClusterResourceHolder;
-import org.wso2.andes.server.store.CassandraMessageStore;
 
 
 /**
@@ -43,72 +44,98 @@ public class TimeStampBasedMessageIdGenerator implements MessageIdGenerator {
 
     private volatile long lastMessageId;
 
-    @Override
+//    @Override
+//    public long getNextId() {
+//        long ts = ClusterResourceHolder.getInstance().getReferenceTime().getCurrentTime();
+//        CassandraMessageStore ms = ClusterResourceHolder.getInstance().getCassandraMessageStore();
+//
+//        if (lastCurrentTime == ts) {
+//            synchronized (this) {
+//                if (lastCurrentTime == ts) {
+//                    lastMessageId = ms.currentMessageId().incrementAndGet();
+//                    return lastMessageId;
+//                } else {
+//
+//                    StringBuffer buffer = new StringBuffer();
+//
+//                    buffer.append(ts).
+//                            append(getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().
+//                                    getNodeId())).append("00");
+//
+//
+//                    long mid = Long.parseLong(buffer.toString());
+//                    lastMessageId = mid;
+//                    ms.currentMessageId().set(lastMessageId);
+//                    lastCurrentTime = ts;
+//                    return lastMessageId;
+//                }
+//            }
+//        } else {
+//            StringBuffer buffer = new StringBuffer();
+//
+//            buffer.append(ts).
+//                    append(getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().
+//                            getNodeId())).append("00");
+//            long mid = Long.parseLong(buffer.toString());
+//            synchronized (this) {
+//                lastCurrentTime = ts;
+//                lastMessageId = mid;
+//                ms.currentMessageId().set(lastMessageId);
+//                return lastMessageId;
+//            }
+//
+//
+//        }
+//
+//
+//    }
+//
+//
+//    private static String getTwoDigitNodeId(int nodeId) {
+//        switch (nodeId / 10) {
+//            case 0: {
+//                return "0" + nodeId;
+//            }
+//            case 1:
+//            case 2:
+//            case 3:
+//            case 4:
+//            case 5:
+//            case 6:
+//            case 7:
+//            case 8:
+//            case 9: {
+//                return "" + nodeId;
+//            }
+//            default:
+//                throw new RuntimeException("Node id range exceeded - supported range 0-99");
+//
+//        }
+//    }
+    
+    int nodeID = 0; 
+    long lastTimestamp = 0; 
+    private AtomicInteger offsetOnthisslot = new AtomicInteger();
+    private long referenaceStart = 41*365*24*60*60*10000; //this is 2011
+
+    /**
+     * Out of 64 bits for long, we will use the range as follows
+     * [1 sign bit][45bits for time spent from reference time in milliseconds][8bit node id][10 bit offset for ID falls within the same timestamp]
+     * This assumes there will not be more than 1024 hits within a given milisecond. Range is sufficient for 6029925857 years.  
+     * @return
+     */
+    
     public long getNextId() {
-        long ts = ClusterResourceHolder.getInstance().getReferenceTime().getCurrentTime();
-        CassandraMessageStore ms = ClusterResourceHolder.getInstance().getCassandraMessageStore();
-
-        if (lastCurrentTime == ts) {
-            synchronized (this) {
-                if (lastCurrentTime == ts) {
-                    lastMessageId = ms.currentMessageId().incrementAndGet();
-                    return lastMessageId;
-                } else {
-
-                    StringBuffer buffer = new StringBuffer();
-
-                    buffer.append(ts).
-                            append(getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().
-                                    getNodeId())).append("00");
-
-
-                    long mid = Long.parseLong(buffer.toString());
-                    lastMessageId = mid;
-                    ms.currentMessageId().set(lastMessageId);
-                    lastCurrentTime = ts;
-                    return lastMessageId;
-                }
-            }
-        } else {
-            StringBuffer buffer = new StringBuffer();
-
-            buffer.append(ts).
-                    append(getTwoDigitNodeId(ClusterResourceHolder.getInstance().getClusterManager().
-                            getNodeId())).append("00");
-            long mid = Long.parseLong(buffer.toString());
-            synchronized (this) {
-                lastCurrentTime = ts;
-                lastMessageId = mid;
-                ms.currentMessageId().set(lastMessageId);
-                return lastMessageId;
-            }
-
-
+        nodeID = ClusterResourceHolder.getInstance().getClusterManager().getNodeId();
+        long ts = System.currentTimeMillis();
+        int offset = 0; 
+        if(ts == lastTimestamp){
+            offset = offsetOnthisslot.incrementAndGet();
+        }else{
+            offsetOnthisslot.set(0);
         }
-
-
+        lastTimestamp = ts;
+        return (ts - referenaceStart) * 256* 1024 + nodeID * 1024 + offset;
     }
-
-
-    private static String getTwoDigitNodeId(int nodeId) {
-        switch (nodeId / 10) {
-            case 0: {
-                return "0" + nodeId;
-            }
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9: {
-                return "" + nodeId;
-            }
-            default:
-                throw new RuntimeException("Node id range exceeded - supported range 0-99");
-
-        }
-    }
+    
 }

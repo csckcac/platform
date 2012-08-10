@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,8 +25,8 @@ public class OnflightMessageTracker {
     private static Log log = LogFactory.getLog(OnflightMessageTracker.class);
 
     private int acktimeout = 10000; 
-    private Map<Long,MsgData> msgId2MsgData = new HashMap<Long,MsgData>(); 
-    private TreeMap<Long, Long> timesortedMsgIds = new TreeMap<Long, Long>();
+    private Map<Long,MsgData> msgId2MsgData = new LinkedHashMap<Long,MsgData>(); 
+    //private TreeMap<Long, Long> timesortedMsgIds = new TreeMap<Long, Long>();
     private Map<Long,Long> deliveryTag2MsgID = new HashMap<Long,Long>();
     
     public class MsgData{
@@ -50,46 +51,66 @@ public class OnflightMessageTracker {
 
     
     private OnflightMessageTracker(){
-        new Thread(new Runnable() {
-            
+        
+        /*
+         * for all add and remove, following is executed, and it will remove the oldest entry if needed
+         */
+        msgId2MsgData = new LinkedHashMap<Long, MsgData>() {
+            private static final long serialVersionUID = -8681132571102532817L;
+
             @Override
-            public void run() {
-                while(true){
-                    try {
-                        synchronized (this) {
-                            SortedMap<Long, Long> entries2Remove = timesortedMsgIds.headMap(System.currentTimeMillis()
-                                    - acktimeout * 3);
-                            Iterator<Entry<Long, Long>> items2Remove = entries2Remove.entrySet().iterator();
-                            while (items2Remove.hasNext()) {
-                                Long mesageID = items2Remove.next().getValue();
-                                items2Remove.remove();
-                                MsgData msgData = msgId2MsgData.remove(mesageID);
-                                if (msgData == null) {
-                                    log.error("Cannot find key " + mesageID
-                                            + " to remove from msgId2MsgData: timesortedMsgIds="
-                                            + timesortedMsgIds.size() + " msgId2MsgData=" + msgId2MsgData.size()
-                                            + " deliveryTag2MsgID=" + deliveryTag2MsgID.size());
-                                } else {
-                                    if(!msgData.ackreceived){
-                                        log.warn("No ack received for deliverytag"+ msgData.deliveryTag + " and "+ msgData.msgID); 
-                                    }
-                                    if (deliveryTag2MsgID.remove(msgData.deliveryTag) == null) {
-                                        log.error("Cannot find delivery tag " + deliveryTag2MsgID);
-                                    }
-                                    System.out.println("removed delivery tag " + msgData.deliveryTag);
-                                }
-                            }
-                            log.info("timesortedMsgIds="
-                                            + timesortedMsgIds.size() + " msgId2MsgData=" + msgId2MsgData.size()
-                                            + " deliveryTag2MsgID=" + deliveryTag2MsgID.size());
-                        }
-                        Thread.sleep(60000);
-                    } catch (Throwable e) {
-                        e.printStackTrace();
+            protected boolean removeEldestEntry(Map.Entry<Long, MsgData> eldest) {
+                MsgData msgData = eldest.getValue(); 
+                boolean todelete = (System.currentTimeMillis() - msgData.timestamp) > (acktimeout*3);
+                if(todelete){
+                    if(deliveryTag2MsgID.remove(msgData.deliveryTag) == null){
+                        log.error("Cannot find delivery tag " + msgData.deliveryTag + " in "+ deliveryTag2MsgID);
                     }
                 }
+                return todelete;
             }
-        }).start();
+        };
+        
+//        new Thread(new Runnable() {
+//            
+//            @Override
+//            public void run() {
+//                while(true){
+//                    try {
+//                        synchronized (this) {
+//                            SortedMap<Long, Long> entries2Remove = timesortedMsgIds.headMap(System.currentTimeMillis()
+//                                    - acktimeout * 3);
+//                            Iterator<Entry<Long, Long>> items2Remove = entries2Remove.entrySet().iterator();
+//                            while (items2Remove.hasNext()) {
+//                                Long mesageID = items2Remove.next().getValue();
+//                                items2Remove.remove();
+//                                MsgData msgData = msgId2MsgData.remove(mesageID);
+//                                if (msgData == null) {
+//                                    log.error("Cannot find key " + mesageID
+//                                            + " to remove from msgId2MsgData: timesortedMsgIds="
+//                                            + timesortedMsgIds.size() + " msgId2MsgData=" + msgId2MsgData.size()
+//                                            + " deliveryTag2MsgID=" + deliveryTag2MsgID.size());
+//                                } else {
+//                                    if(!msgData.ackreceived){
+//                                        log.warn("No ack received for deliverytag"+ msgData.deliveryTag + " and "+ msgData.msgID); 
+//                                    }
+//                                    if (deliveryTag2MsgID.remove(msgData.deliveryTag) == null) {
+//                                        log.error("Cannot find delivery tag " + deliveryTag2MsgID);
+//                                    }
+//                                    System.out.println("removed delivery tag " + msgData.deliveryTag);
+//                                }
+//                            }
+//                            log.info("timesortedMsgIds="
+//                                            + timesortedMsgIds.size() + " msgId2MsgData=" + msgId2MsgData.size()
+//                                            + " deliveryTag2MsgID=" + deliveryTag2MsgID.size());
+//                        }
+//                        Thread.sleep(60000);
+//                    } catch (Throwable e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        }).start();
     }
     
     public synchronized boolean testMessage(long messageId){
@@ -111,15 +132,16 @@ public class OnflightMessageTracker {
         if (mdata == null || (!mdata.ackreceived && (currentTime - mdata.timestamp) > acktimeout)) {
             if (mdata != null) {
                 // message has sent once, we will clean that up
-                if (mdata.msgID != messageId) {
+                if (mdata.deliveryTag == deliveryTag) {
                     throw new RuntimeException("Delivery Tag reused, this should not happen");
                 }
-                timesortedMsgIds.remove(mdata.timestamp);
+                //timesortedMsgIds.remove(mdata.timestamp);
                 deliveryTag2MsgID.remove(mdata.deliveryTag); 
+                msgId2MsgData.remove(messageId); 
             }
-            msgId2MsgData.put(new Long(messageId), new MsgData(messageId, false, queue, currentTime, deliveryTag));
-            timesortedMsgIds.put(currentTime, messageId);
             deliveryTag2MsgID.put(deliveryTag, messageId);
+            msgId2MsgData.put(new Long(messageId), new MsgData(messageId, false, queue, currentTime, deliveryTag));
+            //timesortedMsgIds.put(currentTime, messageId);
             return true;
         } else {
             return false;
@@ -149,7 +171,7 @@ public class OnflightMessageTracker {
         final OnflightMessageTracker tracker = new OnflightMessageTracker(); 
         final Random random = new Random(); 
         
-        final ConcurrentLinkedQueue<Long> queue = new ConcurrentLinkedQueue<Long>(); 
+        final ConcurrentLinkedQueue<Long> accpetedMessages = new ConcurrentLinkedQueue<Long>(); 
         final Set<Long> messagesSent = new TreeSet<Long>(); 
         
         final Semaphore semaphore = new Semaphore(0);
@@ -163,16 +185,22 @@ public class OnflightMessageTracker {
                 @Override
                 public void run() {
                     System.out.println("thread "+count + "started");
-                    for(int j =0;j<100;j++){
+                    for(int j =0;j<500;j++){
                         try {
                             long deliveryTagnow = deliveryTag.incrementAndGet();
                             long msgID = count*10000 + random.nextInt(1000);
-                            messagesSent.add(msgID);
+                            synchronized (messagesSent) {
+                                messagesSent.add(msgID);
+                            }
                             if(tracker.testAndAddMessage(deliveryTagnow, msgID, "queue1")){
-                                queue.add(msgID);
+                                accpetedMessages.add(msgID);
                                 Thread.sleep(random.nextInt(10));
                                 tracker.ackReceived(deliveryTagnow);
                             } 
+                            
+                            if(j%10 == 0){
+                                System.out.println("size =" + tracker.msgId2MsgData.size());
+                            }
                         } catch (InterruptedException e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
@@ -185,15 +213,15 @@ public class OnflightMessageTracker {
         }
         semaphore.acquire(threadCount);
         
-        Set<Long> set = new HashSet<Long>(queue);
-        if(set.size() != queue.size()){
-            List<Long> list2Sort = new ArrayList<Long>(queue); 
+        Set<Long> uniqueItems = new HashSet<Long>(accpetedMessages);
+        if(uniqueItems.size() != accpetedMessages.size()){
+            List<Long> list2Sort = new ArrayList<Long>(accpetedMessages); 
             Collections.sort(list2Sort);
             System.out.println(list2Sort);
-            throw new Exception("there are duplicated values "+ queue.size() + " != "+ set.size()); 
+            throw new Exception("there are duplicated values "+ accpetedMessages.size() + " != "+ uniqueItems.size()); 
         }else{
-            if(set.size() != messagesSent.size()){
-                throw new Exception("Some messages are missing");
+            if(uniqueItems.size() != messagesSent.size()){
+                throw new Exception("Some messages are missing "+ uniqueItems.size() + "!= "+ messagesSent.size() );
             }
             System.out.println("Test completed");
         }

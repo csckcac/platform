@@ -14,17 +14,48 @@
   ~ limitations under the License.
   -->
 
-<project default="build-all">
+<project name="HelloWorldWebapp" default="build-all">
 
-    <property name="carbon.home" value="../../"/>
-    <property name="repo.location" value="${carbon.home}/repository/deployment/server/webapps/"/>
+    <property name="wso2carbon.home" value="../../"/>
+    <property name="repo.location" value="${wso2carbon.home}/repository/deployment/server"/>
+    <property name="warName" value="HelloWorldWebapp.war"/>    
+    <property name="build.dir" value="build"/>
 
-    <target name="copy-webapp">
-        <copy file="wso2appserver-samples-hello-webapp-1.0.war" toDir="${repo.location}"/>
+    <path id="compile.classpath">
+        <fileset dir="${wso2carbon.home}/repository/components/plugins">
+            <include name="*.jar"/>
+            <include name="javax.servlet*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${build.dir}/classes"/>
+    </target>
+
+    <target name="compile" depends="init" >
+        <javac destdir="${build.dir}/classes" debug="true" srcdir="src">
+            <classpath refid="compile.classpath"/>
+        </javac>
     </target>
     
-    <target name="build-all">
-        <antcall target="copy-webapp"/>
+    <target name="war" depends="compile">
+        <echo message="Creating webapp ${warName}."/>
+        <war destfile="${build.dir}/${warName}" webxml="src/main/webapp/WEB-INF/web.xml">
+            <fileset dir="src/main/webapp"/>
+            <classes dir="${build.dir}/classes"/>
+        </war>
+    </target>
+    
+    <target name="build-all" depends="war">
+        <echo message="Copying the created war file in to the deployment directory"/>
+	<antcall target="copy-webapp"/>       
     </target>
 
+    <target name="copy-webapp">
+        <copy file="${build.dir}/${warName}" toDir="${repo.location}/webapps"/>
+    </target> 
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
 </project>

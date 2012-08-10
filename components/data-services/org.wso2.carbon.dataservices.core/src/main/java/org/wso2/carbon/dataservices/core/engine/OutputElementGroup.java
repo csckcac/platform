@@ -31,8 +31,6 @@ public class OutputElementGroup extends OutputElement {
 
     private String name;
 
-    private Set<String> requiredRoles;
-
     private List<StaticOutputElement> attributeEntries;
 
     private List<StaticOutputElement> elementEntries;
@@ -60,10 +58,10 @@ public class OutputElementGroup extends OutputElement {
     private ThreadLocal<List<OutputElement>> roleAllElements =
             new ThreadLocal<List<OutputElement>>();
 
-    public OutputElementGroup(String name, String namespace, Set<String> requiredRoles, String arrayName) {
-        super(namespace);
+    public OutputElementGroup(String name, String namespace, Set<String> requiredRoles, 
+    		String arrayName) {
+        super(namespace, requiredRoles);
         this.name = name;
-        this.requiredRoles = requiredRoles;
         this.arrayName = arrayName;
         this.allElements = new ArrayList<OutputElement>();
         this.elementEntries = new ArrayList<StaticOutputElement>();
@@ -128,14 +126,6 @@ public class OutputElementGroup extends OutputElement {
         } catch (XMLStreamException e) {
             throw new DataServiceFault(e, "Error in XML generation at OutputElementGroup.execute");
         }
-    }
-
-    public Set<String> getRequiredRoles() {
-        return requiredRoles;
-    }
-
-    public boolean isOptional() {
-        return this.getRequiredRoles() != null && this.getRequiredRoles().size() > 0;
     }
 
     /**

@@ -23,6 +23,8 @@ import org.wso2.carbon.dataservices.core.description.query.Query;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -42,7 +44,7 @@ public class CallQueryGroup extends OutputElement {
 	
 	public CallQueryGroup(List<CallQuery> callQueries) {
 		/* set namespace at init() */
-		super(null);
+		super(null, new HashSet<String>());
 		this.callQueries = callQueries;		
 	}
 		

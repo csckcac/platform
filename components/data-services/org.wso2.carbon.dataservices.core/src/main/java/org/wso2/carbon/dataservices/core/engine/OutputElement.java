@@ -27,7 +27,7 @@ import java.util.Set;
 /**
  * Represents an entity which can yield a result, i.e. elements in a result section.
  */
-public abstract class OutputElement extends XMLWriterHelper{
+public abstract class OutputElement extends XMLWriterHelper {
 
     private String arrayName;
 
@@ -37,8 +37,18 @@ public abstract class OutputElement extends XMLWriterHelper{
 
     private String param;
     
-    public OutputElement(String namespace) {
+    private Set<String> requiredRoles;
+    
+    /**
+     * This flag is used to force this output element to be optional, this is used in situations such as,
+     * the output element is in the first level of the result, and the result doesn't have a result row,
+     * and only a wrapper, in those cases, when there is no result, the output elements will be optional.
+     */
+    private boolean optionalOverride;
+
+	public OutputElement(String namespace, Set<String> requiredRoles) {
         super(namespace);
+        this.requiredRoles = requiredRoles;
     }
 
     /**
@@ -78,13 +88,26 @@ public abstract class OutputElement extends XMLWriterHelper{
     /**
      * Returns the requires roles to view this element.
      */
-    public abstract Set<String> getRequiredRoles();
+    public Set<String> getRequiredRoles() {
+    	return requiredRoles;
+    }
 
     /**
      * Checks if this element is optional,
      * if so, this has to be mentioned in the schema for WSDL generation.
      */
-    public abstract boolean isOptional();
+    public boolean isOptional() {
+		return this.isOptionalOverride()
+				|| (this.getRequiredRoles() != null && this.getRequiredRoles().size() > 0);
+    }
+    
+    public boolean isOptionalOverride() {
+		return optionalOverride;
+	}
+
+	public void setOptionalOverride(boolean optionalOverride) {
+		this.optionalOverride = optionalOverride;
+	}
 
     public String getArrayName() {
         return arrayName;

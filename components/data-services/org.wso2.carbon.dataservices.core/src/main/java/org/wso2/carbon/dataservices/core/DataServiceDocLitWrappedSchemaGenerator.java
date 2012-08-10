@@ -131,7 +131,7 @@ public class DataServiceDocLitWrappedSchemaGenerator {
                         nestedEl.setMaxOccurs(Long.MAX_VALUE);
                         addElementToComplexTypeSequence(cparams, inputComplexType,
                                 query.getInputNamespace(),
-                                nestedEl, false, false);
+                                nestedEl, false, false, false);
                     } else {
                         throw new DataServiceFault("No parent operation for batch request: "
                                 + request.getRequestName());
@@ -156,7 +156,7 @@ public class DataServiceDocLitWrappedSchemaGenerator {
                                         tmpWithParam);
                                 /* add to input element complex type */
                                 addElementToComplexTypeSequence(cparams, inputComplexType,
-                                        query.getInputNamespace(), tmpEl, false, false);
+                                        query.getInputNamespace(), tmpEl, false, false, false);
                             }
                         }
                     } else {
@@ -264,22 +264,24 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 			tmpElement = getElement(cparams, result.getNamespace(), result.getElementName());
 			if (tmpElement != null) {
 				/* the element already exists .. */
-				addToElement(cparams, activeElement, tmpElement, true, false);
+				addToElement(cparams, activeElement, tmpElement, true, false, callQuery.isOptional());
 				/* no need to continue */
 				return;
 			}
 			activeElement = createAndAddToElement(cparams, activeElement,
-					result.getElementName(), result.getNamespace(), true, false);
+					result.getElementName(), result.getNamespace(), true, false, 
+					callQuery.isOptional());			
 		}
 		/* process result row */
 		if (!DBUtils.isEmptyString(result.getRowName())) {
 			tmpElement = getElement(cparams, result.getNamespace(), result.getRowName());
 			if (tmpElement != null) {
-				addToElement(cparams, activeElement, tmpElement, true, false);
+				addToElement(cparams, activeElement, tmpElement, true, false, false);
 				return;
 			}
 			activeElement = createAndAddToElement(cparams, activeElement, 
-					result.getRowName(), result.getNamespace(), false, false);
+					result.getRowName(), result.getNamespace(), false, false,
+					callQuery.isOptional() );
 			/* rows can be from zero to infinity */
 			activeElement.setMinOccurs(0);
 			activeElement.setMaxOccurs(Long.MAX_VALUE);
@@ -303,21 +305,21 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 					elementGroup.getNamespace(), elementGroup.getName());
 			if (tmpElement != null) {
 				if (elementGroup.getArrayName() == null) {
-                    addToElement(cparams, activeElement, tmpElement, true, false);
+                    addToElement(cparams, activeElement, tmpElement, true, false, elementGroup.isOptional());
                 } else {
-                    addToElement(cparams, activeElement, tmpElement, true, true);
+                    addToElement(cparams, activeElement, tmpElement, true, true, elementGroup.isOptional());
                 }
                 /* element group already exists, nothing else to do here .. */
                 return;
 			}
 			if (elementGroup.getArrayName() != null) {
                 activeElement = createAndAddToElement(cparams, activeElement,
-                    elementGroup.getName(), elementGroup.getNamespace(), true, true);
+                    elementGroup.getName(), elementGroup.getNamespace(), true, true, elementGroup.isOptional());
             } else {
                activeElement = createAndAddToElement(cparams, activeElement,
-                    elementGroup.getName(), elementGroup.getNamespace(), true, false);
+                    elementGroup.getName(), elementGroup.getNamespace(), true, false, elementGroup.isOptional());
             }
-            /* Setting boundaries for array elements */
+			/* Setting boundaries for array elements */
             if (elementGroup.getArrayName() != null) {
                 activeElement.setMinOccurs(0);
                 activeElement.setMaxOccurs(Long.MAX_VALUE);
@@ -355,8 +357,7 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		boolean global = !parentElement.getQName().getNamespaceURI().equals(staticEl.getNamespace());
 		XmlSchemaElement tmpSchemaEl = createElement(cparams, staticEl.getNamespace(), 
 				staticEl.getName(), global);
-		tmpSchemaEl.setMinOccurs(staticEl.isOptional() ? 0 : 1);
-        if (staticEl.getArrayName() != null) {
+		if (staticEl.getArrayName() != null) {
             tmpSchemaEl.setMaxOccurs(Long.MAX_VALUE);
         } else {
             tmpSchemaEl.setMaxOccurs(1);
@@ -365,10 +366,12 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		tmpSchemaEl.setSchemaTypeName(staticEl.getXsdType());
 		if (staticEl.getArrayName() == null) {
             addElementToComplexTypeSequence(cparams, parentType,
-                    parentElement.getQName().getNamespaceURI(), tmpSchemaEl, global, false);
+                    parentElement.getQName().getNamespaceURI(), tmpSchemaEl, global, false,
+                    staticEl.isOptional());
         } else {
             addElementToComplexTypeSequence(cparams, parentType,
-                    parentElement.getQName().getNamespaceURI(), tmpSchemaEl, global, true);
+                    parentElement.getQName().getNamespaceURI(), tmpSchemaEl, global, true,
+                    staticEl.isOptional());
         }
 	}
 	
@@ -398,20 +401,22 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 	 * @return The newly added XML schema element
 	 */
 	private static XmlSchemaElement createAndAddToElement(CommonParams cparams,
-			XmlSchemaElement parentElement, String name, String namespace, boolean global, boolean isArrayElement) {		
+			XmlSchemaElement parentElement, String name, String namespace, boolean global, 
+			boolean isArrayElement, boolean optional) {		
 		XmlSchemaElement tmpElement = createElement(cparams, namespace, name, global);
 		XmlSchemaComplexType type = createComplexType(cparams, namespace, name, true);
 		tmpElement.setSchemaTypeName(type.getQName());
 		if (isArrayElement) {
-            addToElement(cparams, parentElement, tmpElement, global, true);
+            addToElement(cparams, parentElement, tmpElement, global, true, optional);
         } else {
-            addToElement(cparams, parentElement, tmpElement, global, false);
+            addToElement(cparams, parentElement, tmpElement, global, false, optional);
         }
 		return tmpElement;
 	}
 	
 	private static void addToElement(CommonParams cparams,
-			XmlSchemaElement parentElement, XmlSchemaElement element, boolean elementRef, boolean isArrayElement) {
+			XmlSchemaElement parentElement, XmlSchemaElement element, boolean elementRef, 
+			boolean isArrayElement, boolean optional) {
 		/* check if new element's namespace and parent's namespace is the same,
 		 * if it's different, this has to be forced to be element references */
 		if (!parentElement.getQName().getNamespaceURI().equals(
@@ -421,10 +426,10 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		XmlSchemaType type = extractElementSchemaType(cparams, parentElement);
 		if (isArrayElement) {
             addElementToComplexTypeSequence(cparams, (XmlSchemaComplexType) type,
-                parentElement.getQName().getNamespaceURI(), element, elementRef, true);
+                parentElement.getQName().getNamespaceURI(), element, elementRef, true, optional);
         } else {
             addElementToComplexTypeSequence(cparams, (XmlSchemaComplexType) type,
-                parentElement.getQName().getNamespaceURI(), element, elementRef, false);
+                parentElement.getQName().getNamespaceURI(), element, elementRef, false, optional);
         }
 	}
 	
@@ -565,7 +570,8 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 	 */
 	private static void addElementToComplexTypeSequence(CommonParams cparams, 
 			XmlSchemaComplexType complexType, String complexTypeNS, 
-			XmlSchemaElement element, boolean elementRef, boolean isArrayElement) {
+			XmlSchemaElement element, boolean elementRef, boolean isArrayElement,
+			boolean optional) {
 		XmlSchemaParticle particle = complexType.getParticle();
 		XmlSchemaSequence sequence;
 		if (particle instanceof XmlSchemaSequence) {
@@ -586,6 +592,7 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		} else {
 			tmpElement = element;
 		}
+		tmpElement.setMinOccurs(optional ? 0 : 1);
 		sequence.getItems().add(tmpElement);
 	}
 		

@@ -51,15 +51,12 @@ public class CallQuery extends OutputElement {
 	/* key - target query's query-param name, value - withparam */
     private Map<String, WithParam> withParams;
 
-	private Set<String> requiredRoles;
-
 	public CallQuery(DataService dataService, String queryId, Map<String, WithParam> withParams,
 			Set<String> requiredRoles) {
-        super(null);
+        super(null, requiredRoles);
 		this.dataService = dataService;
 		this.queryId = queryId;
 		this.withParams = withParams;
-		this.requiredRoles = requiredRoles;
 	}
 
 	public void init() throws DataServiceFault {
@@ -70,15 +67,7 @@ public class CallQuery extends OutputElement {
 					"Query with the query id: '" + this.getQueryId() + "' cannot be found");
 		}
 	}
-
-	public Set<String> getRequiredRoles() {
-		return requiredRoles;
-	}
-
-	public boolean isOptional() {
-		return this.getRequiredRoles() != null && this.getRequiredRoles().size() > 0;
-	}
-
+	
 	public Map<String, WithParam> getWithParams() {
 		return withParams;
 	}

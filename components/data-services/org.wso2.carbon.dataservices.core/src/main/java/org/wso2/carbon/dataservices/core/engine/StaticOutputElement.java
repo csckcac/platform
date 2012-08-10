@@ -72,11 +72,6 @@ public class StaticOutputElement extends OutputElement {
     private QName xsdType;
 
     /**
-     * user roles required to access this element
-     */
-    private Set<String> requiredRoles;
-
-    /**
      * i.e. XML, RDF etc..
      */
     private int resultType;
@@ -118,15 +113,15 @@ public class StaticOutputElement extends OutputElement {
                                String param, String originalParam, String paramType,
                                String elementType, String namespace, QName xsdType,
                                Set<String> requiredRoles, int dataCategory, int resultType,
-                               String export, int exportType, String arrayName) throws DataServiceFault {
-        super(namespace);
+                               String export, int exportType, 
+                               String arrayName) throws DataServiceFault {
+        super(namespace, requiredRoles);
         this.name = name;
         this.param = param;
         this.originalParam = originalParam;
         this.paramType = paramType;
         this.elementType = elementType;
         this.xsdType = xsdType;
-        this.requiredRoles = requiredRoles;
         this.dataCategory = dataCategory;
         this.resultType = resultType;
         this.export = export;
@@ -171,14 +166,6 @@ public class StaticOutputElement extends OutputElement {
 
     public String getOriginalParam() {
         return originalParam;
-    }
-
-    public Set<String> getRequiredRoles() {
-        return requiredRoles;
-    }
-
-    public boolean isOptional() {
-        return this.getRequiredRoles() != null && this.getRequiredRoles().size() > 0;
     }
 
     public QName getXsdType() {

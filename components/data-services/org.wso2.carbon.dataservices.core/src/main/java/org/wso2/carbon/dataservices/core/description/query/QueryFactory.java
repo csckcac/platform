@@ -579,7 +579,8 @@ public class QueryFactory {
 		addRHSChildrenToLHS(groupEl, resEl);
 		
 		/* create output element group and set it to the result */
-		OutputElementGroup defGroup = createOutputElementGroup(dataService, groupEl, namespace, result);
+		OutputElementGroup defGroup = createOutputElementGroup(dataService, groupEl, 
+				namespace, result, 0, false);
 		result.setDefaultElementGroup(defGroup);
 		
 		return result;
@@ -617,7 +618,7 @@ public class QueryFactory {
 
 	@SuppressWarnings("unchecked")
 	private static OutputElementGroup createOutputElementGroup(DataService dataService, OMElement groupEl, 
-			String parentNamespace, Result parentResult) throws DataServiceFault {
+			String parentNamespace, Result parentResult, int level, boolean optionalOverrideCurrent) throws DataServiceFault {
 		String name = groupEl.getAttributeValue(new QName(DBSFields.NAME));
 		String namespace = groupEl.getAttributeValue(new QName(DBSFields.NAMESPACE));
         String arrayName = groupEl.getAttributeValue(new QName("arrayName"));
@@ -634,28 +635,31 @@ public class QueryFactory {
 		QName cqgQName = new QName(DBSFields.CALL_QUERY_GROUP);		
 		Iterator<OMElement> resElItr = groupEl.getChildElements();
 		OMElement el;
+		boolean targetOptionalOverride = (level == 0) && (parentResult.getRowName() == null || "".equals(parentResult.getRowName()));
 		while (resElItr.hasNext()) {
 			el = resElItr.next();
 			if (el.getQName().equals(elQName) && isElementGroup(el)) {
                 elGroup.addOutputElementGroupEntry(createOutputElementGroup(dataService, el,
-                        namespace, parentResult));
+                        namespace, parentResult, ++level, optionalOverrideCurrent));
 			} else if (el.getQName().equals(elQName)) {
 				elGroup.addElementEntry(createStaticOutputElement(dataService, el, namespace,
-                        resultType));
+                        resultType, targetOptionalOverride));
 			} else if (el.getQName().equals(attrQName)) {
 				elGroup.addAttributeEntry(createStaticOutputElement(dataService, el, namespace,
-                        resultType));
+                        resultType, targetOptionalOverride));
 			} else if (el.getQName().equals(cqQName)) {
-				CallQuery callQuery = createCallQuery(dataService, el);
+				CallQuery callQuery = createCallQuery(dataService, el, targetOptionalOverride);
 				List<CallQuery> list = new ArrayList<CallQuery>();
 				list.add(callQuery);
 				CallQueryGroup cqg = new CallQueryGroup(list);
 				elGroup.addCallQueryGroupEntry(cqg);
+				cqg.setOptionalOverride(targetOptionalOverride);
 			} else if (el.getQName().equals(cqgQName)) {
-				CallQueryGroup cqg = createCallQueryGroup(dataService, el);
+				CallQueryGroup cqg = createCallQueryGroup(dataService, el, targetOptionalOverride);
 				elGroup.addCallQueryGroupEntry(cqg);
 			}
-		}		
+		}
+		elGroup.setOptionalOverride(optionalOverrideCurrent);
 		return elGroup;
 	}
 	
@@ -808,7 +812,8 @@ public class QueryFactory {
 	}
 	
 	private static StaticOutputElement createStaticOutputElement(DataService dataService, 
-			OMElement el, String namespace, int resultType)	throws DataServiceFault {
+			OMElement el, String namespace, int resultType, boolean optionalOverride) 
+	            throws DataServiceFault {
 		String name = el.getAttributeValue(new QName(DBSFields.NAME));
 		String paramType = DBSFields.COLUMN;
 		String param = el.getAttributeValue(new QName(paramType));		
@@ -882,6 +887,7 @@ public class QueryFactory {
 		StaticOutputElement soel = new StaticOutputElement(dataService, name, param, 
 				originalParam, paramType, elementType, namespace, 
 				xsdType, requiredRoles, dataCategory, resultType, export, exportType, arrayName);
+		soel.setOptionalOverride(optionalOverride);
 		return soel;
 	}
 	
@@ -920,7 +926,7 @@ public class QueryFactory {
 		List<CallQuery> cqList = null;
 		/* extract single call-queries */
 		while (callQueryElItr.hasNext()) {
-			callQuery = createCallQuery(dataService, callQueryElItr.next());
+			callQuery = createCallQuery(dataService, callQueryElItr.next(), false);
 			cqList = new ArrayList<CallQuery>();
 			cqList.add(callQuery);
 			cqGroup = new CallQueryGroup(cqList);
@@ -933,7 +939,7 @@ public class QueryFactory {
 					new QName(DBSFields.CALL_QUERY));
 			cqList = new ArrayList<CallQuery>();			
 			while (tmpCqElItr.hasNext()) {
-				callQuery = createCallQuery(dataService, tmpCqElItr.next());
+				callQuery = createCallQuery(dataService, tmpCqElItr.next(), false);
 				cqList.add(callQuery);				
 			}			
 			cqGroup = new CallQueryGroup(cqList);
@@ -944,23 +950,24 @@ public class QueryFactory {
 	
 	@SuppressWarnings("unchecked")
 	private static CallQueryGroup createCallQueryGroup(DataService dataservice,
-			OMElement el) throws DataServiceFault {
+			OMElement el, boolean optionalOverride) throws DataServiceFault {
 		Iterator<OMElement> tmpCqElItr = el.getChildrenWithName(new QName("call-query"));
 		CallQueryGroup cqGroup;
 		List<CallQuery> cqList;
 		CallQuery callQuery;
 		cqList = new ArrayList<CallQuery>();
 		while (tmpCqElItr.hasNext()) {
-			callQuery = createCallQuery(dataservice, tmpCqElItr.next());
+			callQuery = createCallQuery(dataservice, tmpCqElItr.next(), false);
 			cqList.add(callQuery);
 		}
 		cqGroup = new CallQueryGroup(cqList);
+		cqGroup.setOptionalOverride(optionalOverride);
 		return cqGroup;
 	}
 	
 	@SuppressWarnings("unchecked")
 	private static CallQuery createCallQuery(DataService dataService,
-			OMElement el) throws DataServiceFault {
+			OMElement el, boolean optionalOverride) throws DataServiceFault {
 		String queryId = el.getAttributeValue(new QName(DBSFields.HREF));
 		Map<String, WithParam> withParamList = new HashMap<String, WithParam>();
 		Iterator<OMElement> wpItr = el.getChildrenWithName(new QName(DBSFields.WITH_PARAM));
@@ -976,6 +983,7 @@ public class QueryFactory {
 		Set<String> requiredRoles = extractRequiredRoles(el);
 		
 		CallQuery callQuery = new CallQuery(dataService, queryId, withParamList, requiredRoles);
+		callQuery.setOptionalOverride(optionalOverride);
 		return callQuery;
 	}
 

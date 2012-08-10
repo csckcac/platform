@@ -271,20 +271,6 @@
                 <include>**/**.war</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>../samples/product/HelloWorldWebapp/target</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/samples/HelloWorldWebapp</outputDirectory>
-            <includes>
-                <include>*.war</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>../samples/product/TomcatWebApps/GenericJavaBeanResource/target</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/samples/TomcatWebApps/GenericJavaBeanResource</outputDirectory>
-            <includes>
-                <include>*.war</include>
-            </includes>
-        </fileSet>
 
         <!-- copy executables in samples with execute permissions -->
         <fileSet>

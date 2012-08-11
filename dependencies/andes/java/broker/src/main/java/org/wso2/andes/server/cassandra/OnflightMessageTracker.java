@@ -58,8 +58,12 @@ public class OnflightMessageTracker {
                 MsgData msgData = eldest.getValue(); 
                 boolean todelete = (System.currentTimeMillis() - msgData.timestamp) > (acktimeout*3);
                 if(todelete){
+                    if(!msgData.ackreceived){
+                        log.debug("No ack received for delivery tag " + msgData.deliveryID + " and message id "+ msgData.msgID); 
+                        //TODO notify the CassandraMessageFlusher to resend (it work now as well as flusher loops around, but this will be faster)
+                    }
                     if(deliveryTag2MsgID.remove(msgData.deliveryID) == null){
-                        log.error("Cannot find delivery tag " + msgData.deliveryID + " for message id "+ msgData.msgID);
+                        log.error("Cannot find delivery tag " + msgData.deliveryID + " and message id "+ msgData.msgID);
                     }
                 }
                 return todelete;

@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hosting.mgt.stub.ApplicationManagementServiceStub;
 import org.wso2.carbon.hosting.mgt.stub.types.carbon.FileUploadData;
-import org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPAppsWrapper;
+import org.wso2.carbon.hosting.mgt.stub.types.carbon.AppsWrapper;
 
 
 import java.rmi.RemoteException;
@@ -41,7 +41,6 @@ public class HostingAdminClient {
     private static final Log log = LogFactory.getLog(HostingAdminClient.class);
     private ResourceBundle bundle;
     public ApplicationManagementServiceStub stub;
-    private static boolean isInstanceUp = false;
 
     public HostingAdminClient( Locale locale, String cookie, ConfigurationContext configCtx,
                                String backendServerURL) throws AxisFault {
@@ -61,9 +60,9 @@ public class HostingAdminClient {
 
     }
 
-    public void uploadWebapp(FileUploadData[] fileUploadDataList) throws AxisFault {
+    public void uploadCartridgeApps(FileUploadData[] fileUploadDataList, String cartridge) throws AxisFault {
         try {
-            stub.uploadWebapp(fileUploadDataList);
+            stub.uploadApp(fileUploadDataList, cartridge);
         } catch (RemoteException e) {
             handleException("Cannot upload Web application.", e);
         }
@@ -74,78 +73,47 @@ public class HostingAdminClient {
         throw new AxisFault(msg, e);
     }
 
-    public PHPAppsWrapper getPagedPhpAppsSummary(String phpappSearchString, int pageNumber)
+    public AppsWrapper getPagedAppsSummary(String cartridge)
             throws AxisFault {
-        PHPAppsWrapper phpAppsWrapper = null;
+        AppsWrapper appsWrapper = null;
         try {
-            phpAppsWrapper = stub.getPagedPhpAppsSummary(phpappSearchString , pageNumber);
-            String[] phpApps = phpAppsWrapper.getPhpapps(); //For testing whether the PHP apps are null
+            appsWrapper = stub.getPagedAppsSummary(cartridge);
+            String[] phpApps = appsWrapper.getApps(); //For testing whether the apps are null
             if((phpApps != null && phpApps[0] == null) || phpApps == null){
-                phpAppsWrapper.setPhpapps(null);
-                phpAppsWrapper.setEndPoints(null);
+                appsWrapper.setApps(null);
+                appsWrapper.setEndPoints(null);
             }
         } catch (RemoteException e) {
-            handleException("Cannot retrieve PHP app data. Backend service may be unavailable.", e);
+            handleException("Cannot retrieve application data. Backend service may be unavailable.", e);
         }
-        return phpAppsWrapper;
+        return appsWrapper;
     }
 
 
-    public void deleteAllPhpApps() throws AxisFault {
+    public void deleteAllApps(String cartridge) throws AxisFault {
         try {
-            stub.deleteAllPhpApps();
+            stub.deleteAllApps(cartridge);
         } catch (RemoteException e) {
-            handleException("Cannot delete PHP applications. Backend service may be unavailable", e);
+            handleException("Cannot delete applications. Backend service may be unavailable", e);
         }
     }
 
-    public void deletePhpApps(String[] phpAppFileNames) throws AxisFault {
+    public void deleteApps(String[] appFileNames,String cartridge) throws AxisFault {
         try {
-            stub.deletePhpApps(phpAppFileNames) ;
+            stub.deleteApps(appFileNames, cartridge) ;
         } catch (RemoteException e) {
-            handleException("Cannot delete PHP applications. Backend service may be unavailable", e);
+            handleException("Cannot delete applications. Backend service may be unavailable", e);
         }
     }
-
-    public boolean isInstanceUp() throws AxisFault {
+    public String[] getCartridges() throws AxisFault {
         try {
-            isInstanceUp = stub.isInstanceForTenantUp();
+            String cartridges[] =  stub.getCartridgeTitles();
+            return cartridges;
         } catch (RemoteException e) {
-            String msg = "Error while calling isInstanceUp";
-            throw new AxisFault(msg);
-        }
-        return isInstanceUp;
-    }
-
-    /**
-     * Not used for this release
-     * @return
-     * @throws AxisFault
-     */
-    public String[] getBaseImages() throws AxisFault {
-        try {
-            String images[] =  stub.getImages();
-            return images;
-        } catch (RemoteException e) {
-            handleException("Error while retrieving images.", e);
+            handleException("Error while retrieving cartridges.", e);
         }
         return null;
     }
 
-    /**
-     *
-     * @param image
-     * @return
-     * @throws AxisFault
-     */
-    public String startInstance(String image) throws AxisFault {
-        String ip = "";
-          try {
-            ip =  stub.startInstance(image);
-        } catch (RemoteException e) {
-            handleException("Error while starting instance" , e);
-        }
-        return ip;
-    }
 
 }

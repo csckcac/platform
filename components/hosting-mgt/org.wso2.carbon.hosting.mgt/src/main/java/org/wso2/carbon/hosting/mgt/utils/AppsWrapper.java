@@ -15,7 +15,6 @@
  */
 package org.wso2.carbon.hosting.mgt.utils;
 
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.Pageable;
 
 import java.util.List;
@@ -23,16 +22,13 @@ import java.util.List;
 /**
  * This class holds summary information about all the webapps in the system
  */
-public final class PHPAppsWrapper implements Pageable {
-    private String[] phpapps;
+public final class AppsWrapper implements Pageable {
+    private String[] apps;
     private String[] endPoints;
-    private int numberOfPhpapps;
-    private int numberOfFaultyWebapps;
+    private int numberOfApps;
     private int numberOfPages;
-    private String webappsDir;
+    private String appsDir;
     private String hostName;
-    private int httpPort;
-    private int httpsPort;
 
     public int getNumberOfPages() {
         return numberOfPages;
@@ -43,31 +39,23 @@ public final class PHPAppsWrapper implements Pageable {
     }
 
     public <T> void set(List<T> items) {
-        this.phpapps = items.toArray(new String[items.size()]);
+        this.apps = items.toArray(new String[items.size()]);
     }
 
-    public int getNumberOfPhpapps() {
-        return numberOfPhpapps;
+    public int getNumberOfApps() {
+        return numberOfApps;
     }
 
-    public void setNumberOfPhpapps(int numberOfCorrectWebapps) {
-        this.numberOfPhpapps = numberOfCorrectWebapps;
+    public void setNumberOfApps(int numberOfCorrectWebapps) {
+        this.numberOfApps = numberOfCorrectWebapps;
     }
 
-    public int getNumberOfFaultyWebapps() {
-        return numberOfFaultyWebapps;
+    public String getAppsDir() {
+        return appsDir;
     }
 
-    public void setNumberOfFaultyWebapps(int numberOfFaultyWebapps) {
-        this.numberOfFaultyWebapps = numberOfFaultyWebapps;
-    }
-
-    public String getWebappsDir() {
-        return webappsDir;
-    }
-
-    public void setWebappsDir(String webappsDir) {
-        this.webappsDir = webappsDir;
+    public void setAppsDir(String appsDir) {
+        this.appsDir = appsDir;
     }
 
     public String getHostName() {
@@ -78,28 +66,12 @@ public final class PHPAppsWrapper implements Pageable {
         this.hostName = hostName;
     }
 
-    public int getHttpPort() {
-        return httpPort;
+    public String[] getApps() {
+        return this.apps;
     }
 
-    public void setHttpPort(int httpPort) {
-        this.httpPort = httpPort;
-    }
-
-    public int getHttpsPort() {
-        return httpsPort;
-    }
-
-    public void setHttpsPort(int httpsPort) {
-        this.httpsPort = httpsPort;
-    }
-
-    public String[] getPhpapps() {
-        return this.phpapps;
-    }
-
-    public void setPhpapps(String[] webapps) {
-        this.phpapps = webapps;
+    public void setApps(String[] Apps) {
+        this.apps = Apps;
     }
 
     public String[] getEndPoints() {

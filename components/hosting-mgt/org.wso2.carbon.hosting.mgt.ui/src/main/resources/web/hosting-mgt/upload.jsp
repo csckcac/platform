@@ -32,10 +32,9 @@
 
     String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    //HostingAdminClient client;  //Not used for this release
+    HostingAdminClient client;
     try {
-             //client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL);
-        //Not used for this release
+             client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL);
     }catch (Exception e) {
              response.setStatus(500);
              CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -57,15 +56,11 @@
                        topPage="true" request="<%=request%>"/>
     <script type="text/javascript">
         function validate() {
-        <%
-         if(!instancesUpForTenant){ //when three are no PHP apps for this tenant, we should create instance
-        %>
-            var imageSelect = document.getElementById("images");
-            if(imageSelect.options[imageSelect.selectedIndex].text == '<fmt:message key="select.image"/>'){
-                CARBON.showWarningDialog('<fmt:message key="no.selected.image"/>');
+            var cartridgeSelect = document.getElementById("cartridges");
+            if(cartridgeSelect .options[cartridgeSelect .selectedIndex].text == '<fmt:message key="select.cartridge"/>'){
+                CARBON.showWarningDialog('<fmt:message key="no.selected.cartridge"/>');
                 return;
             }
-            <%}%>
 
             if (document.webappUploadForm.warFileName.value != null) {
                 var jarinput = document.webappUploadForm.warFileName.value;
@@ -106,7 +101,7 @@
             newRow.id = 'file' + rows;
 
             var oCell = newRow.insertCell(-1);
-            oCell.innerHTML = '<label><fmt:message key="phpapp.archive"/> (.zip)<font color="red">*</font></label>';
+            oCell.innerHTML = '<label><fmt:message key="app.archive"/> (.zip)<font color="red">*</font></label>';
             oCell.className = "formRow";
 
             oCell = newRow.insertCell(-1);
@@ -125,20 +120,20 @@
     </script>
 
     <div id="middle">
-        <h2><fmt:message key="upload.web.application"/></h2>
+        <h2><fmt:message key="upload.application"/></h2>
 
         <div id="workArea">
-            <form method="post" name="webappUploadForm" action="../../fileupload/phpapp"
+            <form method="post" name="webappUploadForm" action="../../fileupload/app"
                   enctype="multipart/form-data" target="_self">
                 <input type="hidden" name="errorRedirectionPage"
                             value="../carbon/hosting-mgt/upload.jsp?region=region1&item=webapps_add_menu"/>
-                <label style="font-weight:bold;">&nbsp;<fmt:message key="upload.new.phpapp"/> (.zip)</label>
+                <label style="font-weight:bold;">&nbsp;<fmt:message key="upload.new.app"/> (.zip)</label>
                 <br/><br/>
 
                 <table class="styledLeft" id="webappTbl">
                     <tr>
                         <td class="formRow">
-                            <label><fmt:message key="phpapp.archive"/> (.zip)<font color="red">*</font></label>
+                            <label><fmt:message key="app.archive"/> (.zip)<font color="red">*</font></label>
                         </td>
                         <td class="formRow">
                             <input type="file" name="warFileName" size="50"/>&nbsp;
@@ -146,40 +141,35 @@
                         </td>
                     </tr>
                 </table>
-                <%--        Not used for this release
-                    String images[] = client.getBaseImages();
-                     instancesUpForTenant = client.isInstanceUp();
-                    if(!instancesUpForTenant){ //when three are no PHP apps for this tenant, we should create instance
-
-                        <table class="styledLeft">
-                            <tr>
-                                <td class="imageRow">
-                                    <nobr>
-                                        <fmt:message key="image"/>
-                                        <label><font color="red">*</font></label>
-                                    </nobr>
-                                </td>
-                                <td class="imageRow">
-                                    <nobr>
-                                        <select name="images" id="images">
-                                            <option value="selectAImage" selected="selected">
-                                                <fmt:message key="select.image"/>
-                                            </option>
-
-                                                for (String image : images) {
-
-                                                    <option value="<%= image%>"> <%= image%>  </option>
-
-                                                }
-
-                                        </select>
-                                    </nobr>
-                                </td>
-                            </tr>
-                        </table>
-
-                    }
-                --%>
+                 <%
+                    String cartridges[] = client.getCartridges();
+                 %>
+                <table class="styledLeft">
+                    <tr>
+                        <td class="cartridgeRow">
+                            <nobr>
+                                <fmt:message key="cartridge"/>
+                                <label><font color="red">*</font></label>
+                            </nobr>
+                        </td>
+                        <td class="cartridgeRow">
+                            <nobr>
+                                <select name="cartridges" id="cartridges">
+                                    <option value="selectACartridge" selected="selected">
+                                       <fmt:message key="select.cartridge"/>
+                                    </option>
+                                        <%
+                                        for (String cartridge : cartridges) {
+                                         %>
+                                            <option value="<%= cartridge%>"> <%= cartridge%>  </option>
+                                        <%
+                                        }
+                                         %>
+                                </select>
+                            </nobr>
+                        </td>
+                    </tr>
+                </table>
                 <table class="styledLeft">
                     <tr>
                         <td class="buttonRow">

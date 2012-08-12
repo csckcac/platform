@@ -23,9 +23,10 @@
 <%@ page import="org.wso2.carbon.hosting.mgt.ui.HostingAdminClient" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%
-    String[] phpAppFileNames = request.getParameterValues("phpappFileName");
+    String[] phpAppFileNames = request.getParameterValues("appFileName");
     String pageNumber = request.getParameter("pageNumber");
     String deleteAllPhpapps = request.getParameter("deleteAllPhpapps");
+    String cartridge = request.getParameter("cartridge");
 
     int pageNumberInt = 0;
     if (pageNumber != null) {
@@ -56,12 +57,12 @@
 
     try {
         if (deleteAllPhpapps != null) {
-            client.deleteAllPhpApps();
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.phpapps"),
+            client.deleteAllApps(cartridge);
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.all.apps"),
                                                                 CarbonUIMessage.INFO, request);
         }else {
-            client.deletePhpApps(phpAppFileNames);
-            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.phpapps"),
+            client.deleteApps(phpAppFileNames, cartridge);
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("successfully.deleted.apps"),
                                                                 CarbonUIMessage.INFO, request);
         }
 %>

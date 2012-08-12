@@ -59,22 +59,15 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
 
         List<FileItemData> tempDataList = fileItemsMap.get("warFileName");
         List<FileUploadData> fileUploadDataList = new ArrayList<FileUploadData>();
-        String selectedImage = "";
-        String publicIp = null;
-
-        if(!client.isInstanceUp()){
-            //List<String> images = getFormFieldValue("images");
-//            if(images.isEmpty() || images == null){
-//                log.error("Image is empty, Can not start instance" );
-//            } else{
-//                if(images.size() == 1){
-//                    selectedImage = images.get(0);
-                    selectedImage = "dummy"; // For this release we ony give this
-                    // option and will not let user to select image
-                    //log.info(selectedImage);
-                    publicIp = client.startInstance(selectedImage);
-//                }
-//            }
+        String selectedCartridge = "";
+        List<String> cartridge = getFormFieldValue("cartridges");
+        if(cartridge.isEmpty() || cartridge == null){
+            log.error("Cartridge is empty, Can not upload file" );
+            return false;
+        } else{
+            if(cartridge.size() == 1){
+                selectedCartridge = cartridge.get(0);
+            }
         }
         try {
             for (FileItemData filedata : tempDataList) {
@@ -85,16 +78,8 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
                 fileUploadDataList.add(tempData);
             }
 
-            client.uploadWebapp(fileUploadDataList.toArray(new FileUploadData[fileUploadDataList.size()]));
-
-            //response.setContentType("text/html; charset=utf-8");
-            if(publicIp != null){
-                msg = "PHP application has been uploaded successfully. Instance is spawned and " +
-                      "public ip of the instance is: " + publicIp;
-            }   else{
-                msg = "PHP application has been uploaded successfully.";
-            }
-
+            client.uploadCartridgeApps(fileUploadDataList.toArray(new FileUploadData[fileUploadDataList.size()]), selectedCartridge);
+            msg = "Application has been uploaded successfully.";
 
             CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
                                                 "../" + webContext + "/hosting-mgt/index.jsp");

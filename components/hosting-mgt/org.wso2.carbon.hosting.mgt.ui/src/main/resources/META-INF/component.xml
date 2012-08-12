@@ -18,8 +18,8 @@
 <component xmlns="http://products.wso2.org/carbon">
     <menus>
         <menu>
-            <id>phpapps_menu</id>
-            <i18n-key>phpappmgt.services.menu</i18n-key>
+            <id>apps_menu</id>
+            <i18n-key>appmgt.services.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.hosting.mgt.ui.i18n.Resources</i18n-bundle>
             <parent-menu>manage_menu</parent-menu>
             <link>#</link>
@@ -30,10 +30,10 @@
             <require-permission>/permission/admin/manage/manage/webapp</require-permission>
         </menu>
         <menu>
-            <id>phpapps_list_menu</id>
-            <i18n-key>phpappmgt.listservices.menu</i18n-key>
+            <id>apps_list_menu</id>
+            <i18n-key>appmgt.listservices.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.hosting.mgt.ui.i18n.Resources</i18n-bundle>
-            <parent-menu>phpapps_menu</parent-menu>
+            <parent-menu>apps_menu</parent-menu>
             <link>../hosting-mgt/index.jsp</link>
             <region>region1</region>
             <order>3</order>
@@ -42,10 +42,10 @@
             <require-permission>/permission/admin/manage/manage/webapp</require-permission>
         </menu>
         <menu>
-            <id>phpapps_add_menu</id>
-            <i18n-key>phpappmgt.add.phpapp.menu</i18n-key>
+            <id>apps_add_menu</id>
+            <i18n-key>appmgt.add.app.menu</i18n-key>
             <i18n-bundle>org.wso2.carbon.hosting.mgt.ui.i18n.Resources</i18n-bundle>
-            <parent-menu>phpapps_menu</parent-menu>
+            <parent-menu>apps_menu</parent-menu>
             <link>../hosting-mgt/upload.jsp</link>
             <region>region1</region>
             <order>10</order>
@@ -58,7 +58,7 @@
     <FileUploadConfig>
         <Mapping>
             <Actions>
-                <Action>phpapp</Action>
+                <Action>app</Action>
             </Actions>
             <Class>org.wso2.carbon.hosting.mgt.ui.ZipFileUploadExecutor</Class>
         </Mapping>

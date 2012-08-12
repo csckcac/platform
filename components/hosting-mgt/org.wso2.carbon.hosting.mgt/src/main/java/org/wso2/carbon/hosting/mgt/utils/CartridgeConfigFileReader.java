@@ -8,15 +8,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.utils.CarbonUtils;
 
-public class PHPCartridgeConfigFileReader {
+public class CartridgeConfigFileReader {
 	
 	private static String carbonHome = CarbonUtils.getCarbonHome();
 	
-    private static final Log log = LogFactory.getLog(PHPCartridgeConfigFileReader.class);
+    private static final Log log = LogFactory.getLog(CartridgeConfigFileReader.class);
 
 	/**
 	 * 
-	 * Reads php-cartridge-config.properties file and assign properties
+	 * Reads cartridge-config.properties file and assign properties
 	 * to system properties
 	 * 
 	 */
@@ -25,7 +25,7 @@ public class PHPCartridgeConfigFileReader {
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(carbonHome + File.separator + "repository" +
-					File.separator + "conf" + File.separator + "php-cartridge-config.properties"));
+					File.separator + "conf" + File.separator + "cartridge-config.properties"));
 		} catch (Exception e) {
 			log.error("Exception is occurred in reading properties file. Reason:" + e.getMessage());
 		}		

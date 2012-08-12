@@ -7,6 +7,7 @@ package org.wso2.carbon.hosting.mgt.service;
 import org.apache.axis2.AxisFault;
 import org.wso2.carbon.hosting.mgt.internal.Store;
 import org.wso2.carbon.hosting.mgt.openstack.db.OpenstackDAO;
+import org.wso2.carbon.hosting.mgt.utils.CartridgeConstants;
 import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,9 +18,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.hosting.mgt.clients.AutoscaleServiceClient;
-import org.wso2.carbon.hosting.mgt.utils.PHPAppsWrapper;
-import org.wso2.carbon.hosting.mgt.utils.PHPCartridgeConstants;
+import org.wso2.carbon.hosting.mgt.utils.AppsWrapper;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 
@@ -30,49 +29,29 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 public class ApplicationManagementService extends AbstractAdmin{
 
     private static final Log log = LogFactory.getLog(ApplicationManagementService.class);
-    public static final String FILE_DEPLOYMENT_FOLDER = "phpapps";
-    AutoscaleServiceClient client;
-//    HashMap<String, String> imageIdtoNameMap;  to active for next release
-    OpenstackDAO openstackDAO;
 
     /**
-     * Here in the constructor it call init Autoscaler due to requirement of calling init before any
-     * operation
-     * @throws AxisFault
-     */
-    public ApplicationManagementService() throws AxisFault{
-//        imageIdtoNameMap = new HashMap<String, String>(); to active for next release
-        client = new AutoscaleServiceClient(System.getProperty(PHPCartridgeConstants.AUTOSCALER_SERVICE_URL));
-        try {
-            client.init(true);
-        } catch (Exception e) {
-            throw new AxisFault(e.getMessage(), e);
-        }
-    }
-
-
-    /**
-         * Upload PHP apps passed to method. Will be uploaded to the directory relevant to tenant
+         * Upload apps passed to method. Will be uploaded to the directory relevant to tenant
          *
-         * @param fileUploadDataList Array of data representing the PHP apps(.zip) that are to be uploaded
+         * @param fileUploadDataList Array of data representing the apps(.zip) that are to be uploaded
          * @return true - if upload was successful
          * @throws org.apache.axis2.AxisFault If an error occurs while uploading
          */
-    public boolean uploadWebapp(FileUploadData[] fileUploadDataList ) throws AxisFault {
-        File phpAppsDir = new File(getWebappDeploymentDirPath());
+    public boolean uploadApp(FileUploadData[] fileUploadDataList, String cartridge) throws AxisFault {
+        File appsDir = new File(getAppDeploymentDirPath(cartridge));
 
-        if (!phpAppsDir.exists() && !phpAppsDir.mkdirs()) {
-            log.warn("Could not create directory " + phpAppsDir.getAbsolutePath());
+        if (!appsDir.exists() && !appsDir.mkdirs()) {
+            log.warn("Could not create directory " + appsDir.getAbsolutePath());
         }
         for (FileUploadData uploadData : fileUploadDataList) {
             String fileName = uploadData.getFileName();
-            File destFile = new File(phpAppsDir, fileName);
+            File destFile = new File(appsDir, fileName);
             FileOutputStream fos = null;
             try {
                 fos = new FileOutputStream(destFile);
                 uploadData.getDataHandler().writeTo(fos);
             } catch (IOException e) {
-                handleException("Error occurred while uploading the PHP application " + fileName, e);
+                handleException("Error occurred while uploading the application " + fileName, e);
             } finally {
                 try {
                     if (fos != null) {
@@ -95,25 +74,25 @@ public class ApplicationManagementService extends AbstractAdmin{
     }
 
 
-    protected String getWebappDeploymentDirPath() {
-        return getAxisConfig().getRepository().getPath() + File.separator + FILE_DEPLOYMENT_FOLDER;
+    protected String getAppDeploymentDirPath(String cartridge) {
+        return getAxisConfig().getRepository().getPath() + File.separator + cartridge.toLowerCase();
     }
 
     /**
      * Retrieve and display the applications from the directory relevant to tenant
      */
-    public String[] listPhpApplications() {
-        String phpAppPath = getWebappDeploymentDirPath();
-        File phpAppDirectory = new File(phpAppPath);
+    private String[] listApplications(String cartridge) {
+        String appPath = getAppDeploymentDirPath(cartridge);
+        File appDirectory = new File(appPath);
         String[] children;
-        if(phpAppDirectory.exists()){
+        if(appDirectory.exists()){
             // This return any files that ends with '.zip'.
             FilenameFilter filter = new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return name.endsWith(".zip");
                 }
             };
-            children = phpAppDirectory.list(filter);
+            children = appDirectory.list(filter);
             if(children.length == 0){
                 children = null;
             }else {
@@ -129,43 +108,37 @@ public class ApplicationManagementService extends AbstractAdmin{
     }
 
     /**
-     * returns a summery of the PHP apps deployed in the directory relevant to tenant
-     * @param phpAppSearchString search is not implemented yet
-     * @param pageNumber
+     * returns a summery of the apps deployed in the directory relevant to tenant
      * @return
      */
-    public PHPAppsWrapper getPagedPhpAppsSummary(String phpAppSearchString, int pageNumber){
-         PHPAppsWrapper phpAppsWrapper = new PHPAppsWrapper();
-        String[] phpApps= listPhpApplications();
-        phpAppsWrapper.setPhpapps(phpApps);
-        phpAppsWrapper.setEndPoints(getEndPoints(phpApps));
-        phpAppsWrapper.setNumberOfPages(1);
-        return phpAppsWrapper;
+    public AppsWrapper getPagedAppsSummary(String cartridge){
+         AppsWrapper appsWrapper = new AppsWrapper();
+        String[] apps= listApplications(cartridge);
+        appsWrapper.setApps(apps);
+        appsWrapper.setEndPoints(getEndPoints(apps));
+        appsWrapper.setNumberOfPages(1);
+        return appsWrapper;
     }
 
     /**
      * End points relevant to different applications according to the instance, or if instance is
      * not there an error mesage
-     * @param phpApps
+     * @param apps
      * @return
      */
-    private String[] getEndPoints(String[] phpApps) {
+    private String[] getEndPoints(String[] apps) {
         String[] endPoints;
-        if(phpApps != null){
-            endPoints = new String[phpApps.length];
+        if(apps != null){
+            endPoints = new String[apps.length];
             int tenantId = MultitenantUtils.getTenantId(getConfigContext());
             String tenantIdentityForUrl = "";
             if(tenantId != -1234) {
                tenantIdentityForUrl = "/t/" + tenantId ;
             }
             for(int i = 0; i < endPoints.length; i++){
-                if(isInstanceForTenantUp()){
                     String publicIp = Store.tenantToPublicIpMap.get(tenantId);
-                    endPoints[i] = "http://" + publicIp + tenantIdentityForUrl + "/" + phpApps[i]
-                                   + "/" + phpApps[i] + ".php";
-                }    else{
-                    endPoints[i] = "Endpoint could not be allocated. Please contact your administrator";
-                }
+                    endPoints[i] = "http://" + publicIp + tenantIdentityForUrl + "/" + apps[i]
+                                   + "/" + apps[i] + ".php";
             }
         }   else {
             endPoints = null;
@@ -174,94 +147,27 @@ public class ApplicationManagementService extends AbstractAdmin{
     }
 
 
-    public void deleteAllPhpApps(){
-        deleteApps(listPhpApplications());
+    public void deleteAllApps(String cartridge){
+        deleteFromDirectory(listApplications(cartridge), cartridge);
     }
 
-    public void deletePhpApps(String[] phpAppFileNames){
-        deleteApps(phpAppFileNames);
+    public void deleteApps(String[] appFileNames, String cartridge){
+        deleteFromDirectory(appFileNames, cartridge);
     }
 
-    private void deleteApps(String phpApps[]){
-        File phpAppFile;
-        for (String phpApp : phpApps) {
-            phpAppFile = new File(getWebappDeploymentDirPath() +  File.separator + phpApp + ".zip");
-            phpAppFile.delete();
-        }
-        if(listPhpApplications() == null && isInstanceForTenantUp()){
-            Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-            String privateIp = Store.tenantToPrivateIpMap.get(tenantId);
-            String publicIp = Store.tenantToPublicIpMap.get(tenantId);
-            try {
-                log.info(" Terminating instance. IP :" + publicIp);
-                client.terminateSpiInstance(privateIp);
-                Store.tenantToPublicIpMap.remove(tenantId);
-                Store.tenantToPrivateIpMap.remove(tenantId);
-                Store.privateIpToTenantMap.remove(privateIp);
-            } catch (Exception e) {
-                log.error("Error while terminating instance");
-            }
+    private void deleteFromDirectory(String apps[], String cartridge){
+        File appFile;
+        for (String app : apps) {
+            appFile = new File(getAppDeploymentDirPath(cartridge) +  File.separator + app + ".zip");
+            appFile.delete();
         }
     }
 
-    public String startInstance(String image){
-        //passed value will be ignored for this release
-        String imageId = "";
-        String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
-        String[] imagesToNameArray = imageIdsString.split(",");
-        if (imagesToNameArray != null) {
-            String imageArray[] = imageIdsString.split(":");
-            imageId = imageArray[1];
-        }
-        //Above code will get first one from images of configuration for this release
-        Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-        log.info("An instance is spawning using Auto scaler for tenant " + tenantId);
-        String publicIp = "";
-        openstackDAO = new OpenstackDAO();
-        try{
-            String modifiedDomainWithTenantId = System.getProperty("php.domain") + "/t/" + tenantId;
-            // FIXME for now we're passing null as the sub domain, please fix appropriately
-            String privateIp = client.startInstance( modifiedDomainWithTenantId , null, imageId);
-            Store.tenantToPrivateIpMap.put(tenantId, privateIp);
-            publicIp = openstackDAO.getPublicIp(privateIp);
-            Store.privateIpToTenantMap.put(privateIp, tenantId);
-            Store.tenantToPublicIpMap.put(tenantId, publicIp);
-            log.info("Started Instance public ip is " + publicIp);
-        }catch (Exception e){
-            String msg = "Error while calling auto scaler to start instance. Reason :" + e.getMessage();
-            log.error(msg);
-        }
-
-        return publicIp;
+    public String[] getCartridgeTitles(){
+        String cartridgeTitles[];
+        String imageIdsString = System.getProperty(CartridgeConstants.CARTRIDGE_TITLES);
+        cartridgeTitles = imageIdsString.split(",");
+        return cartridgeTitles;
     }
-
-    public boolean isInstanceForTenantUp(){
-        Integer tenantId = MultitenantUtils.getTenantId(getConfigContext());
-        if(Store.privateIpToTenantMap.containsValue(tenantId)){
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Not used for this release
-     * @return
-     */
-//    public String[] getImages(){
-//        String imageNames[];
-//        String[] apps = listPhpApplications();
-//        if(!isInstanceForTenantUp()){
-//            String imageIdsString = System.getProperty(PHPCartridgeConstants.OPENSTACK_INSTANCE_IMAGE_IDS);
-//            String[] imagesToNameArray = imageIdsString.split(",");
-//            for (String image : imagesToNameArray) {
-//                String imageArray[] = image.split(":");
-//                imageIdtoNameMap.put(imageArray[0], imageArray[1]);
-//            }
-//            imageNames = imageIdtoNameMap.keySet().toArray(new String[imageIdtoNameMap.size()]);
-//        } else {
-//            imageNames = null;
-//        }
-//        return imageNames;
-//    }
 
 }

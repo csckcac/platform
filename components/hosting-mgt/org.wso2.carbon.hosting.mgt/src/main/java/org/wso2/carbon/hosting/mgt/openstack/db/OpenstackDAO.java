@@ -10,7 +10,7 @@ import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.hosting.mgt.utils.PHPCartridgeConstants;
+import org.wso2.carbon.hosting.mgt.utils.CartridgeConstants;
 
 public class OpenstackDAO {
 
@@ -39,10 +39,10 @@ public class OpenstackDAO {
 	private void init() {
 		try {
 		Class.forName(driver);
-		con = DriverManager.getConnection(System.getProperty(PHPCartridgeConstants.OPENSTACK_DB_URL) 
-				+ System.getProperty(PHPCartridgeConstants.OPENSTACK_DB_SCHEMA),
-					System.getProperty(PHPCartridgeConstants.OPENSTACK_DB_USERNAME),
-					System.getProperty(PHPCartridgeConstants.OPENSTACK_DB_PASSWORD));
+		con = DriverManager.getConnection(System.getProperty(CartridgeConstants.OPENSTACK_DB_URL)
+				+ System.getProperty(CartridgeConstants.OPENSTACK_DB_SCHEMA),
+					System.getProperty(CartridgeConstants.OPENSTACK_DB_USERNAME),
+					System.getProperty(CartridgeConstants.OPENSTACK_DB_PASSWORD));
 		} catch (Exception e) {
 			logDBAccessException(e);
 		}
@@ -62,7 +62,7 @@ public class OpenstackDAO {
 			String selectIpQuery =
 						"SELECT address FROM fixed_ips f where instance_id in " +
 						"(SELECT id FROM instances where datediff(curdate(), created_at) > "+ 
-						System.getProperty(PHPCartridgeConstants.OPENSTACK_FREE_ACCOUNT_MAX_DAYS) +
+						System.getProperty(CartridgeConstants.OPENSTACK_FREE_ACCOUNT_MAX_DAYS) +
 						" and deleted = '0' and hostname like '%wso2-php-domain%')";
 			
 			pst = con.prepareStatement(selectIpQuery);

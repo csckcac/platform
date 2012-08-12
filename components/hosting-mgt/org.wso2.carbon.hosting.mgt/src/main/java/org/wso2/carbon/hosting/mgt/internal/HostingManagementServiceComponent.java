@@ -18,8 +18,7 @@ package org.wso2.carbon.hosting.mgt.internal;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
-import org.wso2.carbon.hosting.mgt.scheduler.InstanceCleanupScheduler;
-import org.wso2.carbon.hosting.mgt.utils.PHPCartridgeConfigFileReader;
+import org.wso2.carbon.hosting.mgt.utils.CartridgeConfigFileReader;
 import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
@@ -41,8 +40,7 @@ public class HostingManagementServiceComponent {
 
 
     protected void activate(ComponentContext ctx) {
-    	PHPCartridgeConfigFileReader.readProperties();
-    	InstanceCleanupScheduler.schedule();
+    	CartridgeConfigFileReader.readProperties();
     }
 
     protected void deactivate(ComponentContext ctx) {

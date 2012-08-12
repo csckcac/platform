@@ -24,7 +24,7 @@
 <%@ taglib uri="http://wso2.org/projects/carbon/taglibs/carbontags.jar" prefix="carbon" %>
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.hosting.mgt.ui.HostingAdminClient" %>
-<%@ page import="org.wso2.carbon.hosting.mgt.stub.types.carbon.PHPAppsWrapper" %>
+<%@ page import="org.wso2.carbon.hosting.mgt.stub.types.carbon.AppsWrapper" %>
 <jsp:include page="../dialog/display_messages.jsp"/>
 
 <%
@@ -47,23 +47,21 @@
     } catch (NumberFormatException ignored) {
     }
 
-    PHPAppsWrapper phpAppsWrapper;
-    String[] phpApps;
+    AppsWrapper appsWrapper;
+    String[] apps;
     String[] endPoints;
-    String publicIp = "";
 
-    String phpappSearchString = request.getParameter("phpappSearchString");
-    if (phpappSearchString == null) {
-        phpappSearchString = "";
+    String cartridgeTitle = request.getParameter("cartridges");
+    if (cartridgeTitle == null) {
+        cartridgeTitle = "";
     }
     try {
          client = new HostingAdminClient(request.getLocale(),cookie, configContext, serverURL );
-         phpAppsWrapper = client.getPagedPhpAppsSummary(phpappSearchString,
-                                                        Integer.parseInt(pageNumber));
-         numberOfPages = phpAppsWrapper.getNumberOfPages();
-        //get the php app list and endpoints list
-         phpApps = phpAppsWrapper.getPhpapps();
-         endPoints = phpAppsWrapper.getEndPoints();
+         appsWrapper = client.getPagedAppsSummary(cartridgeTitle);
+         numberOfPages = appsWrapper.getNumberOfPages();
+        //get the app list and endpoints list
+         apps = appsWrapper.getApps();
+         endPoints = appsWrapper.getEndPoints();
     } catch (Exception e) {
          response.setStatus(500);
          CarbonUIMessage uiMsg = new CarbonUIMessage(CarbonUIMessage.ERROR, e.getMessage(), e);
@@ -72,9 +70,9 @@
 <jsp:include page="../admin/error.jsp"/>
     <%
         return;
-    }   int numOfPhpapps = 0;
-        if(phpApps != null){
-            numOfPhpapps = phpApps.length;
+    }   int numOfapps = 0;
+        if(apps != null){
+            numOfapps = apps.length;
         }
             ResourceBundle bundle = ResourceBundle.getBundle(HostingAdminClient.BUNDLE, request.getLocale());
     %>
@@ -89,55 +87,55 @@
 <script type="text/javascript">
 
     var allPhpAppsSelected = false;
-    function isPHPappSelected() {
+    function isAppSelected() {
         var selected = false;
-        if (document.phpappsForm.phpappFileName[0] != null) { // there is more than 1
-            for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
-                selected = document.phpappsForm.phpappFileName[j].checked;
+        if (document.appsForm.appFileName[0] != null) { // there is more than 1
+            for (var j = 0; j < document.appsForm.appFileName.length; j++) {
+                selected = document.appsForm.appFileName[j].checked;
                 if (selected) break;
             }
-        } else if (document.phpappsForm.name != null) { // only 1
-            selected = document.phpappsForm.phpappFileName.checked;
+        } else if (document.appsForm.name != null) { // only 1
+            selected = document.appsForm.appFileName.checked;
         }
         return selected;
     }
 
     function selectAllInThisPage(isSelected) {
         allPhpAppsSelected = false;
-        if (document.phpappsForm.phpappFileName != null &&
-            document.phpappsForm.phpappFileName[0] != null) { // there is more than 1
+        if (document.appsForm.appFileName != null &&
+            document.appsForm.appFileName[0] != null) { // there is more than 1
             if (isSelected) {
-                for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
-                    document.phpappsForm.phpappFileName[j].checked = true;
+                for (var j = 0; j < document.appsForm.appFileName.length; j++) {
+                    document.appsForm.appFileName[j].checked = true;
                 }
             } else {
-                for (j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
-                    document.phpappsForm.phpappFileName[j].checked = false;
+                for (j = 0; j < document.appsForm.appFileName.length; j++) {
+                    document.appsForm.appFileName[j].checked = false;
                 }
             }
-        } else if (document.phpappsForm.phpappFileName != null) { // only 1
-            document.phpappsForm.phpappFileName.checked = isSelected;
+        } else if (document.appsForm.appFileName != null) { // only 1
+            document.appsForm.appFileName.checked = isSelected;
         }
         return false;
     }
 
-    function deletePHPapps() {
-        var selected = isPHPappSelected();
+    function deleteApps() {
+        var selected = isAppSelected();
         if (!selected) {
-            CARBON.showInfoDialog('<fmt:message key="select.phpapps.to.be.deleted"/>');
+            CARBON.showInfoDialog('<fmt:message key="select.apps.to.be.deleted"/>');
             return;
         }
         if (allPhpAppsSelected) {
-            CARBON.showConfirmationDialog("<fmt:message key="delete.all.phpapps.prompt"><fmt:param value="<%= numOfPhpapps%>"/></fmt:message>",
-                              function() {
-                                  location.href = 'delete_phpapps.jsp?deleteAllPhpapps=true';
-                              }
+            CARBON.showConfirmationDialog("<fmt:message key="delete.all.apps.prompt"><fmt:param value="<%= numOfapps%>"/></fmt:message>",
+              function() {
+                  location.href = 'delete_apps.jsp?deleteAllapps=true&cartridge=<%=cartridgeTitle%>';
+              }
         );
         } else {
-            CARBON.showConfirmationDialog("<fmt:message key="delete.phpapps.on.page.prompt"/>",
+            CARBON.showConfirmationDialog("<fmt:message key="delete.apps.on.page.prompt"/>",
                 function() {
-                  document.phpappsForm.action = 'delete_phpapps.jsp';
-                  document.phpappsForm.submit();
+                  document.appsForm.action = 'delete_apps.jsp?cartridge=<%=cartridgeTitle%>';
+                  document.appsForm.submit();
                 }
             );
         }
@@ -154,14 +152,14 @@
         allPhpAppsSelected = false;
 
         var isSelected = false;
-        if (document.phpappsForm.phpappFileName[0] != null) { // there is more than 1 sg
-            for (var j = 0; j < document.phpappsForm.phpappFileName.length; j++) {
-                if (document.phpappsForm.phpappFileName[j].checked) {
+        if (document.appsForm.appFileName[0] != null) { // there is more than 1 sg
+            for (var j = 0; j < document.appsForm.appFileName.length; j++) {
+                if (document.appsForm.appFileName[j].checked) {
                     isSelected = true;
                 }
             }
-        } else if (document.phpappsForm.phpappFileName != null) { // only 1 sg
-            if (document.phpappsForm.phpappFileName.checked) {
+        } else if (document.appsForm.appFileName != null) { // only 1 sg
+            if (document.appsForm.appFileName.checked) {
                 isSelected = true;
             }
         }
@@ -171,71 +169,68 @@
 
 
 <script type="text/javascript">
-    function searchPhpapps() {
-        document.searchForm.submit();
+    function listApps() {
+        document.listForm.submit();
     }
 </script>
 
 <div id="middle">
-<h2><fmt:message key="phpapps"/></h2>
+
+
+
+<h2><fmt:message key="apps"/></h2>
 
 <div id="workArea">
+    <%
+        String cartridges[] = client.getCartridges();
+     %>
+    <form action="index.jsp" name="listForm">
+        <table class="styledLeft">
+            <tr>
+                <td width="30px" class="cartridgeRow">
+                    <nobr>
+                        <fmt:message key="cartridge"/>
+                        <label><font color="red">*</font></label>
+                    </nobr>
+                </td>
+                <td class="cartridgeRow">
+                    <nobr>
+                        <select name="cartridges" id="cartridges">
+                            <option value="selectACartridge" selected="selected">
+                               <fmt:message key="select.cartridge"/>
+                            </option>
+                                <%
+                                for (String cartridge : cartridges) {
+                                 %>
+                                    <option value="<%= cartridge%>"> <%= cartridge%>  </option>
+                                <%
+                                }
+                                 %>
+                        </select>
+                    </nobr>
+                </td>
+                <td class="buttonRow">
+                    <input type="button" class="button"
+                           onclick="listApps(); return false;"
+                           value=" <fmt:message key="list"/> "/>
+                </td>
+            </tr>
+        </table>
+    </form>
 
-<form action="index.jsp" name="searchForm">
-    <table class="styledLeft">
-        <tr>
-            <td style="border:0; !important">
-                <nobr>
-                    <%= numOfPhpapps%> <fmt:message key="phpapps"/>.&nbsp;
-                </nobr>
-            </td>
-        </tr>
-        <tr>
-            <td style="border:0; !important">&nbsp;</td>
-        </tr>
-        <tr>
-            <td>
-                <table style="border:0; !important">
-                    <tbody>
-                    <tr style="border:0; !important">
-                        <td style="border:0; !important">
-                            <nobr>
-                                <fmt:message key="search.phpapps"/>
-                                <input type="text" name="phpappSearchString"
-                                       value="<%= phpappSearchString != null? phpappSearchString : ""%>"/>&nbsp;
-                            </nobr>
-                        </td>
-                        <td style="border:0; !important">
-                            <a class="icon-link" href="#"
-                               style="background-image: url(images/search.gif);"
-                               onclick="searchPhpapps(); return false;"
-                               alt="<fmt:message key="search"/>">
-                            </a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-    </table>
-</form>
+
+    <%
+       if (apps != null && cartridgeTitle != null && cartridgeTitle != "") {
+   %>
 
 <p>&nbsp;</p>
-   <%
-       if (phpApps != null) {
-           if(!client.isInstanceUp()){
-               publicIp = client.startInstance("dummy"); //real image will selected from backend for this release
-           }
-           String parameters = "phpappSearchString=" + phpappSearchString;
-
-
-   %>
+    <p><strong><%=cartridgeTitle%> Applications</strong></p>
+    <p>&nbsp;</p>
 
    <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
                      page="index.jsp" pageNumberParameterName="pageNumber"
                      resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
-                     prevKey="prev" nextKey="next"
-                     parameters="<%=parameters%>"/>
+                     prevKey="prev" nextKey="next"/>
 
    <carbon:itemGroupSelector selectAllInPageFunction="selectAllInThisPage(true)"
                              selectAllFunction="selectAllInAllPages()"
@@ -244,37 +239,40 @@
                              selectAllInPageKey="selectAllInPage"
                              selectAllKey="selectAll"
                              selectNoneKey="selectNone"
-                             addRemoveFunction="deletePHPapps()"
+                             addRemoveFunction="deleteApps()"
                              addRemoveButtonId="delete1"
                              addRemoveKey="delete"
                              numberOfPages="<%=numberOfPages%>"/>
    <p>&nbsp;</p>
-<form action="delete_phpapps.jsp" name="phpappsForm" method="post">
+
+
+
+<form action="delete_apps.jsp" name="appsForm" method="post">
 <input type="hidden" name="pageNumber" value="<%= pageNumber%>"/>
 <table class="styledLeft" id="webappsTable" width="100%">
     <thead>
     <tr>
         <th width="10px"></th>
         <th><fmt:message key="name"/></th>
-        <th><fmt:message key="endpoint"/></th>
+        <!--th--><!--fmt:message key="endpoint"/--><!--/th-->
     </tr>
     </thead>
     <tbody>
     <%
-        for (int i=0; i<phpApps.length; i++) {
+        for (int i=0; i< apps.length; i++) {
     %>
     <tr>
         <td width="10px" style="text-align:center; !important">
-                        <input type="checkbox" name="phpappFileName"
-                               value="<%=phpApps[i]%>"
+                        <input type="checkbox" name="appFileName"
+                               value="<%=apps[i]%>"
                                onclick="resetVars()" class="chkBox"/>
         </td>
         <td>
-            <%=phpApps[i]%>
+            <%=apps[i]%>
         </td>
-        <td>
-            <%=endPoints[i]%>
-        </td>
+        <!--td-->
+            <!--%=endPoints[i]%-->
+        <!--/td-->
     </tr>
     <% } %>
     </tbody>
@@ -290,22 +288,21 @@
                           selectAllInPageKey="selectAllInPage"
                           selectAllKey="selectAll"
                           selectNoneKey="selectNone"
-                          addRemoveFunction="deletePHPapps()"
+                          addRemoveFunction="deleteApps()"
                           addRemoveButtonId="delete2"
                           addRemoveKey="delete"
                           numberOfPages="<%=numberOfPages%>"/>
 <carbon:paginator pageNumber="<%=pageNumberInt%>" numberOfPages="<%=numberOfPages%>"
                   page="index.jsp" pageNumberParameterName="pageNumber"
                   resourceBundle="org.wso2.carbon.hosting.mgt.ui.i18n.Resources"
-                  prevKey="prev" nextKey="next"
-                  parameters="<%= parameters%>"/>
+                  prevKey="prev" nextKey="next"/>
 <%
-} else {
+}
 %>
-<b><fmt:message key="no.phpapps.found"/></b>
-<%
-    }
-%>
+
 </div>
+
+
+
 </div>
 </fmt:bundle>

@@ -8,204 +8,125 @@
                     <xs:element minOccurs="0" name="fileName" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
-            <xs:complexType name="PHPAppsWrapper">
+            <xs:complexType name="AppsWrapper">
                 <xs:sequence>
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="apps" nillable="true" type="xs:string" />
+                    <xs:element minOccurs="0" name="appsDir" nillable="true" type="xs:string" />
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="endPoints" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="httpPort" type="xs:int" />
-                    <xs:element minOccurs="0" name="httpsPort" type="xs:int" />
-                    <xs:element minOccurs="0" name="numberOfFaultyWebapps" type="xs:int" />
+                    <xs:element minOccurs="0" name="numberOfApps" type="xs:int" />
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
-                    <xs:element minOccurs="0" name="numberOfPhpapps" type="xs:int" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="phpapps" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="webappsDir" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
         </xs:schema>
         <xs:schema xmlns:ax2127="http://utils.mgt.hosting.carbon.wso2.org/xsd" xmlns:ns="http://org.apache.axis2/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
             <xs:import namespace="http://utils.mgt.hosting.carbon.wso2.org/xsd" />
-            <xs:element name="uploadWebapp">
+            <xs:element name="uploadApp">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element maxOccurs="unbounded" minOccurs="0" name="fileUploadDataList" nillable="true" type="ax2127:FileUploadData" />
+                        <xs:element minOccurs="0" name="cartridge" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="uploadWebappResponse">
+            <xs:element name="uploadAppResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="startInstance">
+            <xs:element name="getPagedAppsSummary">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="image" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cartridge" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="startInstanceResponse">
+            <xs:element name="getPagedAppsSummaryResponse">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2127:AppsWrapper" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="listPhpApplications">
+            <xs:element name="getCartridgeTitles">
                 <xs:complexType>
                     <xs:sequence />
                 </xs:complexType>
             </xs:element>
-            <xs:element name="listPhpApplicationsResponse">
+            <xs:element name="getCartridgeTitlesResponse">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="isInstanceForTenantUp">
-                <xs:complexType>
-                    <xs:sequence />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="isInstanceForTenantUpResponse">
+            <xs:element name="deleteApps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="appFileNames" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="cartridge" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="initAutoscaler">
-                <xs:complexType>
-                    <xs:sequence />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getPagedPhpAppsSummary">
+            <xs:element name="deleteAllApps">
                 <xs:complexType>
                     <xs:sequence>
-                        <xs:element minOccurs="0" name="phpAppSearchString" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="pageNumber" type="xs:int" />
+                        <xs:element minOccurs="0" name="cartridge" nillable="true" type="xs:string" />
                     </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getPagedPhpAppsSummaryResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="return" nillable="true" type="ax2127:PHPAppsWrapper" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getImages">
-                <xs:complexType>
-                    <xs:sequence />
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getImagesResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deletePhpApps">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="phpAppFileNames" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="deleteAllPhpApps">
-                <xs:complexType>
-                    <xs:sequence />
                 </xs:complexType>
             </xs:element>
         </xs:schema>
     </wsdl:types>
-    <wsdl:message name="deletePhpAppsRequest">
-        <wsdl:part name="parameters" element="ns1:deletePhpApps" />
+    <wsdl:message name="getPagedAppsSummaryRequest">
+        <wsdl:part name="parameters" element="ns1:getPagedAppsSummary" />
     </wsdl:message>
-    <wsdl:message name="isInstanceForTenantUpRequest">
-        <wsdl:part name="parameters" element="ns1:isInstanceForTenantUp" />
+    <wsdl:message name="getPagedAppsSummaryResponse">
+        <wsdl:part name="parameters" element="ns1:getPagedAppsSummaryResponse" />
     </wsdl:message>
-    <wsdl:message name="isInstanceForTenantUpResponse">
-        <wsdl:part name="parameters" element="ns1:isInstanceForTenantUpResponse" />
+    <wsdl:message name="getCartridgeTitlesRequest">
+        <wsdl:part name="parameters" element="ns1:getCartridgeTitles" />
     </wsdl:message>
-    <wsdl:message name="getImagesRequest">
-        <wsdl:part name="parameters" element="ns1:getImages" />
+    <wsdl:message name="getCartridgeTitlesResponse">
+        <wsdl:part name="parameters" element="ns1:getCartridgeTitlesResponse" />
     </wsdl:message>
-    <wsdl:message name="getImagesResponse">
-        <wsdl:part name="parameters" element="ns1:getImagesResponse" />
+    <wsdl:message name="uploadAppRequest">
+        <wsdl:part name="parameters" element="ns1:uploadApp" />
     </wsdl:message>
-    <wsdl:message name="getPagedPhpAppsSummaryRequest">
-        <wsdl:part name="parameters" element="ns1:getPagedPhpAppsSummary" />
+    <wsdl:message name="uploadAppResponse">
+        <wsdl:part name="parameters" element="ns1:uploadAppResponse" />
     </wsdl:message>
-    <wsdl:message name="getPagedPhpAppsSummaryResponse">
-        <wsdl:part name="parameters" element="ns1:getPagedPhpAppsSummaryResponse" />
+    <wsdl:message name="deleteAllAppsRequest">
+        <wsdl:part name="parameters" element="ns1:deleteAllApps" />
     </wsdl:message>
-    <wsdl:message name="initAutoscalerRequest">
-        <wsdl:part name="parameters" element="ns1:initAutoscaler" />
-    </wsdl:message>
-    <wsdl:message name="listPhpApplicationsRequest">
-        <wsdl:part name="parameters" element="ns1:listPhpApplications" />
-    </wsdl:message>
-    <wsdl:message name="listPhpApplicationsResponse">
-        <wsdl:part name="parameters" element="ns1:listPhpApplicationsResponse" />
-    </wsdl:message>
-    <wsdl:message name="deleteAllPhpAppsRequest">
-        <wsdl:part name="parameters" element="ns1:deleteAllPhpApps" />
-    </wsdl:message>
-    <wsdl:message name="startInstanceRequest">
-        <wsdl:part name="parameters" element="ns1:startInstance" />
-    </wsdl:message>
-    <wsdl:message name="startInstanceResponse">
-        <wsdl:part name="parameters" element="ns1:startInstanceResponse" />
-    </wsdl:message>
-    <wsdl:message name="uploadWebappRequest">
-        <wsdl:part name="parameters" element="ns1:uploadWebapp" />
-    </wsdl:message>
-    <wsdl:message name="uploadWebappResponse">
-        <wsdl:part name="parameters" element="ns1:uploadWebappResponse" />
+    <wsdl:message name="deleteAppsRequest">
+        <wsdl:part name="parameters" element="ns1:deleteApps" />
     </wsdl:message>
     <wsdl:portType name="ApplicationManagementServicePortType">
-        <wsdl:operation name="deletePhpApps">
-            <wsdl:input message="tns:deletePhpAppsRequest" wsaw:Action="urn:deletePhpApps" />
+        <wsdl:operation name="getPagedAppsSummary">
+            <wsdl:input message="tns:getPagedAppsSummaryRequest" wsaw:Action="urn:getPagedAppsSummary" />
+            <wsdl:output message="tns:getPagedAppsSummaryResponse" wsaw:Action="urn:getPagedAppsSummaryResponse" />
         </wsdl:operation>
-        <wsdl:operation name="isInstanceForTenantUp">
-            <wsdl:input message="tns:isInstanceForTenantUpRequest" wsaw:Action="urn:isInstanceForTenantUp" />
-            <wsdl:output message="tns:isInstanceForTenantUpResponse" wsaw:Action="urn:isInstanceForTenantUpResponse" />
+        <wsdl:operation name="getCartridgeTitles">
+            <wsdl:input message="tns:getCartridgeTitlesRequest" wsaw:Action="urn:getCartridgeTitles" />
+            <wsdl:output message="tns:getCartridgeTitlesResponse" wsaw:Action="urn:getCartridgeTitlesResponse" />
         </wsdl:operation>
-        <wsdl:operation name="getImages">
-            <wsdl:input message="tns:getImagesRequest" wsaw:Action="urn:getImages" />
-            <wsdl:output message="tns:getImagesResponse" wsaw:Action="urn:getImagesResponse" />
+        <wsdl:operation name="uploadApp">
+            <wsdl:input message="tns:uploadAppRequest" wsaw:Action="urn:uploadApp" />
+            <wsdl:output message="tns:uploadAppResponse" wsaw:Action="urn:uploadAppResponse" />
         </wsdl:operation>
-        <wsdl:operation name="getPagedPhpAppsSummary">
-            <wsdl:input message="tns:getPagedPhpAppsSummaryRequest" wsaw:Action="urn:getPagedPhpAppsSummary" />
-            <wsdl:output message="tns:getPagedPhpAppsSummaryResponse" wsaw:Action="urn:getPagedPhpAppsSummaryResponse" />
+        <wsdl:operation name="deleteAllApps">
+            <wsdl:input message="tns:deleteAllAppsRequest" wsaw:Action="urn:deleteAllApps" />
         </wsdl:operation>
-        <wsdl:operation name="initAutoscaler">
-            <wsdl:input message="tns:initAutoscalerRequest" wsaw:Action="urn:initAutoscaler" />
-        </wsdl:operation>
-        <wsdl:operation name="listPhpApplications">
-            <wsdl:input message="tns:listPhpApplicationsRequest" wsaw:Action="urn:listPhpApplications" />
-            <wsdl:output message="tns:listPhpApplicationsResponse" wsaw:Action="urn:listPhpApplicationsResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="deleteAllPhpApps">
-            <wsdl:input message="tns:deleteAllPhpAppsRequest" wsaw:Action="urn:deleteAllPhpApps" />
-        </wsdl:operation>
-        <wsdl:operation name="startInstance">
-            <wsdl:input message="tns:startInstanceRequest" wsaw:Action="urn:startInstance" />
-            <wsdl:output message="tns:startInstanceResponse" wsaw:Action="urn:startInstanceResponse" />
-        </wsdl:operation>
-        <wsdl:operation name="uploadWebapp">
-            <wsdl:input message="tns:uploadWebappRequest" wsaw:Action="urn:uploadWebapp" />
-            <wsdl:output message="tns:uploadWebappResponse" wsaw:Action="urn:uploadWebappResponse" />
+        <wsdl:operation name="deleteApps">
+            <wsdl:input message="tns:deleteAppsRequest" wsaw:Action="urn:deleteApps" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="ApplicationManagementServiceSoap11Binding" type="tns:ApplicationManagementServicePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-        <wsdl:operation name="isInstanceForTenantUp">
-            <soap:operation soapAction="urn:isInstanceForTenantUp" style="document" />
+        <wsdl:operation name="getPagedAppsSummary">
+            <soap:operation soapAction="urn:getPagedAppsSummary" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -213,14 +134,8 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="deletePhpApps">
-            <soap:operation soapAction="urn:deletePhpApps" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="getImages">
-            <soap:operation soapAction="urn:getImages" style="document" />
+        <wsdl:operation name="getCartridgeTitles">
+            <soap:operation soapAction="urn:getCartridgeTitles" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -228,8 +143,8 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getPagedPhpAppsSummary">
-            <soap:operation soapAction="urn:getPagedPhpAppsSummary" style="document" />
+        <wsdl:operation name="uploadApp">
+            <soap:operation soapAction="urn:uploadApp" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -237,50 +152,23 @@
                 <soap:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="initAutoscaler">
-            <soap:operation soapAction="urn:initAutoscaler" style="document" />
+        <wsdl:operation name="deleteAllApps">
+            <soap:operation soapAction="urn:deleteAllApps" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="listPhpApplications">
-            <soap:operation soapAction="urn:listPhpApplications" style="document" />
+        <wsdl:operation name="deleteApps">
+            <soap:operation soapAction="urn:deleteApps" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="deleteAllPhpApps">
-            <soap:operation soapAction="urn:deleteAllPhpApps" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="startInstance">
-            <soap:operation soapAction="urn:startInstance" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="uploadWebapp">
-            <soap:operation soapAction="urn:uploadWebapp" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="ApplicationManagementServiceSoap12Binding" type="tns:ApplicationManagementServicePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
-        <wsdl:operation name="isInstanceForTenantUp">
-            <soap12:operation soapAction="urn:isInstanceForTenantUp" style="document" />
+        <wsdl:operation name="getPagedAppsSummary">
+            <soap12:operation soapAction="urn:getPagedAppsSummary" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -288,14 +176,8 @@
                 <soap12:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="deletePhpApps">
-            <soap12:operation soapAction="urn:deletePhpApps" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="getImages">
-            <soap12:operation soapAction="urn:getImages" style="document" />
+        <wsdl:operation name="getCartridgeTitles">
+            <soap12:operation soapAction="urn:getCartridgeTitles" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -303,8 +185,8 @@
                 <soap12:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getPagedPhpAppsSummary">
-            <soap12:operation soapAction="urn:getPagedPhpAppsSummary" style="document" />
+        <wsdl:operation name="uploadApp">
+            <soap12:operation soapAction="urn:uploadApp" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -312,50 +194,23 @@
                 <soap12:body use="literal" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="initAutoscaler">
-            <soap12:operation soapAction="urn:initAutoscaler" style="document" />
+        <wsdl:operation name="deleteAllApps">
+            <soap12:operation soapAction="urn:deleteAllApps" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="listPhpApplications">
-            <soap12:operation soapAction="urn:listPhpApplications" style="document" />
+        <wsdl:operation name="deleteApps">
+            <soap12:operation soapAction="urn:deleteApps" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="deleteAllPhpApps">
-            <soap12:operation soapAction="urn:deleteAllPhpApps" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="startInstance">
-            <soap12:operation soapAction="urn:startInstance" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="uploadWebapp">
-            <soap12:operation soapAction="urn:uploadWebapp" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="ApplicationManagementServiceHttpBinding" type="tns:ApplicationManagementServicePortType">
         <http:binding verb="POST" />
-        <wsdl:operation name="isInstanceForTenantUp">
-            <http:operation location="isInstanceForTenantUp" />
+        <wsdl:operation name="getPagedAppsSummary">
+            <http:operation location="getPagedAppsSummary" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -363,14 +218,8 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="deletePhpApps">
-            <http:operation location="deletePhpApps" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="getImages">
-            <http:operation location="getImages" />
+        <wsdl:operation name="getCartridgeTitles">
+            <http:operation location="getCartridgeTitles" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -378,8 +227,8 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="getPagedPhpAppsSummary">
-            <http:operation location="getPagedPhpAppsSummary" />
+        <wsdl:operation name="uploadApp">
+            <http:operation location="uploadApp" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
@@ -387,44 +236,17 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="initAutoscaler">
-            <http:operation location="initAutoscaler" />
+        <wsdl:operation name="deleteAllApps">
+            <http:operation location="deleteAllApps" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
         </wsdl:operation>
-        <wsdl:operation name="listPhpApplications">
-            <http:operation location="listPhpApplications" />
+        <wsdl:operation name="deleteApps">
+            <http:operation location="deleteApps" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="deleteAllPhpApps">
-            <http:operation location="deleteAllPhpApps" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-        </wsdl:operation>
-        <wsdl:operation name="startInstance">
-            <http:operation location="startInstance" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="uploadWebapp">
-            <http:operation location="uploadWebapp" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="ApplicationManagementService">

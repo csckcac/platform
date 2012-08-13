@@ -14,6 +14,10 @@
     		<file>retweet_status.xml</file>
     		<description>sample synapse library</description>
 	</artifact>
+    <artifact name="login_user" >
+    		<file>login_user.xml</file>
+    		<description>sample synapse library</description>
+	</artifact>
     </subArtifacts>
     
 </artifact>

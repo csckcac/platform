@@ -1,0 +1,10 @@
+#set( $symbol_pound = '#' )
+#set( $symbol_dollar = '$' )
+#set( $symbol_escape = '\' )
+<?xml version="1.0" encoding="UTF-8"?>
+<artifacts>
+    <artifact name="${connector_name}" package="${package}" >
+        <dependency artifact="${connector_name.toLowerCase()}_core" />
+        <description>wso2 sample connector library</description>
+    </artifact>
+</artifacts>

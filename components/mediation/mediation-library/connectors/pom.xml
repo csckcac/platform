@@ -34,6 +34,8 @@
         <module>org.wso2.carbon.mediation.library.connectors.linked-in</module>
         <module>org.wso2.carbon.mediation.library.connectors.twitter</module>
         <module>org.wso2.carbon.mediation.library.connectors.core</module>
+        <module>org.wso2.carbon.mediation.library.connectors.email</module>
+        <module>utilities/org.wso2.carbon.mediation.library.connectors.connector-archetype</module>
     </modules>
 
     <dependencyManagement>

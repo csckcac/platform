@@ -1,0 +1,16 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="email_user">
+	    <parameter name="host"/>
+        <parameter name="smtp_port"/>
+        <parameter name="username"/>
+        <parameter name="password"/>
+        <parameter name="from"/>
+        <parameter name="to"/>
+        <parameter name="subject"/>
+        <parameter name="msg"/>
+        <sequence>
+            	<log level="full">
+			<property name="email user" expression="$func:from" />
+		</log>
+		<class name="org.wso2.carbon.mediation.library.connectors.email.EMailConnector" />
+        </sequence>
+    </template>

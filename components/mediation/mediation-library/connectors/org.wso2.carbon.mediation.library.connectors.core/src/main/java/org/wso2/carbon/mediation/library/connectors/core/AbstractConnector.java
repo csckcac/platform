@@ -23,6 +23,7 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.AbstractMediator;
 import org.wso2.carbon.mediation.library.connectors.core.util.ConfigHolder;
+import org.wso2.carbon.mediation.library.connectors.core.util.ConnectorUtils;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.api.UserRealm;
@@ -35,7 +36,7 @@ public abstract class AbstractConnector extends AbstractMediator implements Conn
     public abstract void connect() throws ConnectException;
 
     protected MessageContext getMessageContext() {
-        return currentContext.get();  //To change body of implemented methods use File | Settings | File Templates.
+        return currentContext.get();
     }
 
     public boolean mediate(MessageContext messageContext) {
@@ -95,5 +96,9 @@ public abstract class AbstractConnector extends AbstractMediator implements Conn
                 getSynapseEnvironment();
 
         return synapseEnvironment;
+    }
+
+    protected String getParameter(String paramName){
+        return ConnectorUtils.lookupFunctionParam(getMessageContext(), paramName);
     }
 }

@@ -27,6 +27,7 @@ public class LibraryInfo {
     private String description ;
 
     private List<String> artifacts = new ArrayList<String>();
+    private String qName;
 
     public String getLibName() {
         return libName;
@@ -50,5 +51,13 @@ public class LibraryInfo {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public void setQName(String description) {
+        this.qName = description;
+    }
+
+    public String getQName() {
+        return this.qName;
     }
 }

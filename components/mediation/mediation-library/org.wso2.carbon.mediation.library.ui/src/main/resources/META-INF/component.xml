@@ -59,7 +59,7 @@
             <Actions>
                 <Action>mediationlib</Action>
             </Actions>
-            <Class>org.wso2.carbon.application.mgt.ui.fileupload.CarbonAppUploadExecutor</Class>
+            <Class>org.wso2.carbon.mediation.library.ui.fileupload.MediationLibUploadExecutor</Class>
         </Mapping>
     </FileUploadConfig>
 </component>

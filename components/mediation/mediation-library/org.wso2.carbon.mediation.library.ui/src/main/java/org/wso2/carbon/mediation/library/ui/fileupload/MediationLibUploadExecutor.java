@@ -33,7 +33,7 @@ public class MediationLibUploadExecutor extends AbstractFileUploadExecutor {
 
     public boolean execute(HttpServletRequest request,
                            HttpServletResponse response) throws CarbonException, IOException {
-        return uploadArtifacts(request, response, "dropins", new String[]{"jar"}, "Axis2");
+        return uploadArtifacts(request, response, "dropins", new String[]{"zip"}, "Axis2");
     }
 
     protected boolean uploadArtifacts(HttpServletRequest request,
@@ -67,7 +67,7 @@ public class MediationLibUploadExecutor extends AbstractFileUploadExecutor {
                 String fieldName = (String) o;
                 FileItemData fileItemData = fileItemsMap.get(fieldName).get(0);
                 String fileName = getFileName(fileItemData.getFileItem().getName());
-                uploaderClient.addUploadedFileItem(fileItemData.getDataHandler(), fileName, "jar");
+                uploaderClient.addUploadedFileItem(fileItemData.getDataHandler(), fileName, "zip");
             }
 
             //Uploading files to back end service

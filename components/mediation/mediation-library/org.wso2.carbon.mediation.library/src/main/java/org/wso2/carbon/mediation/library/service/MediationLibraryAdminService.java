@@ -63,7 +63,7 @@ public class MediationLibraryAdminService extends AbstractServiceBusAdmin {
      * @throws AxisFault if some thing goes wrong when creating
      *                   a MessageProcessor with the given xml.
      */
-    public void addImport(String xml) throws AxisFault {
+    private void addImport(String xml) throws AxisFault {
         try {
             OMElement imprtElem = createElement(xml);
             SynapseImport synapseImport =
@@ -248,6 +248,7 @@ public class MediationLibraryAdminService extends AbstractServiceBusAdmin {
             libInfo.setLibName(library.getQName().getLocalPart());
             libInfo.setPackageName(library.getPackage());
             libInfo.setDescription(library.getDescription());
+            libInfo.setQName(library.getQName().toString());
             librarySet.add(libInfo);
         }
 

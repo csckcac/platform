@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifacts>
+    <artifact name="EmailLib" package="org.apache.synapse.email" >
+        <dependency artifact="email_core" />
+        <description>synapse library for email</description>
+    </artifact>
+</artifacts>

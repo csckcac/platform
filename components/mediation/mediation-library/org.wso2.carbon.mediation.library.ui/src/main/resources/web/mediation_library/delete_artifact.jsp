@@ -20,34 +20,54 @@
 <%@ page import="org.wso2.carbon.CarbonConstants" %>
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="java.util.ResourceBundle" %>
-<%@ page import="org.wso2.carbon.application.mgt.ui.ApplicationAdminClient" %>
+<%@ page import="org.wso2.carbon.mediation.library.ui.LibraryAdminClient" %>
+<%@ page import="org.wso2.carbon.mediation.library.stub.types.carbon.LibraryInfo" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
+
 
 <%
     String backendServerURL = CarbonUIUtil.getServerURL(config.getServletContext(), session);
-    ConfigurationContext configContext = (ConfigurationContext) config.getServletContext()
-            .getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
+        ConfigurationContext configContext = (ConfigurationContext) config.getServletContext()
+                .getAttribute(CarbonConstants.CONFIGURATION_CONTEXT);
 
-    String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
+        String cookie = (String) session.getAttribute(ServerConstants.ADMIN_SERVICE_COOKIE);
 
-    String BUNDLE = "org.wso2.carbon.mediation.library.ui.i18n.Resources";
-    ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE, request.getLocale());
+        String BUNDLE = "org.wso2.carbon.mediation.library.ui.i18n.Resources";
+        ResourceBundle bundle = ResourceBundle.getBundle(BUNDLE, request.getLocale());
 
-    String appName = request.getParameter("appName");
-
-    try {
-        ApplicationAdminClient client = new ApplicationAdminClient(cookie,
-                backendServerURL, configContext, request.getLocale());
-        String msg = "";
-        if (appName != null) {
-            client.deleteApp(appName);
-            msg = bundle.getString("successfully.deleted.app") + " " + appName + ". " +
-                    bundle.getString("refresh.capp.page");
+        String artifactName = request.getParameter("artifactName");
+        String artifactType = request.getParameter("type");
+        if(artifactName == null || artifactType == null || "".equals(artifactName) ||
+                "".equals(artifactType)){
+            CarbonUIMessage.sendCarbonUIMessage(bundle.getString("warn.delete.app") + " : null " +
+                                                "artifact Type/Name" ,
+                                                CarbonUIMessage.WARNING, request);
+            return;
         }
-        CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request);
-    } catch (Exception e) {
-        CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
-    }
+
+        try {
+            LibraryAdminClient client = new LibraryAdminClient(cookie,
+                                                               backendServerURL, configContext, request.getLocale());
+            String msg = "";
+            if (artifactName != null && "import".equals(artifactType.trim().toLowerCase())) {
+                client.deleteImport(artifactName);
+                msg = bundle.getString("successfully.deleted.import") + " " + artifactName + ". " +
+                      bundle.getString("refresh.capp.page");
+            }else if(artifactName != null && "library".equals(artifactType.trim().toLowerCase())){
+                client.deleteLibrary(artifactName);
+                msg = bundle.getString("successfully.deleted.app") + " " + artifactName + ". " +
+                      bundle.getString("refresh.capp.page");
+
+            }else{
+                CarbonUIMessage.sendCarbonUIMessage(bundle.getString("warn.delete.app") + " : invalid " +
+                                                "artifact Type/Name" ,
+                                                CarbonUIMessage.WARNING, request);
+                return;
+            }
+            CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request);
+        } catch (Exception e) {
+            CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request, e);
+        }
 %>
 
 <script type="text/javascript">

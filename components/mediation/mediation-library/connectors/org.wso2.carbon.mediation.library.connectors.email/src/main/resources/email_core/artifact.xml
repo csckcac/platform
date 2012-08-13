@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<artifact name="email_core" type="synapse/template" >
+
+    <subArtifacts> 
+	
+    <artifact name="email_user" >
+    		<file>email_user.xml</file>
+    		<description>sample synapse library</description>
+	</artifact>
+    </subArtifacts>
+    
+</artifact>

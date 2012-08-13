@@ -99,16 +99,23 @@ if(tabs!=null && tabs.equals("0")) {
     }
 });
 
-    function deleteApplication(appName) {
+    function deleteApplication(libQName) {
         CARBON.showConfirmationDialog("<fmt:message key="confirm.delete.app"/>" , function(){
-            document.applicationsForm.action = "delete_artifact.jsp?appName=" + appName;
+            document.applicationsForm.action = "delete_artifact.jsp?artifactName=" + libQName+ "&type=library";
             document.applicationsForm.submit();
         });
     }
 
-    function deleteImport(appName) {
+    function importLib(libName,packageName) {
+        CARBON.showConfirmationDialog("<fmt:message key="confirm.import.app"/>" , function(){
+            document.applicationsForm.action = "import_lib.jsp?libName=" + libName +"&pkgName=" + packageName;
+            document.applicationsForm.submit();
+        });
+    }
+
+    function deleteImport(importName) {
         CARBON.showConfirmationDialog("<fmt:message key="confirm.delete.app"/>" , function(){
-            document.applicationsForm.action = "delete_artifact.jsp?appName=" + appName;
+            document.applicationsForm.action = "delete_artifact.jsp?artifactName=" + importName+"&type=import";
             document.applicationsForm.submit();
         });
     }
@@ -168,6 +175,7 @@ if(tabs!=null && tabs.equals("0")) {
                              String libName = libraryInfo.getLibName();
                              String pkgName = libraryInfo.getPackageName();
                              String libDesc = libraryInfo.getDescription();
+                             String libQName = libraryInfo.getQName();
                     %>
                     <tr>
                         <td><a href="./application_info.jsp?appName=<%= libName%>"><%= libName%></a></td>
@@ -189,7 +197,8 @@ if(tabs!=null && tabs.equals("0")) {
                         <%
                             }
                         %>
-                        <td><a href="#" class="icon-link-nofloat" style="background-image:url(images/delete.gif);" onclick="deleteApplication('<%= libName%>');" title="<%= bundle.getString("libs.delete.this.row")%>"><%= bundle.getString("libs.delete")%></a></td>
+                        <td><a href="#" class="icon-link-nofloat" style="background-image:url(images/delete.gif);" onclick="deleteApplication('<%= libQName%>');" title="<%= bundle.getString("libs.delete.this.row")%>"><%= bundle.getString("libs.delete")%></a></td>
+                        <td><a href="#" class="icon-link-nofloat" style="background-image:url(images/add.gif);" onclick="importLib('<%= libName%>','<%= pkgName%>');" title="<%= bundle.getString("libs.import.this.row")%>"><%= bundle.getString("libs.import")%></a></td>
                         <td><a href="download-ajaxprocessor.jsp?cappName=<%= libName%>" class="icon-link-nofloat" style="background-image:url(images/download.gif);" title="<%= bundle.getString("download.capp")%>"><%= bundle.getString("download")%></a></td>
                     </tr>
                     <%

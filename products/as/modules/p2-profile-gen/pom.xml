@@ -287,6 +287,9 @@
 									org.wso2.carbon:org.apache.synapse.wso2.feature:${synapse.version}
 								</featureArtifactDef>                    
 								<!-- End of the Mashup server features -->
+                                 <!-- reporting features -->
+                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.reporting.feature:${carbon.version}</featureArtifactDef>
+                                <!-- end reporting features -->
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -625,6 +628,10 @@
                                     <version>${synapse.version}</version>
                                 </feature>
 								<!-- mashup feature groups end -->
+                                 <feature>
+                                    <id>org.wso2.carbon.reporting.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>

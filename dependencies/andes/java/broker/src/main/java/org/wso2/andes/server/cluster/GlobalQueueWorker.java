@@ -120,7 +120,7 @@ public class GlobalQueueWorker implements Runnable{
                             //ignore
                         }
                     }else{
-                        log.info("[Global, "+ globalQueueName + "] moved "+ cassandraMessages.size() + " to user queues"); 
+                        log.debug("[Global, "+ globalQueueName + "] moved "+ cassandraMessages.size() + " to user queues");
                     }
                 } else {
                     try {

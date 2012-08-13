@@ -191,7 +191,7 @@ public class CassandraMessageFlusher extends Thread{
                     
                     iterations++;
                     if(messageProcessed > 10 || workqueueSize > 100){
-                        log.info("[Flusher]read="+ messages.size() + " tot= "+ messageProcessed + ". queue size = "+ workqueueSize); 
+                        log.debug("[Flusher]read="+ messages.size() + " tot= "+ messageProcessed + ". queue size = "+ workqueueSize);
                     }
                     messages.clear();
                 } else {

@@ -1,4 +1,4 @@
-<data name="OracleNestedQueryStoredProcService">
+<data name="OracleUDTService">
    <config>
       <property name="org.wso2.ws.dataservice.driver">oracle.jdbc.driver.OracleDriver</property>
       <property name="org.wso2.ws.dataservice.protocol">jdbc:oracle:thin:@localhost:1521/xe</property>

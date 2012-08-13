@@ -175,4 +175,19 @@ public abstract class AbstractBasicServiceTest extends DataServiceBaseTestCase {
 			fail(e.getMessage());
 		}
     }
+    
+    protected void basicDecimalOutputType() {
+    	TestUtils.showMessage(this.epr + " - decimalOutputTypes");
+    	try {
+			OMElement result = TestUtils.callOperation(this.epr, "basic_decimal_type_op", null);
+			String val = TestUtils.getFirstValue(result,
+					"/Salary/EmpSalaryInfo/employeeSalary",
+					TestUtils.DEFAULT_DS_WS_NAMESPACE);
+			assertTrue(val.equals(TestUtils.DECIMAL_RESULT_VALUE));	
+		} catch (Exception e) {
+			
+			e.printStackTrace();
+			fail(e.getMessage());
+		}
+    }
 }

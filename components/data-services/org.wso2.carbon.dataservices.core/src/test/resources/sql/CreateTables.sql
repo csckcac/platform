@@ -102,5 +102,10 @@ CREATE TABLE BinaryData(
 	data BLOB
 );
 
+CREATE TABLE IF NOT EXISTS Salary(
+	employeeNumber INTEGER,
+	employeeSalary DECIMAL(11,10)
+);
+
 
 

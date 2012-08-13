@@ -144,7 +144,17 @@
 		<with-param name="contactFirstName" query-param="contactFirstName"/>
        </call-query>
      </operation> 
+     
+     <!--Decimal type output test  -->
+     <query id="testDecimalType" useConfig="default">
+      <sql>select employeeSalary from Salary where employeeNumber = 1</sql>
+      <result element="Salary" rowName="EmpSalaryInfo">
+         <element name="employeeSalary" column="employeeSalary" xsdType="xs:decimal" />
+      </result>
+   	 </query>
 
-
+	 <operation name="basic_decimal_type_op">
+      	<call-query href="testDecimalType" />
+     </operation>
 </data>
 

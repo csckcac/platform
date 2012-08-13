@@ -10,3 +10,4 @@ RUNSCRIPT FROM './src/test/resources/sql/ProductLines.sql';
 RUNSCRIPT FROM './src/test/resources/sql/OrderDetails.sql';
 RUNSCRIPT FROM './src/test/resources/sql/H2StoredProcs.sql';
 RUNSCRIPT FROM './src/test/resources/sql/H2StoredFuncs.sql';
+RUNSCRIPT FROM './src/test/resources/sql/Salary.sql';

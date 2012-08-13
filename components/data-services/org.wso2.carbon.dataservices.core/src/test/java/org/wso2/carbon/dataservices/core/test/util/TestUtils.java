@@ -70,6 +70,10 @@ public class TestUtils {
 	public static final String ORDER_DETAILS_NESTED_XSD_PATH = "./src/test/resources/xsd/order_details_nested.xsd";
 	
 	public static final String OFFICES_XSD_PATH = "./src/test/resources/xsd/offices.xsd";
+	
+	public static final String SALARY_XSD_PATH = "./src/test/resources/xsd/salary.xsd";
+	
+	public static final String DECIMAL_RESULT_VALUE = "0.0000000015"; 
 
 	/**
 	 * Calls an operation of a target web service with the given parameters and

@@ -7,6 +7,7 @@
       <class name="org.wso2.carbon.proxyservices.test.ProxyAdminServiceTestCase"/>
       <class name="org.wso2.carbon.proxyservices.test.PassThroughServiceTestCase"/>
       <class name="org.wso2.carbon.proxyservices.test.WSDLBasedTestCase"/>
+      <class name="org.wso2.carbon.proxyservices.test.HotUpdateProxyWithDBLookupTestCase"/>
       <!--<class name="org.wso2.carbon.proxyservices.test.ThrottleTestCase"/>-->
       <!--<class name="org.wso2.carbon.proxyservices.test.WSDLWithXSDImportsTestCase"/>-->
     </classes>

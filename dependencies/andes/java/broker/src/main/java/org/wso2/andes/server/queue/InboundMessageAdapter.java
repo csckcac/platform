@@ -68,4 +68,9 @@ class InboundMessageAdapter implements InboundMessage
     {
         return _entry.getSize();
     }
+
+    @Override
+    public Long getMessageNumber() {
+        return null;
+    }
 }

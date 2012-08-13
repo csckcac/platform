@@ -127,7 +127,7 @@
                         Topic topic = topicSession.createTopic(topicName);
 
                         // create the message to send
-                        TextMessage textMessage = topicSession.createTextMessage("TEST Message");
+                        TextMessage textMessage = topicSession.createTextMessage("Test Message");
 
                         javax.jms.TopicPublisher topicPublisher = topicSession.createPublisher(topic);
                         topicPublisher.publish(textMessage);
@@ -247,5 +247,6 @@
 
 
             </pre>
+        <p>Also note that a MessageListener can be set to topicSubscriber to receive messages asynchronously.</p>
     </body>
 </html>

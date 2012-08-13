@@ -59,7 +59,8 @@
 
             <p>
                 note: To run this code sample, you need to have dependencies located at
-                $CARBON_HOME/client-lib in class path.
+                $CARBON_HOME/client-lib in class path. You need to run QueueReceiver class prior to QueueSender class
+                when testing this sample.
             </p>
             <p>
                 Using following QueueSender JMS client messages can be sent to 'testQueue'.
@@ -86,7 +87,6 @@
                 import javax.jms.Queue;
                 import javax.jms.QueueConnection;
                 import javax.jms.QueueConnectionFactory;
-                import javax.jms.QueueReceiver;
                 import javax.jms.QueueSession;
                 import javax.jms.TextMessage;
                 import javax.naming.Context;

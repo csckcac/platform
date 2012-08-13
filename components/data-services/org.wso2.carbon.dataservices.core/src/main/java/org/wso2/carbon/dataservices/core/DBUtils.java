@@ -668,7 +668,9 @@ public class DBUtils {
             } else {
                 text = propEl.getText();
             }
-            properties.put(propEl.getAttributeValue(new QName(DBSFields.NAME)), text);
+            if(text != null && !text.equals("")) {
+            	properties.put(propEl.getAttributeValue(new QName(DBSFields.NAME)), text);
+            }
         }
         return properties;
     }

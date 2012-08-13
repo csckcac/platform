@@ -22,6 +22,7 @@
     <description>The main sequence for the message mediation</description>
 
     <in>
+        <property name="REQUEST_HOST_HEADER" value="$trp:Host" scope="axis2"/>
         <property name="SERVICE_PREFIX" expression="$axis2:SERVICE_PREFIX"/>
         <send>
             <!--endpoint name="sdlbEndpoint">

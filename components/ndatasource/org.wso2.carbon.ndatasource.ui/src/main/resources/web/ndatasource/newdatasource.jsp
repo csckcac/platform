@@ -47,6 +47,7 @@
 	String description = request.getParameter("description");
 	boolean editMode = (("true".equals(request.getParameter("edit"))) ? true : false );
 	String type = null;
+	boolean isSystem = false;
 	String dataSourceclassName = null;
 	String dsproviderPropertiesEditMode = null;
 	String givenDataSourceProps = null;
@@ -103,7 +104,7 @@
 		dataSourceDefinition = dataSourceMetaInfo.getDefinition();
 		type = dataSourceMetaInfo.getDefinition().getType();
 		type = (type == null) ? "" : type;
-		
+		isSystem = dataSourceMetaInfo.getSystem();
 		description = dataSourceMetaInfo.getDescription();
 				
 		String configuration = dataSourceDefinition.getDsXMLConfiguration();
@@ -127,7 +128,7 @@
 				driverClassName = rdbmsCon.getDriverClassName();
 				url = rdbmsCon.getUrl();
 				username = rdbmsCon.getUsername();
-				password = rdbmsCon.getPassword();
+				password = rdbmsCon.getPassword().getValue();
 			}
 			//datasource properties
 			defaultAutoCommit = rdbmsCon.getDefaultAutoCommit();
@@ -379,24 +380,46 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
     form.submit();
     return true;
 }
+
 </script>
 <form method="post" name="dscreationform" id="dscreationform"
-      action="savedatasource.jsp">
+      action="savedatasource.jsp" >
 
 <div id="middle">
-<h2><fmt:message key="new.data.source"/></h2>
+<h2>
+<%if (editMode) { %>
+      <%if (isSystem) { %>
+        <fmt:message key="view.data.source"/>
+      <%} else { %>
+        <fmt:message key="edit.data.source"/>
+      <%} %>
+      <%} else { %>
+       <fmt:message key="new.data.source"/>
+<%} %>
+</h2>
 
 <div id="workArea">
 <table class="styledLeft noBorders" cellspacing="0" cellpadding="0" border="0">
 <thead>
     <tr>
-        <th colspan="3"><fmt:message key="new.data.source"/></th>
+        <th colspan="3">
+        <%if (editMode) { %>
+        	<%if (isSystem) { %>
+        		<fmt:message key="view.data.source"/>
+        	<%} else { %>
+        		<fmt:message key="edit.data.source"/>
+        	<%} %>
+        <%} else { %>
+        	<fmt:message key="new.data.source"/>
+        <%} %>
+        </th>
     </tr>
 </thead>
 <tbody>
 <tr>
     <td style="width:170px;"><fmt:message key="name"/><span class='required'>*</span></td>
     <td align="left">
+    	 <input type="hidden" id="isSystem" name="isSystem" value="<%=isSystem %>"/>
     	<%if (editMode) { %>
             <input id="dsName" name=dsName class="longInput" value="<%=dataSourceName %>" readonly>
         <%} else { %>
@@ -408,7 +431,7 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
 <tr>
     <td style="width:170px;"><fmt:message key="description"/></td>
     <td align="left">
-    	 <input id="description" name="description" class="longInput" value="<%=description %>" />
+        <input id="description" name="description" class="longInput" value="<%=description %>" />
     </td>
 </tr>
 <tr>
@@ -471,10 +494,12 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
     </td>
     <td >
 		<div id="nameValueAdd">
+		<%if (!isSystem) { %>
 			<a class="icon-link"
 	           href="#addNameLink"
 	           onclick="addDataSourceProperties();"
 	           style="background-image: url(../admin/images/add.gif);"><fmt:message key="jndi.properties.add"/></a>
+	    <%} %>
 	    	<div style="clear:both;"></div>
 	    </div>
 	    <div>
@@ -532,10 +557,12 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
     </td>
     <td >
 		<div id="nameValueAdd">
+		<%if (!isSystem) { %>
 			<a class="icon-link"
 	           href="#addNameLink"
 	           onclick="addJNDIProps();"
 	           style="background-image: url(../admin/images/add.gif);"><fmt:message key="jndi.properties.add"/></a>
+	    <%} %>
 	    	<div style="clear:both;"></div>
 	    </div>
 	    <div>
@@ -559,57 +586,6 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
         </table>
     </td>
 </tr>
-<!-- JNDI NEW -->
-<%-- <tr>
-    <td colspan="2" class="middle-header"><fmt:message key="datasource.jndi.config"/></td>
-</tr>
-<tr>
-    <td><fmt:message key="jndi.name"/></td>
-    <td align="left">
-    	<input id="jndiname" name="jndiname" class="longInput" value="<%=jndiConfigName %>"/>
-    	<input type="hidden" id="jndiPropertiesHidden" name="jndiPropertiesHidden" class="longInput" value="<%=jndiPropertiesEditMode %>"/>
-    </td>
-</tr>
-<tr>
-	<td><label for="useDataSourceFactory"><fmt:message  key="jndi.use.data.source.factory"/></label></td>
-	<% if ("External Data Source".equals(dsProvider)) { %>
-	<td><input type="checkbox" id="useDataSourceFactory" name="useDataSourceFactory" disabled="disabled"/></td>
-	<%} else if (isUseDataSourceFactory) {%>
-		<td><input type="checkbox" id="useDataSourceFactory" name="useDataSourceFactory" checked/></td>
-	<%} else {%>
-		<td><input type="checkbox" id="useDataSourceFactory" name="useDataSourceFactory"/></td>
-	<% } %>
-</tr>
-
-<tr>
-	<td>
-       <fmt:message key="jndi.properties"/>
-    </td>
-    <td >
-		<div id="nameValueAdd">
-			<a class="icon-link"
-	           href="#addNameLink"
-	           onclick="addJNDIProps();"
-	           style="background-image: url(../admin/images/add.gif);"><fmt:message key="jndi.properties.add"/></a>
-	    	<div style="clear:both;"></div>
-	    </div>
-	    <div>
-	         <table cellpadding="0" cellspacing="0" border="0" class="styledLeft"
-	                          id="jndiPropertyTable"
-	                          style="display:none;">
-	                <thead>
-	                    <tr>
-	                        <th style="width:40%"><fmt:message key="prop.name"/></th>
-	                        <th style="width:40%"><fmt:message key="prop.value"/></th>
-	                        <th style="width:20%"><fmt:message key="prop.action"/></th>
-	                    </tr>
-	                </thead>
-	         		<tbody></tbody>
-	          </table>
-	    </div>
-	    <input type="hidden" id="jndiProperties" name="jndiProperties" class="longInput"/>
-	  </td>
-</tr> --%>
 
 <tr>
     <td colspan="2" class="middle-header">
@@ -1016,11 +992,17 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
    <td class="buttonRow" colspan="3">
    		<input class="button" id="testConnectionButton" name="testConnectionButton" type="button" value="Test Connection" onclick="testConnection('<fmt:message key="ds.name.cannotfound.msg"/>','<fmt:message key="ds.name.invalid.msg"/>',
    		'<fmt:message key="ds.driver.cannotfound.msg"/>','<fmt:message key="ds.url.cannotfound.msg"/>','<fmt:message key="ds.testquery.cannotfound.msg"/>','<fmt:message key="ds.healthy.connection"/>')"/>
+        <%if (!isSystem) { %>
         <input class="button" type="button"
-               value="<fmt:message key="add"/>"
+               value="<fmt:message key="save"/>"
                onclick="var val = ValidateProperties(); if (val) {dsSave('<fmt:message key="ds.name.cannotfound.msg"/>','<fmt:message key="ds.name.invalid.msg"/>','<fmt:message key="ds.driver.cannotfound.msg"/>','<fmt:message key="ds.url.cannotfound.msg"/>',document.dscreationform)}; return false;"/>
+        
         <input class="button" type="reset" value="<fmt:message key="cancel"/>"
                onclick="document.location.href='index.jsp'"/>
+        <%} else {%>
+        <input class="button" type="reset" value="<fmt:message key="back"/>"
+               onclick="document.location.href='index.jsp'"/>
+        <%} %>
     </td>
 </tr>
 
@@ -1028,6 +1010,7 @@ function dsSave(namemsg, invalidnamemsg, drivermsg, urlmsg, form) {
 <script type="text/javascript">
 	populateDataSourceProperties();
 	populateJNDIProperties();
+	disableForm();
 </script>
 </div>
 </div>

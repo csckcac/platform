@@ -29,6 +29,7 @@
 		NDataSourceAdminServiceClient client;
 		String name = "";
 		boolean canAdd = true;
+		boolean isSystem = false;
 		boolean editMode = "true".equals(request.getParameter("editMode"));
 			try {
 				client = NDataSourceAdminServiceClient.getInstance(config, session);
@@ -45,7 +46,11 @@
 					}
 				//edit mode
 				} else {
-					client.addDataSource(dataSourceMetaInformation);
+					WSDataSourceMetaInfo m = client.getDataSource(name).getDsMetaInfo();
+					isSystem = m.getSystem();
+					if (!isSystem) {
+						client.addDataSource(dataSourceMetaInformation);
+					}
 				}
 				
 				if (!canAdd) { %>
@@ -60,7 +65,18 @@
                   });
               });
           </script>
-			<%} else {%>
+			<%} else if (isSystem) {%>
+				<script type="text/javascript">
+              jQuery(document).ready(function() {
+                  CARBON.showWarningDialog("<fmt:message key="cannot.add.a.data.source"/>", 
+                  	function() {
+                  	 goBackOnePage();
+                      }, function () {
+                       goBackOnePage();
+                  });
+              });
+          			</script>
+			<%}else {%>
 		
 		<script type="text/javascript">
 			forward("index.jsp?region=region1&item=new_datasource_menu");

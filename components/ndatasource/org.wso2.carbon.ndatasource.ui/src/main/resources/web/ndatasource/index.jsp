@@ -18,6 +18,7 @@
 <%@page import="org.wso2.carbon.ndatasource.ui.NDataSourceHelper"%>
 <%@ page import="org.wso2.carbon.ndatasource.ui.NDataSourceAdminServiceClient" %>
 <%@ page import="org.wso2.carbon.ndatasource.ui.stub.core.services.xsd.WSDataSourceInfo" %>
+<%@ page import="org.wso2.carbon.ndatasource.ui.stub.core.services.xsd.WSDataSourceMetaInfo" %>
 <%@ page import="java.util.List" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 <%@ page import="java.util.Map" %>
@@ -60,6 +61,8 @@
                     <%
                         for (String name : allDatasources.keySet()) {
                             if (name != null) {
+                            	WSDataSourceMetaInfo m = client.getDataSource(name).getDsMetaInfo();
+                                boolean isSystem = m.getSystem();
                     %>
                     <tr id="tr_<%=name%>">
 
@@ -69,7 +72,15 @@
                         <td>
                             <%=allDatasources.get(name)%>
                         </td>
-                        <td ><a href="#" class="edit-icon-link" onclick="editRow('<%=name%>')"><fmt:message key="datasource.edit"/></a><a href="#" class="delete-icon-link" onclick="deleteRow('<%=name%>','<fmt:message key="ds.delete.waring"/>')"><fmt:message key="datasource.delete"/></a>
+                        <td >
+                        <% if (!isSystem) { %>
+                        	<a href="#" class="edit-icon-link" onclick="editRow('<%=name%>')"><fmt:message key="datasource.edit"/></a>
+                        <%} else { %>
+                        	<a href="#" class="view-icon-link" onclick="editRow('<%=name%>')"><fmt:message key="datasource.view"/></a>
+                        <%} %>
+                        <% if (!isSystem) { %>
+                        	<a href="#" class="delete-icon-link" onclick="deleteRow('<%=name%>','<fmt:message key="ds.delete.waring"/>')"><fmt:message key="datasource.delete"/></a>
+                        <%} %>
                     
                     </tr>
                     <%

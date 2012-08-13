@@ -17,7 +17,6 @@ package org.wso2.carbon.ndatasource.ui;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +24,6 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.DocumentBuilder;
@@ -140,7 +138,9 @@ public class NDataSourceHelper {
 				rdbmsDSXMLConfig.setUrl(url);
 				rdbmsDSXMLConfig.setDriverClassName(driver);
 				rdbmsDSXMLConfig.setUsername(username);
-				rdbmsDSXMLConfig.setPassword(password);
+				RDBMSDSXMLConfiguration.Password passwordOb = new RDBMSDSXMLConfiguration.Password();
+				passwordOb.setValue(password);
+				rdbmsDSXMLConfig.setPassword(passwordOb);
 			} else {
 				throw new IllegalArgumentException("Unknown data source provider type");
 			}
@@ -202,8 +202,7 @@ public class NDataSourceHelper {
 		if (allDataSourcesInfo != null) {
 			for (WSDataSourceInfo dataSourceInfo : allDataSourcesInfo) {
 				WSDataSourceMetaInfo dataSourceMetaInfo = dataSourceInfo.getDsMetaInfo();
-				allDataSources
-						.put(dataSourceMetaInfo.getName(), dataSourceInfo.getDsStatus().getMode());
+				allDataSources.put(dataSourceMetaInfo.getName(), dataSourceInfo.getDsStatus().getMode());
 			}
 		}
 		return allDataSources;

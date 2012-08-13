@@ -223,3 +223,59 @@ function ValidateProperties() {
 	return true;
 }
 
+function disableForm(){
+	if(document.getElementById("isSystem").value == 'true') {
+		document.getElementById("description").readOnly = true;
+		if (document.getElementById("driver") != null) {
+			document.getElementById("driver").readOnly = true;
+		}
+		if (document.getElementById("url") != null) {
+			document.getElementById("url").readOnly = true;
+		}
+		if (document.getElementById("username") != null) {
+			document.getElementById("username").readOnly = true;
+		}
+		if (document.getElementById("password") != null) {
+			document.getElementById("password").readOnly = true;
+		}
+		if (document.getElementById("dsclassname") != null) {
+			document.getElementById("dsclassname").readOnly = true;
+		}
+		document.getElementById("jndiname").readOnly = true;
+		document.getElementById("useDataSourceFactory").readOnly = true;
+		document.getElementById("defaultCatalog").readOnly = true;
+		document.getElementById("maxActive").readOnly = true;
+		document.getElementById("maxIdle").readOnly = true;
+		document.getElementById("minIdle").readOnly = true;
+		document.getElementById("initialSize").readOnly = true;
+		document.getElementById("maxWait").readOnly = true;
+		document.getElementById("validationquery").readOnly = true;
+		document.getElementById("validatorClassName").readOnly = true;
+		document.getElementById("timeBetweenEvictionRunsMillis").readOnly = true;
+		document.getElementById("numTestsPerEvictionRun").readOnly = true;
+		document.getElementById("minEvictableIdleTimeMillis").readOnly = true;
+		document.getElementById("removeAbandonedTimeout").readOnly = true;
+		document.getElementById("connectionProperties").readOnly = true;
+		document.getElementById("initSQL").readOnly = true;
+		document.getElementById("jdbcInterceptors").readOnly = true;
+		document.getElementById("validationInterval").readOnly = true;
+		document.getElementById("abandonWhenPercentageFull").readOnly = true;
+		document.getElementById("maxAge").readOnly = true;
+		document.getElementById("useEquals").readOnly = true;
+		document.getElementById("suspectTimeout").readOnly = true;
+		
+		document.getElementById("datasourceProvider").disabled = true;
+		document.getElementById("defaultTransactionIsolation").disabled = true;
+		document.getElementById("testOnBorrow").disabled = true;
+		document.getElementById("testOnReturn").disabled = true;
+		document.getElementById("testWhileIdle").disabled = true;
+		document.getElementById("accessToUnderlyingConnectionAllowed").disabled = true;
+		document.getElementById("removeAbandoned").disabled = true;
+		document.getElementById("logAbandoned").disabled = true;
+		document.getElementById("fairQueue").disabled = true;
+		document.getElementById("jmxEnabled").disabled = true;
+		document.getElementById("useEquals").disabled = true;
+		document.getElementById("alternateUsernameAllowed").disabled = true;
+	} 
+}
+

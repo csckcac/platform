@@ -49,7 +49,7 @@ public class RDBMSDSXMLConfiguration extends DSXMLConfiguration {
 	
 	private String username;
 	
-	private String password;
+	private Password password;
 	
 	private Boolean defaultAutoCommit;
 	
@@ -158,12 +158,12 @@ public class RDBMSDSXMLConfiguration extends DSXMLConfiguration {
 		this.username = username;
 	}
 	
-	@XmlElement (name = "password", nillable = false)
-	public String getPassword() {
+	@XmlElement (name = "password")
+	public Password getPassword() {
 		return password;
 	}
 
-	public void setPassword(String password) {
+	public void setPassword(Password password) {
 		this.password = password;
 	}
 	
@@ -440,6 +440,33 @@ public class RDBMSDSXMLConfiguration extends DSXMLConfiguration {
 
 	public void setDataSourceProps(List<DataSourceProperty> dataSourceProps) {
 		this.dataSourceProps = dataSourceProps;
+	}
+	
+	@XmlRootElement (name = "password")
+	public static class Password {
+		
+		private boolean encrypted = true;
+		
+		private String value;
+
+		@XmlAttribute (name = "encrypted")
+		public boolean isEncrypted() {
+			return encrypted;
+		}
+
+		public void setEncrypted(boolean encrypted) {
+			this.encrypted = encrypted;
+		}
+
+		@XmlValue
+		public String getValue() {
+			return value;
+		}
+
+		public void setValue(String value) {
+			this.value = value;
+		}
+		
 	}
 		
 	@XmlRootElement (name = "property")

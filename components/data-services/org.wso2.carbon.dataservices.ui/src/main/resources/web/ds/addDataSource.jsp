@@ -85,6 +85,26 @@ function setValueGov() {
 	$(elementId).value = $(elementId).value.replace("/_system/governance", "gov:");
 }
 
+function getUseSecretAliasValue(chkbox, id) {
+	if (chkbox.checked) {
+		document.getElementById('useSecretAliasValue').value = 'true';
+		document.getElementById('pwdalias').style.display = '';
+		document.getElementById(id).style.display = 'none';
+	} else {
+		document.getElementById('useSecretAliasValue').value = 'false';
+		document.getElementById('pwdalias').style.display = 'none';
+		document.getElementById(id).style.display = '';
+		document.getElementById(id).value = '';
+	}
+}
+function getUseSecretAliasValueForProperty(chkbox, id) {
+	if (chkbox.checked) {
+		document.getElementById(id).value = 'true';
+	} else {
+		document.getElementById(id).value = 'false';
+	}
+}
+
 </script>
 
 <%!
@@ -122,14 +142,6 @@ private boolean isFieldMandatory(String propertName) {
 		return true;
 	} else if (propertName.equals(DBConstants.JNDI.DATASOURCE)) {
 		return true;
-	} else if (propertName.equals(DBConstants.JNDI.INITIAL_CONTEXT_FACTORY)) {
-		return true;
-	} else if (propertName.equals(DBConstants.JNDI.PASSWORD)) {
-		return true;
-	} else if (propertName.equals(DBConstants.JNDI.PROVIDER_URL)) {
-		return true;
-	} else if (propertName.equals(DBConstants.JNDI.USERNAME)) {
-		return true;
 	} else if (propertName.equals(DBConstants.JNDI.RESOURCE_NAME)) {
 		return true;
 	}  else if (propertName.equals(DBConstants.WebDatasource.WEB_CONFIG)) {
@@ -165,9 +177,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
             }
 
             ArrayList<Property> property = new ArrayList<Property>();
-            property.add(new Property("URL", ""));
-            property.add(new Property("User", ""));
-            property.add(new Property("Password", ""));
+            //property.add(new Property("URL", ""));
+            //property.add(new Property("User", ""));
+            //property.add(new Property("Password", ""));
 
             if (config.getPropertyValue(DBConstants.RDBMS.DATASOURCE_PROPS) == null) {
                 config.addProperty(DBConstants.RDBMS.DATASOURCE_PROPS, property);
@@ -399,9 +411,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                         newConfig.addProperty(DBConstants.RDBMS.DATASOURCE_CLASSNAME, "");
 
                         ArrayList<Property> property = new ArrayList<Property>();
-                        property.add(new Property("URL", ""));
-                        property.add(new Property("User", ""));
-                        property.add(new Property("Password", ""));
+                        //property.add(new Property("URL", ""));
+                        //property.add(new Property("User", ""));
+                        //property.add(new Property("Password", ""));
 
                         newConfig.addProperty(DBConstants.RDBMS.DATASOURCE_PROPS, property);
 
@@ -503,9 +515,9 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                     conf.addProperty(DBConstants.RDBMS.DATASOURCE_CLASSNAME,"");
 
                      ArrayList<Property> property = new ArrayList<Property>();
-                        property.add(new Property("URL", ""));
-                        property.add(new Property("User", ""));
-                        property.add(new Property("Password", ""));
+                        //property.add(new Property("URL", ""));
+                        //property.add(new Property("User", ""));
+                        //property.add(new Property("Password", ""));
 
                     conf.addProperty(DBConstants.RDBMS.DATASOURCE_PROPS,property);
                     //pool config properties
@@ -591,6 +603,8 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
     Iterator propertyIterator = null;
     String dataSourceType = "";
     String rdbmsEngineType = "#";
+    String passwordAlias = "";
+    boolean useSecretAlias = false;
     try {
         if (configId != null && configId.trim().length() > 0) {
             Config dsConfig = dataService.getConfig(configId);
@@ -629,6 +643,7 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 if (xaVal != null) {
                     isXAType = Boolean.parseBoolean(xaVal);
                 }
+                useSecretAlias = dsConfig.isUseSecretAliasForPassword();
             }
         } else {
             configId = "";
@@ -1073,20 +1088,35 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                 <tr>
                     <td><label><%=availableProperty.getName()%></label></td>
                     <td>
-                        <% if (availableProperty.getName().equalsIgnoreCase("Password")) {%>
-                        <input type="password" size="50" id="<%=availableProperty.getName()%>" name="<%=availableProperty.getName()%>"
-                               value="<%=availableProperty.getValue()%>"/>
-                        <% } else {%>
                         <input type="text" size="50" id="<%=availableProperty.getName()%>" name="<%=availableProperty.getName()%>"
                                value="<%=availableProperty.getValue()%>"/>
-                    </td>
-                    <% }%>
+                        <% if(availableProperty.isUseSecretAlias()) {%>
+                        <input type="checkbox" id="useSecretAliasFor<%=availableProperty.getName()%>" name="useSecretAliasFor<%=availableProperty.getName()%>" 
+                        						onclick="getUseSecretAliasValueForProperty(this,'useSecretAliasFor<%=availableProperty.getName()%>')"
+                        						checked/>
+                        <% } else {%>
+                        <input type="checkbox" id="useSecretAliasFor<%=availableProperty.getName()%>" name="useSecretAliasFor<%=availableProperty.getName()%>" 
+                        						onclick="getUseSecretAliasValueForProperty(this,'useSecretAliasFor<%=availableProperty.getName()%>')"
+                        						/>
+                        <%} %>
+	               		<fmt:message key="usePasswordAlias"/>
+	               	</td>
+                    
                 </tr>
             <%
         }%>
         <tr>
                 <td colspan="2">
                     <a class="icon-link" style="background-image:url(../admin/images/add.gif);" onclick=" addXAPropertyFields(document,document.getElementById('propertyCount').value);" ><fmt:message key="add.new.xa.datasource.properties"/></a>
+                </td>
+                
+            </tr>
+            <tr>
+            	<td id="externalDSProperties" style="display:none" colspan="2">
+                	<table id="externalDSPropertiesTable">
+                	<tbody>
+                	</tbody>
+                	</table>
                 </td>
             </tr>
         <%}
@@ -1199,9 +1229,23 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
                         <td><fmt:message key="<%=propertyName%>"/><%=(isFieldMandatory(propertyName)?"<font color=\"red\">*</font>":"")%></td>
                      <% } %>
 	         		 <%if(propertyName.equals(RDBMS.PASSWORD)) { %>
-	               		<td><input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>" value="<%=propertyValue%>"/></td>
+	               		<td>
+	               		<%if(useSecretAlias) {%>
+	               			<input type="text" size="50" id="pwdalias" name="pwdalias" value="<%=propertyValue%>">
+	               			<input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>" value="<%=propertyValue%>" style="display:none"/>
+	               			<input type="checkbox" id="useSecretAlias" name="useSecretAlias" onclick="getUseSecretAliasValue(this, '<%=propertyName%>')" checked/>
+	               			<fmt:message key="usePasswordAlias"/>
+	               		<%} else { %>
+	               			<input type="text" size="50" id="pwdalias" name="pwdalias" value="<%=propertyValue%>" style="display:none">
+	               			<input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>" value="<%=propertyValue%>"/>
+	               			<input type="checkbox" id="useSecretAlias" name="useSecretAlias" onclick="getUseSecretAliasValue(this, '<%=propertyName%>')"/>
+	               			<fmt:message key="usePasswordAlias"/>
+	               		<%} %>
+	               		<input type="hidden" id="useSecretAliasValue" name="useSecretAliasValue" size="50" value="<%=useSecretAlias%>">
+	               		</td>
+	            
                 </tr>
-					<%} else {  %>
+               		<%} else {  %>
                   <%  if(!(dataSourceType.equals("Cassandra") && propertyName.equals(RDBMS.DRIVER_CLASSNAME))) {%>
                            <% if((dataSourceType.equals("Cassandra") && propertyName.equals(RDBMS.URL))) {
                                String cassandraServerUrl = propertyValue;
@@ -1269,8 +1313,19 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 
         <% } else {
         	if(propertyName.equals("gspread_password")||propertyName.equals("jndi_password")) {%>
-         <input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>"
-               value="<%=propertyValue%>"/></td>
+        <%if(useSecretAlias) {%>
+	               <input type="text" size="50" id="pwdalias" name="pwdalias" value="<%=propertyValue%>">
+	               <input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>" value="<%=propertyValue%>" style="display:none"/>
+	               <input type="checkbox" id="useSecretAlias" name="useSecretAlias" onclick="getUseSecretAliasValue(this, '<%=propertyName%>')" checked/>
+	               <fmt:message key="usePasswordAlias"/>
+	        <%} else { %>
+	               	<input type="text" size="50" id="pwdalias" name="pwdalias" value="<%=propertyValue%>" style="display:none">
+	               	<input type="password" size="50" id="<%=propertyName%>" name="<%=propertyName%>" value="<%=propertyValue%>"/>
+	               	<input type="checkbox" id="useSecretAlias" name="useSecretAlias" onclick="getUseSecretAliasValue(this, '<%=propertyName%>')"/>
+	               	<fmt:message key="usePasswordAlias"/>
+	        <%} %>
+	               		<input type="hidden" id="useSecretAliasValue" name="useSecretAliasValue" size="50" value="<%=useSecretAlias%>">
+        </td>
 
          <%} else if (propertyName.equals("rdf_datasource")
                     ||propertyName.equals("excel_datasource")

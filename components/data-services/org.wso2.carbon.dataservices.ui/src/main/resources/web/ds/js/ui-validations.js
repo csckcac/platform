@@ -148,16 +148,8 @@ function validateAddDataSourceForm(){
             CARBON.showWarningDialog('Contains Column Header Row is mandatory');
             return false;
         }
-    }else if(document.getElementById('datasourceType').value == 'JNDIDatasource'){
-        if(document.getElementById('jndi_context_class').value == ''){
-            CARBON.showWarningDialog('JNDI Context Class is mandatory');
-            return false;
-        }
-        if(document.getElementById('jndi_provider_url').value == ''){
-            CARBON.showWarningDialog('Provider URL is mandatory');
-            return false;
-        }
-        if(document.getElementById('jndi_resource_name').value == ''){
+    }else if(document.getElementById('datasourceType').value == 'JNDI'){
+       if(document.getElementById('jndi_resource_name').value == ''){
             CARBON.showWarningDialog('Resource Name is mandatory');
             return false;
         }
@@ -1471,12 +1463,29 @@ function addXAPropertyFields(obj,propertyCount) {
 
     td3.appendChild(valueLabel);
     td4.appendChild(valueEl);
-
+    
+    var aliasTD = document.createElement("td");
+    var valueAl = document.createElement('input');
+    valueAl.type = 'checkbox';
+    valueAl.name = 'useSecretAliasFor'+propertyCount;
+    valueAl.id = 'useSecretAliasFor'+propertyCount;
+    
+    var aliasLabelTD = document.createElement("td");
+    var valueAlLabel = document.createElement('label');
+    var aliasLabelText = document.createTextNode('Use as Secret Alias');
+    valueAlLabel.appendChild(aliasLabelText);
+    
+    aliasTD.appendChild(valueAl);
+    aliasLabelTD.appendChild(valueAlLabel);
+    
     propertyNameRaw.appendChild(td3);
     propertyNameRaw.appendChild(td4);
+    propertyNameRaw.appendChild(aliasTD);
+    propertyNameRaw.appendChild(aliasLabelTD);
     propertyNameRaw.appendChild(deleteTD);
-
-    document.getElementById("mainTable").getElementsByTagName('tbody')[0].appendChild(propertyNameRaw);
+    
+    document.getElementById("externalDSPropertiesTable").getElementsByTagName('tbody')[0].appendChild(propertyNameRaw);
+    document.getElementById("externalDSProperties").style.display = '';
     return true;
 }
 

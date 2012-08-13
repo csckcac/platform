@@ -32,10 +32,12 @@ public class Config extends DataServiceConfigurationElement {
     private ArrayList<Property> properties = new ArrayList<Property>();
 
     private String dataSourceType;
-
+    
     public ArrayList<Property> getProperties() {
         return properties;
     }
+    
+    private boolean useSecretAliasForPassword;
 
     public void setProperties(ArrayList<Property> properties) {
         this.properties = new ArrayList<Property>();
@@ -95,7 +97,8 @@ public class Config extends DataServiceConfigurationElement {
             dataSourceType = DataSourceTypes.RDF;
         } else if (SPARQL.DATASOURCE.equals(propertyName)) {
             dataSourceType = DataSourceTypes.SPARQL;
-        } else if (DBConstants.JNDI.PROVIDER_URL.equals(propertyName)) {
+        } else if (DBConstants.JNDI.PROVIDER_URL.equals(propertyName) 
+        		|| DBConstants.JNDI.RESOURCE_NAME.equals(propertyName)) {
             dataSourceType = DataSourceTypes.JNDI;
         } else if (GSpread.DATASOURCE.equals(propertyName)) {
             dataSourceType = DataSourceTypes.GDATA_SPREADSHEET;
@@ -151,11 +154,19 @@ public class Config extends DataServiceConfigurationElement {
     public void setId(String id) {
         this.id = id;
     }
+    
+    public boolean isUseSecretAliasForPassword() {
+		return useSecretAliasForPassword;
+	}
 
-    public String getDataSourceType() {
+	public void setUseSecretAliasForPassword(boolean useSecretAliasForPassword) {
+		this.useSecretAliasForPassword = useSecretAliasForPassword;
+	}
+
+	public String getDataSourceType() {
         return dataSourceType;
     }
-
+    
     public OMElement buildXML() {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMElement confEl = fac.createOMElement("config", null);
@@ -166,7 +177,17 @@ public class Config extends DataServiceConfigurationElement {
         Iterator<Property> iterator = this.getProperties().iterator();
         while (iterator.hasNext()) {
             Property property = iterator.next();
-            confEl.addChild(property.buildXML());
+            if(this.isUseSecretAliasForPassword() && (property.getName().equals(RDBMS.PASSWORD) 
+            		|| property.getName().equals(RDBMS_OLD.PASSWORD) || 
+            			property.getName().equals(GSpread.PASSWORD) || property.getName().equals(JNDI.PASSWORD))){
+            	 OMFactory factory = OMAbstractFactory.getOMFactory();
+                 OMElement propEl = factory.createOMElement("property", null);
+                 propEl.addAttribute("name", property.getName(), null);
+                 propEl.addAttribute("svns:secretAlias", (String)property.getValue(), null);
+                 confEl.addChild(propEl);
+            } else {
+            	confEl.addChild(property.buildXML());
+            }
         }
         return confEl;
     }

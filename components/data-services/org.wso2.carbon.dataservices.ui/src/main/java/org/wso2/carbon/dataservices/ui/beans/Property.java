@@ -36,6 +36,8 @@ import java.util.List;
 public class Property extends DataServiceConfigurationElement{
 	private String name;
 	private Object value;
+	
+	private boolean useSecretAlias;
 
     public Property(){}
 	
@@ -55,8 +57,16 @@ public class Property extends DataServiceConfigurationElement{
 	public void setValue(Object value) {
 		this.value = value;
 	}
+	
+	public boolean isUseSecretAlias() {
+		return useSecretAlias;
+	}
 
-    public OMElement buildXML() {
+	public void setUseSecretAlias(boolean useSecretAlias) {
+		this.useSecretAlias = useSecretAlias;
+	}
+
+	public OMElement buildXML() {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMElement propEl = fac.createOMElement("property", null);
         if (this.getValue() != null) {
@@ -66,8 +76,11 @@ public class Property extends DataServiceConfigurationElement{
                 for (Property p : (List<Property>) this.getValue()) {
                     OMElement propNestedEl = fac.createOMElement("property", null);
                     propNestedEl.addAttribute("name", p.getName(), null);
-                    propNestedEl.setText((String) p.getValue());
-
+                    if (p.isUseSecretAlias()) {
+                    	propNestedEl.addAttribute("svns:secretAlias", (String)p.getValue(), null);
+                    } else { 
+                    	propNestedEl.setText((String) p.getValue());
+                    }
                     propEl.addChild(propNestedEl);
                 }
             } else if (this.getValue() instanceof String) {

@@ -81,6 +81,8 @@ public class Data extends DataServiceConfigurationElement{
     private String serviceHierarchy;
     
     private String status;
+    
+    private String secureVaultNamespace;
 
     public Data() {
         this.configs = new ArrayList<Config>();
@@ -179,7 +181,7 @@ public class Data extends DataServiceConfigurationElement{
         this.boxcarring = boxcarring;
     }
 
-public boolean isDTP() {
+    public boolean isDTP() {
         return enableDTP;
     }
 
@@ -305,7 +307,15 @@ public boolean isDTP() {
 	public void setDisableStreaming(boolean disableStreaming) {
 		this.disableStreaming = disableStreaming;
 	}
-    
+	
+	public String getSecureVaultNamespace() {
+		return secureVaultNamespace;
+	}
+
+	public void setSecureVaultNamespace(String secureVaultNamespace) {
+		this.secureVaultNamespace = secureVaultNamespace;
+	}
+
 	/**
 	 * Schema validation for DS configuration file
 	 */
@@ -341,16 +351,24 @@ public boolean isDTP() {
 			Property property = new Property();
 			OMAttribute name = propertyEle.getAttribute(new QName("name"));
 			if (name != null) {
-                if (name.getAttributeValue().equals("org.wso2.ws.dataservice.xa_datasource_properties")){
+                if (name.getAttributeValue().equals(DBConstants.RDBMS.DATASOURCE_PROPS)){
                     property.setName(name.getAttributeValue());
                     Iterator<OMElement> nestedProperties = propertyEle.getChildrenWithName(new QName("property"));
 
                      ArrayList<Property> nestedProperty = new ArrayList<Property>();
                      while (nestedProperties.hasNext()){
+                    	 Property nestedProp = new Property();
                          OMElement nestedPropertyEle = nestedProperties.next();
+                         OMAttribute secretAlias = nestedPropertyEle.getAttribute(new QName(DBConstants.SECUREVAULT_NAMESPACE,"secretAlias"));
                          OMAttribute propertyName = nestedPropertyEle.getAttribute(new QName("name"));
-
-                         nestedProperty.add(new Property(propertyName.getAttributeValue(), nestedPropertyEle.getText()));
+                         nestedProp.setName(propertyName.getAttributeValue());
+                         if (secretAlias != null) {
+                        	 nestedProp.setUseSecretAlias(true);
+                        	 nestedProp.setValue(secretAlias.getAttributeValue());
+                         } else {
+                        	 nestedProp.setValue(nestedPropertyEle.getText());
+                         }
+                         nestedProperty.add(nestedProp);
                      }
                     property.setValue(nestedProperty);
                 } else if (name.getAttributeValue().equals(DBConstants.RDBMS.DYNAMIC_USER_AUTH_MAPPING)) {
@@ -378,8 +396,20 @@ public boolean isDTP() {
                     dynamicAuthConfiguration.setEntries(dynamicUserList);
                     property.setValue(dynamicAuthConfiguration);
                 } else {
-                    property.setName(name.getAttributeValue());
-                    property.setValue(propertyEle.getText());
+                	property.setName(name.getAttributeValue());
+                	if (name.getAttributeValue().equals(DBConstants.RDBMS.PASSWORD) || 
+                			name.getAttributeValue().equals(DBConstants.JNDI.PASSWORD) || 
+                			name.getAttributeValue().equals(DBConstants.GSpread.PASSWORD)) {
+                		OMAttribute secretAlias = propertyEle.getAttribute(new QName(DBConstants.SECUREVAULT_NAMESPACE,"secretAlias"));
+                    	if(secretAlias != null) {
+                    		config.setUseSecretAliasForPassword(true);
+                    		property.setValue(secretAlias.getAttributeValue());
+                    	} else {
+                    		property.setValue(propertyEle.getText());
+                    	}
+                	} else {
+                		property.setValue(propertyEle.getText());
+                	}
                 }
 			}
 			config.addProperty(property);
@@ -902,7 +932,14 @@ public boolean isDTP() {
 		OMAttribute serviceStatus = dsXml.getAttribute(new QName("serviceStatus"));
 		if (serviceStatus != null) {
 			setStatus(serviceStatus.getAttributeValue());
-		}		
+		}
+		
+		/* xmlns:svns property for using securevault */
+		OMAttribute secureVaultNamespaceAttr = dsXml.getAttribute(new QName("xmlns:svns"));
+		if (secureVaultNamespaceAttr != null) {
+			setSecureVaultNamespace(secureVaultNamespaceAttr.getAttributeValue());
+		}
+		
 		/*populate password manager information */
 		Iterator<OMElement> pwdMngrElements = dsXml.getChildrenWithName(new QName("passwordManager"));
 		if (pwdMngrElements.hasNext()){
@@ -1220,6 +1257,10 @@ public boolean isDTP() {
 
 		if (this.getServiceNamespace() != null && this.getServiceNamespace().trim().length() > 0) {
 			dataEl.addAttribute("serviceNamespace", this.getServiceNamespace().trim(), null);
+		}
+		
+		if (this.getSecureVaultNamespace() != null && this.getSecureVaultNamespace().trim().length() > 0) {
+			dataEl.addAttribute("xmlns:svns", this.getSecureVaultNamespace() , null);
 		}
 
         //adding password manager to the dbs configuration

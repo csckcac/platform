@@ -50,6 +50,7 @@
     String serviceName = request.getParameter("serviceName");
     String datasourceId = request.getParameter("datasourceId");
     String datasourceType = request.getParameter("datasourceType");
+    String useSecretAliasForPasswordValue = request.getParameter("useSecretAliasValue");
     String selectBox = request.getParameter("selectbox");
     String driverClass = request.getParameter(DBConstants.RDBMS.DRIVER_CLASSNAME);
     String jdbcUrl = request.getParameter(DBConstants.RDBMS.URL);
@@ -59,6 +60,7 @@
     String user = request.getParameter("User");
     String url = request.getParameter("URL");
     String password = request.getParameter("Password");
+    String passwordAlias = request.getParameter("pwdalias");
     int propertyCount = 0;
     if (request.getParameter("propertyCount")!=null && !request.getParameter("propertyCount").equals("")){
        propertyCount = Integer.parseInt(request.getParameter("propertyCount")); 
@@ -143,8 +145,12 @@
     if (xaType != null) {
         isXAType = Boolean.parseBoolean(xaType);
     }
-
-
+	
+    boolean useSecretAliasForPassword = false;
+    if (useSecretAliasForPasswordValue != null) {
+    	useSecretAliasForPassword = Boolean.parseBoolean(useSecretAliasForPasswordValue);
+    }
+    
     if (configuration != null && configuration.equals("config")) {
         webConfig = request.getParameter("web_harvest_config_textArea");
     } else {
@@ -164,6 +170,14 @@
         } else {
         if (dsConfig == null) {
             dsConfig = newConfig;
+            dsConfig.setUseSecretAliasForPassword(useSecretAliasForPassword);
+            if (useSecretAliasForPassword) {
+            	dsPassword = passwordAlias;
+            	gspreadPassword = passwordAlias;
+            	jndiPassword = passwordAlias;
+            	password = passwordAlias;
+            	dataService.setSecureVaultNamespace(DBConstants.SECUREVAULT_NAMESPACE);
+            } 
             dataService.setConfig(dsConfig);
         }
         if (dsConfig != null) {
@@ -185,33 +199,49 @@
             } else {
                 if (DBConstants.DataSourceTypes.RDBMS.equals(datasourceType)) {
                     if (isXAType) {
+                    	if (useSecretAliasForPassword) {
+                        	password = passwordAlias;
+                        	dataService.setSecureVaultNamespace(DBConstants.SECUREVAULT_NAMESPACE);
+                        }
                         ArrayList<Property> property = new ArrayList<Property>();
                         Iterator<Property> iterator = dsConfig.getProperties().iterator();
                         while (iterator.hasNext()) {
                             Property availableProperty = iterator.next();
-                            if (availableProperty.getName().equals("org.wso2.ws.dataservice.xa_datasource_properties")) {
+                            if (availableProperty.getName().equals(DBConstants.RDBMS.DATASOURCE_PROPS)) {
                                 if (availableProperty.getValue() instanceof ArrayList) {
                                     ArrayList<Property> nestedPropertyList = (ArrayList<Property>) availableProperty.getValue();
                                     Iterator<Property> nestedPropertyIterator = nestedPropertyList.iterator();
                                     while (nestedPropertyIterator.hasNext()) {
                                         Property nestedProperty = nestedPropertyIterator.next();
-                                        if (nestedProperty.getName().equals("URL")) {
-                                            nestedProperty.setValue(url);
-                                        } else if (nestedProperty.getName().equals("User")) {
-                                            nestedProperty.setValue(user);
-                                        } else if (nestedProperty.getName().equals("Password")) {
-                                            nestedProperty.setValue(password);
+                                        String propertyName = nestedProperty.getName();
+                                        	if (request.getParameter(propertyName) != null) {
+                                        		if (request.getParameter("useSecretAliasFor"+propertyName) != null) {
+                                        			nestedProperty.setUseSecretAlias(true);
+                                        			dataService.setSecureVaultNamespace(DBConstants.SECUREVAULT_NAMESPACE);
+                                        		} else {
+                                        			nestedProperty.setUseSecretAlias(false);
+                                        		}
+                                        		nestedProperty.setValue(request.getParameter(propertyName));
+                                        	}
                                         }
-                                    }
 
                                     for (int j = 0; j < propertyCount; j++) {
                                         Property newProperty = new Property();
 
                                         String propertyName = request.getParameter("propertyNameRaw" + j);
                                         String propertValue = request.getParameter("propertyValueRaw" + j);
+                                       
                                         if (propertyName != null) {
                                             newProperty.setName(propertyName);
                                             newProperty.setValue((String) propertValue);
+                                            boolean useSecretAlias = false;
+                                            if(request.getParameter("useSecretAliasFor"+j) != null) {
+                                            	//useSecretAlias = Boolean.parseBoolean(request.getParameter("useSecretAliasFor"+j));
+                                            	//if (useSecretAlias) {
+                                            		newProperty.setUseSecretAlias(true);
+                                            		dataService.setSecureVaultNamespace(DBConstants.SECUREVAULT_NAMESPACE);
+                                            	//}
+                                            }
                                             nestedPropertyList.add(newProperty);
                                         }
                                     }
@@ -220,13 +250,17 @@
                             }
                             updateConfiguration(dsConfig, DBConstants.RDBMS.DATASOURCE_CLASSNAME, xaDataSourceClass);
                             updateConfiguration(dsConfig, DBConstants.RDBMS.DATASOURCE_PROPS, property);
-
-                            dsConfig.removeProperty(DBConstants.RDBMS.DRIVER_CLASSNAME);
-                            dsConfig.removeProperty(DBConstants.RDBMS.URL);
-                            dsConfig.removeProperty(DBConstants.RDBMS.USERNAME);
-                            dsConfig.removeProperty(DBConstants.RDBMS.PASSWORD);
-                        }
+						}
+                        dsConfig.removeProperty(DBConstants.RDBMS.DRIVER_CLASSNAME);
+                        dsConfig.removeProperty(DBConstants.RDBMS.URL);
+                        dsConfig.removeProperty(DBConstants.RDBMS.USERNAME);
+                        dsConfig.removeProperty(DBConstants.RDBMS.PASSWORD);
                     } else {
+                    	dsConfig.setUseSecretAliasForPassword(useSecretAliasForPassword);
+                        if (useSecretAliasForPassword) {
+                        	dsPassword = passwordAlias;
+                        	dataService.setSecureVaultNamespace(DBConstants.SECUREVAULT_NAMESPACE);
+                        }
                         updateConfiguration(dsConfig, DBConstants.RDBMS.DRIVER_CLASSNAME, driverClass);
                         updateConfiguration(dsConfig, DBConstants.RDBMS.URL, jdbcUrl);
                         updateConfiguration(dsConfig, DBConstants.RDBMS.USERNAME, dsUserName);
@@ -360,12 +394,20 @@
                     updateConfiguration(dsConfig, DBConstants.CSV.MAX_ROW_COUNT, csvMaxRowCount);
                     updateConfiguration(dsConfig, DBConstants.CSV.HAS_HEADER, csvHasHeader);
                 } else if (DBConstants.DataSourceTypes.JNDI.equals(datasourceType)) {
+                	if (useSecretAliasForPassword) {
+                    	jndiPassword = passwordAlias;
+                    	dataService.setSecureVaultNamespace(DBConstants.SECUREVAULT_NAMESPACE);
+                    }
                     updateConfiguration(dsConfig, DBConstants.JNDI.INITIAL_CONTEXT_FACTORY, jndiContextClass);
                     updateConfiguration(dsConfig, DBConstants.JNDI.PROVIDER_URL, jndiProviderUrl);
                     updateConfiguration(dsConfig, DBConstants.JNDI.RESOURCE_NAME, jndiResourceName);
                     updateConfiguration(dsConfig, DBConstants.JNDI.USERNAME, jndiUserName);
                     updateConfiguration(dsConfig, DBConstants.JNDI.PASSWORD, jndiPassword);
                 } else if (DBConstants.DataSourceTypes.GDATA_SPREADSHEET.equals(datasourceType)) {
+                	if (useSecretAliasForPassword) {
+                    	gspreadPassword = passwordAlias;
+                    	dataService.setSecureVaultNamespace(DBConstants.SECUREVAULT_NAMESPACE);
+                    }
                     updateConfiguration(dsConfig, DBConstants.GSpread.DATASOURCE, gspreadDatasource);
                     updateConfiguration(dsConfig, DBConstants.GSpread.VISIBILITY, gspreadVisibility);
                     updateConfiguration(dsConfig, DBConstants.GSpread.USERNAME, gspreadUserName);
@@ -386,6 +428,7 @@
                     updateConfiguration(dsConfig, DBConstants.RDBMS.PASSWORD, cassandraPassword);
                     updateConfiguration(dsConfig, DBConstants.RDBMS.DRIVER_CLASSNAME, cassandraDriverClass);
                 }
+                dsConfig.setUseSecretAliasForPassword(useSecretAliasForPassword);
             }
         }
     }

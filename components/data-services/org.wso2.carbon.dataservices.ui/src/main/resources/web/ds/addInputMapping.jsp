@@ -311,14 +311,14 @@ paramType.equals("") ? "" : "display:none"%>"
 <tr>
     <td class="leftCol-small"><fmt:message key="dataservices.validator"/></td>
     <td><select id="validatorList" name="validatorList"
-                onchange="changeAddValidatorFields(this,document);">
-	        <option value="#">--Select--</option>
-		    <option value="validateLongRange">Long Range Validator</option>
-		    <option value="validateDoubleRange">Double Range Validator</option>
-		    <option value="validateLength">Length Validator</option>
-		    <option value="validatePattern">Pattern Validator</option>
-		    <option value="validateCustom">Custom Validator</option>
-       </select></td>
+    		onchange="changeAddValidatorFields(this,document);">
+        <option value="#">--Select--</option>
+        <option value="validateLongRange">Long Range Validator</option>
+        <option value="validateDoubleRange">Double Range Validator</option>
+        <option value="validateLength">Length Validator</option>
+        <option value="validatePattern">Pattern Validator</option>
+        <option value="validateCustom">Custom Validator</option>
+    </select></td>
 </tr>
 
 <div id="validators" style="display:none">

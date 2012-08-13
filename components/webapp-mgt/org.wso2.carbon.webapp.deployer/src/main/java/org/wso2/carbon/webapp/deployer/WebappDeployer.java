@@ -32,7 +32,6 @@ public class WebappDeployer extends AbstractWebappDeployer {
 
     @Override
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
-        log.info("Deploying Web Application : " + deploymentFileData.getAbsolutePath());
         super.deploy(deploymentFileData);
     }
 

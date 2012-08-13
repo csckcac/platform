@@ -125,6 +125,8 @@ public class CassandraTopicPublisher extends Thread{
              * There can be more than one binding to the same topic
              * We need to publish the message to the exact queue
              * */
+            
+            //TODO Srinath, it might be better to publish messages directly to the client like we do with topics rather than going through the enqueue path
             for(Binding binding: exchange.getBindings()){
                 if(binding.getQueue().getName().equalsIgnoreCase(queue.getName())){
                     try {

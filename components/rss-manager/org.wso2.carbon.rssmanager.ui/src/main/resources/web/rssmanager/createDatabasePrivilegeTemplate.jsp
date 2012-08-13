@@ -39,7 +39,8 @@
                     </thead>
                     <tbody>
 						<tr>
-							<td><fmt:message key="rss.manager.database.privilege.template.name"/></td>
+							<td><fmt:message key="rss.manager.database.privilege.template.name"/><font
+                                            color='red'>*</font></td>
 							<td><input type="text" id="privilegeTemplateName" name="privilegeTemplateName"/></td>
 						</tr>
                     

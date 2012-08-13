@@ -31,6 +31,9 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.dataservices.common.DBConstants;
@@ -43,6 +46,7 @@ import org.wso2.carbon.dataservices.core.engine.ExternalParam;
 import org.wso2.carbon.dataservices.core.engine.ExternalParamCollection;
 import org.wso2.carbon.dataservices.core.engine.ParamValue;
 import org.wso2.carbon.dataservices.core.internal.DataServicesDSComponent;
+import org.wso2.carbon.ndatasource.core.utils.DataSourceUtils;
 import org.wso2.carbon.registry.core.Registry;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
@@ -496,20 +500,66 @@ public class DBUtils {
      * Prettify a given XML string
      */
     public static String prettifyXML(String xmlContent) {
+    	Element element = DataSourceUtils.stringToElement(xmlContent);
+    	if (element == null) {
+    	    throw new RuntimeException("Error in converting string to XML: " + xmlContent);
+    	}
+		removeWhitespaceInMixedContentElements(element);
+    	xmlContent = DataSourceUtils.elementToString(element);
         ByteArrayInputStream byteIn = new ByteArrayInputStream(xmlContent.getBytes());
         XMLPrettyPrinter prettyPrinter = new XMLPrettyPrinter(byteIn);
         return prettyPrinter.xmlFormat().trim();
+    }
+    
+    private static List<Node> getNodesAsList(Element element) {
+    	List<Node> nodes = new ArrayList<Node>();
+    	NodeList nodeList = element.getChildNodes();
+    	int count = nodeList.getLength();
+    	for (int i = 0; i < count; i++) {
+    		nodes.add(nodeList.item(i));
+    	}
+    	return nodes;
+    }
+    
+    private static List<Element> getChildElements(Element element) {
+    	List<Element> childEls = new ArrayList<Element>();
+    	for (Node tmpNode : getNodesAsList(element)) {
+    		if (tmpNode.getNodeType() == Node.ELEMENT_NODE) {
+    			childEls.add((Element) tmpNode);
+    		}
+    	}
+    	return childEls;
+    }
+    
+    private static List<Node> getWhitespaceNodes(Element element) {
+    	List<Node> nodes = new ArrayList<Node>();
+    	for (Node node : getNodesAsList(element)) {
+    		if (node.getNodeType() == Node.TEXT_NODE && 
+    				node.getNodeValue().trim().length() == 0) {
+    			nodes.add(node);
+    		}
+    	}
+    	return nodes;
+    }
+    
+	private static void removeWhitespaceInMixedContentElements(Element element)  {
+    	List<Element> childEls = getChildElements(element);
+    	if (childEls.size() > 0) {
+    		for (Node node : getWhitespaceNodes(element)) {
+    			element.removeChild(node);
+    		}
+    		for (Element childEl : childEls) {
+    			removeWhitespaceInMixedContentElements(childEl);
+    		}
+    	}
     }
 
     /**
      * Prettify a given XML file
      */
     public static void prettifyXMLFile(String filePath) throws IOException {
-        XMLPrettyPrinter prettyPrinter = new XMLPrettyPrinter(new FileInputStream(filePath));
-        String prettyXML = prettyPrinter.xmlFormat().trim();
-        if (prettyXML != null && prettyXML.trim().length() > 0) {
-            FileUtils.writeStringToFile(new File(filePath), prettyXML);
-        }
+        String prettyXML = prettifyXML(FileUtils.readFileToString(new File(filePath)));
+        FileUtils.writeStringToFile(new File(filePath), prettyXML);
     }
 
     /**

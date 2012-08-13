@@ -35,7 +35,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.AbstractAdmin;
-import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.core.DBDeployer;
@@ -48,10 +47,6 @@ import org.wso2.carbon.dataservices.core.engine.DataServiceSerializer;
 import org.wso2.carbon.dataservices.core.script.DSGenerator;
 import org.wso2.carbon.dataservices.core.script.PaginatedTableInfo;
 import org.wso2.carbon.dataservices.core.sqlparser.SQLParserUtil;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.jdbc.utils.Transaction;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.Pageable;
 import org.wso2.carbon.utils.multitenancy.CarbonContextHolder;
 import org.wso2.securevault.SecretResolver;
@@ -119,39 +114,6 @@ public class DataServiceAdmin extends AbstractAdmin {
 		return fileContents.toString();
 	}
 
-	private void setServiceFileHashInRegistry(String serviceGroupName, String hash)
-			throws Exception {
-		Registry registry = this.getConfigSystemRegistry();
-		if (registry == null) {
-			throw new Exception("WSO2 Registry is not available");
-		}
-		boolean transactionStarted = Transaction.isStarted();
-		try {
-			if (transactionStarted) {
-				registry.beginTransaction();
-			}
-			String serviceResourcePath = RegistryResources.SERVICE_GROUPS + serviceGroupName;
-			/* the resource should already exist */
-			if (registry.resourceExists(serviceResourcePath)) {
-				Resource serviceResource = registry.get(serviceResourcePath);
-				serviceResource.setProperty(RegistryResources.ServiceGroupProperties.HASH_VALUE,
-						hash);
-				registry.put(serviceResourcePath, serviceResource);
-				serviceResource.discard();
-			}
-			if (transactionStarted) {
-				registry.commitTransaction();
-			}
-		} catch (Throwable e) {
-			if (transactionStarted) {
-				registry.rollbackTransaction();
-			}
-			log.error("Unable to set the hash value property to service group "
-					+ serviceGroupName);
-			throw new Exception(e);
-		}
-	}
-
 	protected String getDataServiceFileExtension() {
 		ConfigurationContext configCtx = this.getConfigContext();
 		String fileExtension = (String) configCtx.getProperty(DBConstants.DB_SERVICE_EXTENSION);
@@ -171,8 +133,6 @@ public class DataServiceAdmin extends AbstractAdmin {
 		ConfigurationContext configCtx = this.getConfigContext();
 		AxisConfiguration axisConfig = configCtx.getAxisConfiguration();
 		AxisService axisService = axisConfig.getServiceForActivation(serviceName);
-		AxisServiceGroup axisServiceGroup;
-		boolean hotUpdateOrFaulty = false;
 
 		if (serviceHierarchy == null) {
 			serviceHierarchy = "";
@@ -194,42 +154,17 @@ public class DataServiceAdmin extends AbstractAdmin {
 			if (!directory.exists() && !directory.mkdirs()) {
 				throw new AxisFault("Cannot create directory: " + directory.getAbsolutePath());
 			}
-
-			/* check if this is a faulty service */
-			if (CarbonUtils.getFaultyService(serviceName, configCtx) != null) {
-				hotUpdateOrFaulty = true;
-			}
 		} else {
 			dataServiceFilePath = ((DataService) axisService.getParameter(
 					DBConstants.DATA_SERVICE_OBJECT).getValue()).getDsLocation();
-			axisServiceGroup = axisService.getAxisServiceGroup();
-			axisServiceGroup.addParameter(CarbonConstants.KEEP_SERVICE_HISTORY_PARAM, "true");
-			axisServiceGroup.addParameter(CarbonConstants.PRESERVE_SERVICE_HISTORY_PARAM, "true");
-			axisService.addParameter(CarbonConstants.KEEP_SERVICE_HISTORY_PARAM, "true");
-			axisService.addParameter(CarbonConstants.PRESERVE_SERVICE_HISTORY_PARAM, "true");
-			hotUpdateOrFaulty = true;
+			AxisServiceGroup axisServiceGroup = axisService.getAxisServiceGroup();
+			axisServiceGroup.addParameter(CarbonConstants.KEEP_SERVICE_HISTORY_PARAM, Boolean.TRUE.toString());
+			axisServiceGroup.addParameter(CarbonConstants.PRESERVE_SERVICE_HISTORY_PARAM, Boolean.TRUE.toString());
+			axisService.addParameter(CarbonConstants.KEEP_SERVICE_HISTORY_PARAM, Boolean.TRUE.toString());
+			axisService.addParameter(CarbonConstants.PRESERVE_SERVICE_HISTORY_PARAM, Boolean.TRUE.toString());
 		}
 
 		serviceContents = DBUtils.prettifyXML(serviceContents);
-		/*
-		 * If this is hot-update or a faulty service that is getting deployed
-		 * again, the hash is recalculated and set in the registry, so it will
-		 * think the service did not change, thus the service settings will not
-		 * be cleared. The hash is computed by our own here, also considering
-		 * faulty services, i.e. cannot get an AxisServiceGroup for a faulty
-		 * service.
-		 */
-		if (hotUpdateOrFaulty) {
-			try {
-				this.setServiceFileHashInRegistry(serviceName,
-						this.getMD5HashOfString(serviceContents));
-			} catch (Exception e) {
-				log.error("Error while saving " + serviceName, e);
-				throw new AxisFault(
-						"Error occurred while saving the last access time in the registry for the existing service "
-								+ serviceName, e);
-			}
-		}
 
 		/* save contents to .dbs file */
 		try {
@@ -242,10 +177,6 @@ public class DataServiceAdmin extends AbstractAdmin {
 					"Error occurred while writing the contents for the service config file for the new service "
 							+ serviceName, e);
 		}
-	}
-
-	private String getMD5HashOfString(String contents) {
-		return CarbonUtils.getMD5(contents.getBytes());
 	}
 
 	/**

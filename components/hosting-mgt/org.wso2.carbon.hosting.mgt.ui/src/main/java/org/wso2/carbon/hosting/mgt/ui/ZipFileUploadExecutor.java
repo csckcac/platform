@@ -82,7 +82,7 @@ public class ZipFileUploadExecutor extends AbstractFileUploadExecutor {
             msg = "Application has been uploaded successfully.";
 
             CarbonUIMessage.sendCarbonUIMessage(msg, CarbonUIMessage.INFO, request, response,
-                                                "../" + webContext + "/hosting-mgt/index.jsp");
+                                                "../" + webContext + "/hosting-mgt/index.jsp?pageNumber=0&cartridges=" + selectedCartridge);
 
             return true;
         } catch (Exception e) {

@@ -67,7 +67,7 @@
         }
 %>
 <script>
-    location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>'
+    location.href = 'index.jsp?pageNumber=<%=pageNumberInt%>&cartridges=<%=cartridge%>'
 </script>
 
 <%
@@ -75,7 +75,7 @@
     CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request);
 %>
 <script type="text/javascript">
-    location.href = "index.jsp?pageNumber=<%=pageNumberInt%>";
+    location.href = "index.jsp?pageNumber=<%=pageNumberInt%>&cartridges=<%=cartridge%>";
 </script>
 <%
         return;

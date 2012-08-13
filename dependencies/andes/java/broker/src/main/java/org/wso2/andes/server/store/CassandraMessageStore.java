@@ -1041,16 +1041,16 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
      * @param  lastDeliveredMid - Id of the last delivered message
      * @return List of messages to be delivered
      * */
-    public List<MessageTransferMessage> getSubscriberMessages(AMQQueue queue, long lastDeliveredMid) {
-        List<MessageTransferMessage> messages = null;
+    public List<AMQMessage> getSubscriberMessages(AMQQueue queue, long lastDeliveredMid) {
+        List<AMQMessage> messages = null;
         List<Long> messageIds = getPendingMessageIds(queue.getName(), lastDeliveredMid);
         if (messageIds.size() > 0) {
-            messages = new ArrayList<MessageTransferMessage>();
+            messages = new ArrayList<AMQMessage>();
             for (long messageId : messageIds) {
                 StorableMessageMetaData messageMetaData = getMetaData(messageId);
                 if(messageMetaData != null) {
                     StoredCassandraMessage storedCassandraMessage = new StoredCassandraMessage(messageId, messageMetaData, true);
-                    MessageTransferMessage message = new MessageTransferMessage(storedCassandraMessage, null);
+                    AMQMessage message = new AMQMessage(storedCassandraMessage, null);
                     messages.add(message);
                 }
             }

@@ -28,6 +28,7 @@ import org.wso2.andes.server.binding.Binding;
 import org.wso2.andes.server.exchange.AbstractExchange;
 import org.wso2.andes.server.exchange.Exchange;
 import org.wso2.andes.server.exchange.ExchangeRegistry;
+import org.wso2.andes.server.message.AMQMessage;
 import org.wso2.andes.server.message.MessageTransferMessage;
 import org.wso2.andes.server.protocol.AMQProtocolSession;
 import org.wso2.andes.server.queue.AMQQueue;
@@ -79,11 +80,11 @@ public class CassandraTopicPublisher extends Thread{
         try {
             working = true;
 
-            List<MessageTransferMessage> messages = messageStore.getSubscriberMessages(queue,
+            List<AMQMessage> messages = messageStore.getSubscriberMessages(queue,
                     lastDeliveredMessageID++);
             if (messages  != null && messages.size() > 0) {
                 List<Long> publishedMids = new ArrayList<Long>();
-                for (MessageTransferMessage message : messages) {
+                for (AMQMessage message : messages) {
                     try {
                         enqueueMessage(message);
                         publishedMids.add(message.getMessageNumber());
@@ -92,7 +93,8 @@ public class CassandraTopicPublisher extends Thread{
                             log.debug("Sending message  "+ lastDeliveredMessageID +"from cassandra topic publisher" + queue.getName());
                         }
                     } catch (Exception e) {
-                       log.error("Error on enqueing messages to relavent queue", e);
+                       log.error("Error on enqueing messages to relavent queue:"+e.getMessage(), e);
+                       e.printStackTrace();
                     }
                 }
                 messageStore.removeDeliveredMessageIds(publishedMids, queue.getName());
@@ -114,7 +116,7 @@ public class CassandraTopicPublisher extends Thread{
     /**
      * Enqueuing messages to it's relavant queue
      * */
-    private void enqueueMessage(MessageTransferMessage message) {
+    private void enqueueMessage(AMQMessage message) {
         Exchange exchange;
         ExchangeRegistry exchangeRegistry = virtualHost.getExchangeRegistry();
         exchange = exchangeRegistry.getExchange(ExchangeDefaults.TOPIC_EXCHANGE_NAME);

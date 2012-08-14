@@ -63,10 +63,10 @@
 &lt;xsl:output method=&quot;xml&quot; omit-xml-declaration=&quot;yes&quot; indent=&quot;yes&quot;/&gt;
 &lt;xsl:template match=&quot;/&quot;&gt;
   &lt;WeatherInfo&gt;
-   &lt;xsl:for-each select=&quot;//div[@id='myLocContainer']/ul/li&quot;&gt;
+   &lt;xsl:for-each select=&quot;//div[@id='MediaWeatherFeaturedLocations']/div[@class='bd']/ul/li&quot;&gt;
      &lt;Weather&gt;
-      &lt;Region&gt;&lt;xsl:value-of select=&quot;a/@title&quot;/&gt;&lt;/Region&gt;
-      &lt;Temp&gt;&lt;xsl:value-of select=&quot;em&quot;/&gt;&lt;/Temp&gt;
+      &lt;Region&gt;&lt;xsl:value-of select=&quot;div[@class='forecast']/h4&quot;/&gt;&lt;/Region&gt;
+      &lt;Temp&gt;&lt;xsl:value-of select=&quot;div[@class='forecast']/p[@class='temp-f']/span[@class='now']&quot;/&gt;&lt;/Temp&gt;
      &lt;/Weather&gt;
    &lt;/xsl:for-each&gt;
   &lt;/WeatherInfo&gt;

@@ -15,6 +15,8 @@
  */
 package org.wso2.carbon.ntask.common;
 
+import javax.xml.bind.annotation.XmlEnum;
+
 /**
  * This class represents the task service constants.
  */
@@ -25,5 +27,18 @@ public class TaskConstants {
 	public static final String TASK_PROPERTIES = "__TASK_PROPERTIES__";
 	
 	public static final String FIXED_LOCATION_RESOLVER_PARAM = "__FIXED_LOCATION_RESOLVER_PARAM__";
+	
+	@XmlEnum
+	public static enum TaskMisfirePolicy {
+		DEFAULT,
+		IGNORE_MISFIRES,
+		FIRE_AND_PROCEED,
+		DO_NOTHING,
+		FIRE_NOW,
+		NEXT_WITH_EXISTING_COUNT,
+		NEXT_WITH_REMAINING_COUNT,
+		NOW_WITH_EXISTING_COUNT,
+		NOW_WITH_REMAINING_COUNT
+	}
 	
 }

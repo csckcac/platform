@@ -25,6 +25,7 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.CronScheduleBuilder;
+import org.quartz.Job;
 import org.quartz.JobBuilder;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -178,9 +179,10 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 		if (this.containsLocalTask(taskName, taskGroup)) {
 			throw new TaskException("The task with name: " + taskName + ", already started.",
 					Code.TASK_ALREADY_STARTED);
-		}		
-		JobDetail job = JobBuilder.newJob(TaskQuartzJobAdapter.class).withIdentity(
-				taskName, taskGroup).usingJobData(
+		}
+		Class<? extends Job> jobClass = taskInfo.getTriggerInfo().isDisallowConcurrentExecution() ? 
+				NonConcurrentTaskQuartzJobAdapter.class : TaskQuartzJobAdapter.class;
+		JobDetail job = JobBuilder.newJob(jobClass).withIdentity(taskName, taskGroup).usingJobData(
 				this.getJobDataMapFromTaskInfo(taskInfo)).build();		
 		Trigger trigger = this.getTriggerFromInfo(taskName, taskGroup, taskInfo.getTriggerInfo());
 		try {
@@ -193,7 +195,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 	}
 	
 	private Trigger getTriggerFromInfo(String taskName, String taskGroup,
-			TriggerInfo triggerInfo) {
+			TriggerInfo triggerInfo) throws TaskException {
 		TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(
 				taskName, taskGroup);
 		if (triggerInfo.getStartTime() == null) {
@@ -275,12 +277,32 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 		}
 	}
 	
-	private CronScheduleBuilder getCronScheduleBuilder(TriggerInfo triggerInfo) {
-		return CronScheduleBuilder.cronSchedule(triggerInfo.getCronExpression()).
-				withMisfireHandlingInstructionIgnoreMisfires();
+	private CronScheduleBuilder getCronScheduleBuilder(TriggerInfo triggerInfo) 
+	            throws TaskException {
+		CronScheduleBuilder cb = CronScheduleBuilder.cronSchedule(triggerInfo.getCronExpression());
+		cb = this.handleCronScheduleMisfirePolicy(triggerInfo, cb);
+		return cb;
 	}
 	
-	private SimpleScheduleBuilder getSimpleScheduleBuilder(TriggerInfo triggerInfo) {
+	private CronScheduleBuilder handleCronScheduleMisfirePolicy(TriggerInfo triggerInfo, 
+			CronScheduleBuilder cb) throws TaskException {
+		switch (triggerInfo.getMisfirePolicy()) {
+		case DEFAULT:
+			return cb;
+		case IGNORE_MISFIRES:
+			return cb.withMisfireHandlingInstructionIgnoreMisfires();
+		case FIRE_AND_PROCEED:
+			return cb.withMisfireHandlingInstructionFireAndProceed();
+		case DO_NOTHING:
+			return cb.withMisfireHandlingInstructionDoNothing();
+		default:
+			throw new TaskException("The task misfire policy '" + triggerInfo.getMisfirePolicy() +
+					"' cannot be used in cron schedule tasks", Code.CONFIG_ERROR);
+		}
+	}
+	
+	private SimpleScheduleBuilder getSimpleScheduleBuilder(TriggerInfo triggerInfo) 
+	            throws TaskException {
 		SimpleScheduleBuilder scheduleBuilder = null;
 		if (triggerInfo.getRepeatCount() == -1) {
 			scheduleBuilder = SimpleScheduleBuilder.simpleSchedule().repeatForever();
@@ -290,8 +312,31 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 		}
 		scheduleBuilder = scheduleBuilder.withIntervalInMilliseconds(
 				triggerInfo.getIntervalMillis());
-		scheduleBuilder = scheduleBuilder.withMisfireHandlingInstructionNextWithRemainingCount(); 
+		scheduleBuilder = this.handleSimpleScheduleMisfirePolicy(triggerInfo, scheduleBuilder);
 		return scheduleBuilder;
+	}
+	
+	private SimpleScheduleBuilder handleSimpleScheduleMisfirePolicy(TriggerInfo triggerInfo, 
+			SimpleScheduleBuilder sb) throws TaskException {
+		switch (triggerInfo.getMisfirePolicy()) {
+		case DEFAULT:
+			return sb;
+		case FIRE_NOW:
+			return sb.withMisfireHandlingInstructionFireNow();
+		case IGNORE_MISFIRES:
+			return sb.withMisfireHandlingInstructionIgnoreMisfires();
+		case NEXT_WITH_EXISTING_COUNT:
+			return sb.withMisfireHandlingInstructionNextWithExistingCount();
+		case NEXT_WITH_REMAINING_COUNT:
+			return sb.withMisfireHandlingInstructionNextWithRemainingCount();
+		case NOW_WITH_EXISTING_COUNT:
+			return sb.withMisfireHandlingInstructionNowWithExistingCount();
+		case NOW_WITH_REMAINING_COUNT:
+			return sb.withMisfireHandlingInstructionNowWithRemainingCount();
+		default:
+			throw new TaskException("The task misfire policy '" + triggerInfo.getMisfirePolicy() +
+					"' cannot be used in simple schedule tasks", Code.CONFIG_ERROR);
+		}
 	}
 	
 }

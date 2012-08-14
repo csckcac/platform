@@ -24,6 +24,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 
 import org.wso2.carbon.ntask.common.TaskConstants;
+import org.wso2.carbon.ntask.common.TaskConstants.TaskMisfirePolicy;
 import org.wso2.carbon.ntask.core.impl.FixedLocationResolver;
 import org.wso2.carbon.ntask.core.impl.RoundRobinTaskLocationResolver;
 
@@ -174,6 +175,10 @@ public class TaskInfo implements Serializable {
 		
 		private String cronExpression;
 		
+		private TaskMisfirePolicy misfirePolicy = TaskMisfirePolicy.DEFAULT;
+		
+		private boolean disallowConcurrentExecution;
+		
 		public TriggerInfo() {
 		}
 		
@@ -184,6 +189,18 @@ public class TaskInfo implements Serializable {
 			this.repeatCount = repeatCount;
 		}
 		
+		public TriggerInfo(String cronExpression) {
+			this.cronExpression = cronExpression;
+		}
+
+		public void setDisallowConcurrentExecution(boolean disallowConcurrentExecution) {
+			this.disallowConcurrentExecution = disallowConcurrentExecution;
+		}
+
+		public void setMisfirePolicy(TaskMisfirePolicy misfirePolicy) {
+			this.misfirePolicy = misfirePolicy;
+		}
+
 		public void setStartTime(Date startTime) {
 			this.startTime = startTime;
 		}
@@ -203,9 +220,15 @@ public class TaskInfo implements Serializable {
 		public void setCronExpression(String cronExpression) {
 			this.cronExpression = cronExpression;
 		}
-
-		public TriggerInfo(String cronExpression) {
-			this.cronExpression = cronExpression;
+		
+		@XmlElement (name = "disallowConcurrentExecution")
+		public boolean isDisallowConcurrentExecution() {
+			return disallowConcurrentExecution;
+		}
+		
+		@XmlElement (name = "misfirePolicy")
+		public TaskMisfirePolicy getMisfirePolicy() {
+			return misfirePolicy;
 		}
 		
 		@XmlElement (name = "cronExpression")

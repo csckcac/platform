@@ -160,9 +160,13 @@
                         <td>
                             <select name="usage-plan-name" id="usage-plan-name">
                             </select>
+                            <%
+                                if (!CommonUtil.getStratosConfig().getUsagePlanURL().equals("")) {
+                            %>
                             <a href=<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>
-                                       target=<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>>
+                                    target=<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>>
                                 <b>More info</b></a>
+                            <% %>
 
                         </td>
                         <td>

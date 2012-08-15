@@ -166,7 +166,7 @@
                             <a href=<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>
                                     target=<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>>
                                 <b>More info</b></a>
-                            <% %>
+                            <% } %>
 
                         </td>
                         <td>

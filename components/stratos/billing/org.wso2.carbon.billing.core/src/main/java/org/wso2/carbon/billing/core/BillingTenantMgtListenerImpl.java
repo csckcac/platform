@@ -25,9 +25,7 @@ import org.wso2.carbon.billing.core.dataobjects.Customer;
 import org.wso2.carbon.billing.core.dataobjects.Item;
 import org.wso2.carbon.billing.core.dataobjects.Subscription;
 import org.wso2.carbon.billing.core.internal.Util;
-import org.wso2.carbon.billing.core.jdbc.DataAccessObject;
 import org.wso2.carbon.stratos.common.beans.TenantInfoBean;
-import org.wso2.carbon.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.stratos.common.exception.StratosException;
 import org.wso2.carbon.stratos.common.internal.CloudCommonServiceComponent;
 import org.wso2.carbon.stratos.common.listeners.TenantMgtListener;
@@ -72,7 +70,9 @@ public class BillingTenantMgtListenerImpl implements TenantMgtListener{
 
     public void onTenantUpdate(TenantInfoBean tenantInfo) throws StratosException {
         try {
-
+            if (tenantInfo.getUsagePlan() == null) {
+                return;
+            }
             Subscription currentSubscription = Util.getDataAccessManager().
                     getActiveSubscriptionOfCustomer(tenantInfo.getTenantId());
             if (currentSubscription != null && currentSubscription.getSubscriptionPlan() != null) {

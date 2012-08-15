@@ -489,6 +489,12 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>../samples/README</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/samples/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>repository/conf/sec.policy</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <filtered>false</filtered>

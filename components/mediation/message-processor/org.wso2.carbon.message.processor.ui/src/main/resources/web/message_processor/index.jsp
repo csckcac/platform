@@ -380,10 +380,10 @@
         </thead>
 
         <tr>
-            <td width="155px">
-                <a class="icon-link"
+            <td style="width:250px;">
+                <a 
                    href="manageMessageForwardingProcessor.jsp"
-                   style="background-image: url(../admin/images/add.gif);">
+                   style="background: url(../admin/images/add.gif) no-repeat; padding-left:20px;display:block;">
                     <fmt:message key="scheduled.message.forwarding.processor"/>
                 </a>
             </td>
@@ -392,10 +392,10 @@
             </td>
         </tr>
         <tr>
-            <td width="155px">
-                <a class="icon-link"
+            <td style="width:250px;">
+                <a 
                    href="manageMessageSamplingProcessor.jsp"
-                   style="background-image: url(../admin/images/add.gif);">
+                   style="background: url(../admin/images/add.gif) no-repeat; padding-left:20px;">
                     <fmt:message key="message.sampling.processor"/>
                 </a>
             </td>
@@ -404,10 +404,10 @@
             </td>
         </tr>
         <tr>
-            <td width="155px">
-                <a class="icon-link"
+            <td style="width:170px;">
+                <a 
                    href="manageCustomMessageProcessor.jsp"
-                   style="background-image: url(../admin/images/add.gif);">
+                   style="background: url(../admin/images/add.gif) no-repeat; padding-left:20px;">
                     <fmt:message key="custom.message.processor"/>
                 </a>
             </td>

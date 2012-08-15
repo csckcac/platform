@@ -56,6 +56,8 @@ public class CassandraMessageFlusher extends Thread{
     
     private long messageProcessed = 0;
     
+    private long lastRestTime = 0; 
+    
     
     private List<ExecutorService> senderQueues;
 
@@ -85,6 +87,7 @@ public class CassandraMessageFlusher extends Thread{
     @Override
     public void run() {
         long iterations = 0; 
+        lastRestTime = System.currentTimeMillis();
         while (running) {
             // 1) Get configured Number of Messages
             // 2) Send the batch to subscribers asynchronously.
@@ -114,8 +117,9 @@ public class CassandraMessageFlusher extends Thread{
                     }
                 }
                 
-                if(resetOffset()) {
+                if(resetOffset() && System.currentTimeMillis() - lastRestTime < 30000) {
                     lastProcessedId = 0;
+                    lastRestTime = System.currentTimeMillis();
                 }
                 CassandraMessageStore messageStore = ClusterResourceHolder.getInstance().
                         getCassandraMessageStore();

@@ -56,7 +56,7 @@ public class OnflightMessageTracker {
             @Override
             protected boolean removeEldestEntry(Map.Entry<Long, MsgData> eldest) {
                 MsgData msgData = eldest.getValue(); 
-                boolean todelete = (System.currentTimeMillis() - msgData.timestamp) > (acktimeout*3);
+                boolean todelete = (System.currentTimeMillis() - msgData.timestamp) > (acktimeout*10);
                 if(todelete){
                     if(!msgData.ackreceived){
                         log.debug("No ack received for delivery tag " + msgData.deliveryID + " and message id "+ msgData.msgID); 

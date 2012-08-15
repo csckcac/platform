@@ -749,11 +749,14 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             AndesExecuter.submit(new Runnable() {
                 public void run() {
                     try {
+                        long start = System.currentTimeMillis(); 
                         Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
                         CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY, rowKey,
                                 offset, chunkData, messageMutator, false);
                         messageMutator.execute(); 
-                        log.debug("content written for "+rowKey);
+                        if(log.isDebugEnabled()){
+                            log.debug("Content Write for "+rowKey + " took "+ (System.currentTimeMillis() -start) + "ms" ); 
+                        }
                     } catch (Throwable e) {
                         log.error("Error processing completed messages", e);
                         
@@ -2212,7 +2215,6 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         public void run() {
             while (running) {
-
                 try {
                     while (!pubSubMessageContentDeletionTasks.isEmpty()) {
                         Set<Long> messageIds = pubSubMessageContentDeletionTasks.keySet();
@@ -2222,18 +2224,17 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                                 pubSubMessageContentDeletionTasks.remove(messageID);
                             }
                         }
-
-                        try {
-                            Thread.sleep(waitInterval);
-                        } catch (InterruptedException e) {
-                            log.error(e);
-                        }
                     }
+                    try {
+                        Thread.sleep(waitInterval);
+                    } catch (InterruptedException e) {
+                        log.error(e);
+                    }
+
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
             }
-
         }
 
         public boolean isRunning() {
@@ -2255,7 +2256,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         private boolean start = false;
 
-        private int writeCount = 200;
+        private int writeCount = 20;
 
         private BlockingQueue<PublishMessageWriterMessage> messageQueue =
                 new LinkedBlockingQueue<PublishMessageWriterMessage>();
@@ -2287,8 +2288,12 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                          * Notify all the waiting threads
                          * reset counters
                          */
+                        long start = System.currentTimeMillis(); 
                         messageMutator.execute();
                         mappingMutator.execute();
+                        if(log.isDebugEnabled()){
+                            log.info("message Write, batch= "+ count + " took "+ (System.currentTimeMillis() -start) + "ms" ); 
+                        }
                         count = 0;
                         for (PublishMessageWriterMessage m : writtenMessages) {
                             m.release();
@@ -2515,11 +2520,14 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                 AndesExecuter.submit(new Runnable() {
                                     public void run() {
                                         try {
+                                            long start = System.currentTimeMillis();
                                             Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
                                             CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY, msg.rowKey,
                                                     msg.offset, msg.message, messageMutator, false);
                                             messageMutator.execute(); 
-                                            log.debug("content written for "+rowKey);
+                                            if(log.isDebugEnabled()){
+                                                log.debug("message Content Write2 for "+rowKey + " took "+ (System.currentTimeMillis() -start) + "ms" ); 
+                                            }
                                         } catch (Throwable e) {
                                             // TODO Auto-generated catch block
                                             e.printStackTrace();

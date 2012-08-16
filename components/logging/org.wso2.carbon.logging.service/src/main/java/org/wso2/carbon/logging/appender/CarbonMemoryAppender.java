@@ -66,7 +66,7 @@ public class CarbonMemoryAppender extends AppenderSkeleton {
 		}
 		tenantEvent.setTenantId(Integer.toString(CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId()));
             tenantEvent.setServiceName(CarbonApplicationContextHolder.
-                    getThreadLocalCarbonApplicationContextHolder().getApplicationName());
+                    getCurrentCarbonAppContextHolder().getApplicationName());
         if (circularBuffer != null) {
             circularBuffer.append(tenantEvent);
         }

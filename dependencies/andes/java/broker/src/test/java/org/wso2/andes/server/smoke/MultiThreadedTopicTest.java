@@ -3,12 +3,13 @@ package org.wso2.andes.server.smoke;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
+import javax.jms.Message;
+import javax.jms.MessageListener;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 
-public class MultiThreadedTest {
+public class MultiThreadedTopicTest {
     private static final AtomicInteger sentCount = new AtomicInteger(); 
     private static final AtomicInteger receivedCount = new AtomicInteger(); 
     int messageCountPerThread = 1000;
@@ -23,7 +24,7 @@ public class MultiThreadedTest {
     }
     
 
-    public  class SimpleProducer extends AbstractJMSClient{
+    public  class SimpleProducer extends AbstractJMSTopicClient{
         
         private int threadIndex; 
         public SimpleProducer(String queueName, int threadIndex) {
@@ -36,12 +37,12 @@ public class MultiThreadedTest {
             int count = 0;
             MessageProducer producer = null; 
             try {
-                producer = session.createProducer(destination);
+                producer = topicSession.createProducer(topic);
                 long start = System.currentTimeMillis();
                 for (int i = 0; i < messageCountPerThread; i++) {
                     int globalMsgIndex = sentCount.incrementAndGet();
 
-                    TextMessage textMessage = createMessage(threadIndex, i, session, globalMsgIndex); 
+                    TextMessage textMessage = createMessage(threadIndex, i, topicSession, globalMsgIndex); 
                     producer.send(textMessage);
                     if(count%10 == 0){
                         System.out.println("Thread : " + threadIndex + "   sending message = " + i);
@@ -56,8 +57,8 @@ public class MultiThreadedTest {
                                      // Templates.
             } finally {
                 try {
-                    con.close();
-                    session.close();
+                    topicConnection.close();
+                    topicSession.close();
                     producer.close();
                 } catch (JMSException e) {
                     e.printStackTrace(); // To change body of catch
@@ -68,54 +69,61 @@ public class MultiThreadedTest {
         }
     };
 
-    public  class SimpleConsumer extends AbstractJMSClient{
+    public  class SimpleConsumer extends AbstractJMSTopicClient{
         private int  threadIndex; 
+        private int count = 0; 
+        private long start = System.currentTimeMillis(); 
+        
         public SimpleConsumer(String queueName, int threadIndex) {
             super(queueName);
         }
         @Override
         public void run() {
-            MessageConsumer messageConsumer = null;
+            
+            
             try {
-                int count = 0;
+                // start the connection
+                topicConnection.start();
 
-                long start = System.currentTimeMillis();
-                messageConsumer = session.createConsumer(destination);
-                while (true) {
+                // create a topic subscriber
+                javax.jms.TopicSubscriber topicSubscriber = topicSession.createSubscriber(topic);
 
-                    try {
-                        TextMessage textMessage = (TextMessage) messageConsumer.receive();
-                        int globalreceivedIndex = receivedCount.incrementAndGet();
+                topicSubscriber.setMessageListener(new MessageListener() {
+                    
+                    @Override
+                    public void onMessage(Message message) {
+                        try {
+                            TextMessage textMessage = (TextMessage) message;
+                            int globalreceivedIndex = receivedCount.incrementAndGet();
 
 
-                        //if (count % 100 == 0) {
-                          String msgAsStr = textMessage.getText(); 
-                            System.out.println("got(" + count + ")" + msgAsStr.substring(0, (int)Math.min(7, msgAsStr.length())) + " "+ receivedCount+ "/" + sentCount);
-                        //}
-                        if (count % 200 == 0) {
-                            double throughput = count * 1000d / (System.currentTimeMillis() - start);
-                            System.out.println("Received " + count + " mesages, throughput=" + throughput);
-                        }
-                        count++;
-                        postProcessesReceivedMessage(threadIndex, count, textMessage, globalreceivedIndex);
+                            //if (count % 100 == 0) {
+                                System.out.println("got(" + count + ")" + textMessage.getText().substring(0,4) + " "+ receivedCount+ "/" + sentCount + " #"+ textMessage.getText().length());
+                            //}
+                            if (count % 200 == 0) {
+                                double throughput = count * 1000d / (System.currentTimeMillis() - start);
+                                System.out.println("Received " + count + " mesages, throughput=" + throughput);
+                            }
+                            count++;
+                            postProcessesReceivedMessage(threadIndex, count, textMessage, globalreceivedIndex);
 
-                    } catch (JMSException e) {
-                        e.printStackTrace();
-                    } finally {
+                        } catch (JMSException e) {
+                            e.printStackTrace();
+                        } finally {
+                        }                    
                     }
+                });
 
-                }
-            } catch (Exception e) {
+                Thread.sleep(Integer.MAX_VALUE);
+
+         /* TextMessage textMessage = (TextMessage) topicSubscriber.receive();
+                System.out.println("Got message ==> " + textMessage.getText());*/
+
+                topicSubscriber.close();
+                topicSession.close();
+            }catch (Exception e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
-            }finally{
-                try {
-                    messageConsumer.close();
-                    session.close();
-                    con.close();
-                } catch (Exception e1) {
-                    e1.printStackTrace();
-                }
             }
         }
     };
@@ -124,10 +132,14 @@ public class MultiThreadedTest {
      * @throws InterruptedException 
      */
     public static void main(String[] args) throws Exception {
-        MultiThreadedTest base = new MultiThreadedTest();
+        System.setProperty(org.wso2.andes.configuration.ClientProperties.AMQP_VERSION, "0-91");
+        System.setProperty("qpid.dest_syntax" , "BURL");
+        
+        
+        MultiThreadedTopicTest base = new MultiThreadedTopicTest();
         int producerCount = 10; 
-        int consumerCount = 10; 
-        String queueName = "queue1";
+        int consumerCount = 1; 
+        String queueName = "topic1";
 
         for(int i = 0;i< consumerCount;i++){
             new Thread(base.new SimpleConsumer(queueName, i)).start(); 

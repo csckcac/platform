@@ -254,7 +254,7 @@ public class WebApplication {
      */
     public void undeploy() throws CarbonException {
         CarbonApplicationContextHolder currentCarbonAppContextHolder =
-                CarbonApplicationContextHolder.getThreadLocalCarbonApplicationContextHolder();
+                CarbonApplicationContextHolder.getCurrentCarbonAppContextHolder();
         currentCarbonAppContextHolder.startApplicationFlow();
         currentCarbonAppContextHolder.setApplicationName(TomcatUtil.
                 getApplicationNameFromContext(this.context.getBaseName()));

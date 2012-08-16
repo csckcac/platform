@@ -103,7 +103,7 @@
 				<featureArtifactDef>org.wso2.brs:org.wso2.brs.dashboard.ui.feature:${project.version}</featureArtifactDef>
 
                                 <!-- Features related to Cloud -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
+                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:2.0.1</featureArtifactDef>
 			       	<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.deployment.feature:${stratos.version}</featureArtifactDef>
@@ -115,13 +115,6 @@
                 		 <!-- BRS Application deployer-->
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.application.deployer.brs.feature:${carbon.version}</featureArtifactDef>
 
-                                <!-- GApp SSO features --> 
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.gapp.feature:${stratos.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${carbon.version}
-                                </featureArtifactDef>                            
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.feature:${carbon.version}
-                                </featureArtifactDef>
-                                <!-- End GApp SSO features -->
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
 									
@@ -243,7 +236,7 @@
                                 <!-- multitenancy feature groups -->
                                 <feature>
                                     <id>org.wso2.carbon.stratos.common.feature.group</id>
-                                    <version>${stratos.version}</version>
+                                    <version>2.0.1</version>
                                 </feature>
  
                                 <feature>
@@ -274,21 +267,6 @@
                                     <id>org.wso2.carbon.load.balance.agent.server.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
-
-                                <!-- GApp SSO features --> 
-                                <feature>
-                                    <id>org.wso2.carbon.stratos.gapp.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.core.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.identity.relying.party.feature.group</id>
-                                    <version>${carbon.version}</version>
-                                </feature>
-                                <!--End GApp SSO features -->
 
 								<feature>
 									<id>org.wso2.carbon.deployment.synchronizer.server.feature.group</id>

@@ -261,10 +261,5 @@
             <filtered>false</filtered>
             <fileMode>644</fileMode>
         </file>
-        <file>
-            <source>../p2-profile/target/wso2carbon-core-${carbon.version}/repository/resources/security/userRP.jks</source>
-            <outputDirectory>wso2brs-${pom.version}/repository/resources/security/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
     </files>
 </assembly>

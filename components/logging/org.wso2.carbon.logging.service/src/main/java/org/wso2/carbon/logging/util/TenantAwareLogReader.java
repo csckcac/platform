@@ -1,10 +1,5 @@
 package org.wso2.carbon.logging.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.Appender;
@@ -15,6 +10,11 @@ import org.wso2.carbon.logging.appender.CarbonMemoryAppender;
 import org.wso2.carbon.logging.service.data.LogEvent;
 import org.wso2.carbon.utils.logging.TenantAwareLoggingEvent;
 import org.wso2.carbon.utils.logging.TenantAwarePatternLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 
 public class TenantAwareLogReader {
 
@@ -194,7 +194,8 @@ public class TenantAwareLogReader {
 			if (event.getAppName() != null && !event.getAppName().equals("")
 					&& !event.getAppName().equals("NA")
 					&& !LoggingUtil.isAdmingService(event.getAppName())
-					&& !appList.contains(event.getAppName())) {
+					&& !appList.contains(event.getAppName())
+                    && !event.getAppName().equals("STRATOS_ROOT")) {
 				appList.add(event.getAppName());
 			}
 		}

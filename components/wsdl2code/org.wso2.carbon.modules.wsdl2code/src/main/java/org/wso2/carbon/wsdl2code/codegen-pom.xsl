@@ -521,10 +521,10 @@
         </dependencies>
 
             <properties>
-                <axis2.version.wso2>1.6.1.wso2v1</axis2.version.wso2>
-                <axiom.version.wso2>1.2.11.wso2v1</axiom.version.wso2>
-                <sandesha.version>1.6.1-wso2v1</sandesha.version>
-                <rampart.version>1.6.1-wso2v1</rampart.version>
+                <axis2.version.wso2>1.6.1.wso2v6</axis2.version.wso2>
+                <axiom.version.wso2>1.2.11.wso2v2</axiom.version.wso2>
+                <sandesha.version>1.6.1-wso2v2</sandesha.version>
+                <rampart.version>1.6.1-wso2v4</rampart.version>
             </properties>
 
             <profiles>
@@ -578,10 +578,6 @@
                 <snapshots>
                     <enabled>true</enabled>
                 </snapshots>
-            </repository>
-            <repository>
-                <id>ws-zones-repository</id>
-                <url>http://ws.zones.apache.org/repository2</url>
             </repository>
             <repository>
                 <id>wso2-maven2-repository</id>

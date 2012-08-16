@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.context.ApplicationContext;
 import org.wso2.carbon.utils.FileManipulator;
+import org.wso2.carbon.utils.multitenancy.CarbonApplicationContextHolder;
 import org.wso2.carbon.webapp.mgt.utils.GhostWebappDeployerUtils;
 
 import java.io.File;
@@ -252,6 +253,11 @@ public class WebApplication {
      * @throws CarbonException If an error occurs while undeploying this webapp
      */
     public void undeploy() throws CarbonException {
+        CarbonApplicationContextHolder currentCarbonAppContextHolder =
+                CarbonApplicationContextHolder.getThreadLocalCarbonApplicationContextHolder();
+        currentCarbonAppContextHolder.startApplicationFlow();
+        currentCarbonAppContextHolder.setApplicationName(TomcatUtil.
+                getApplicationNameFromContext(this.context.getBaseName()));
         //lazyunload the context of WebApplication
         lazyUnload();
         File webappDir;
@@ -267,7 +273,7 @@ public class WebApplication {
                 !FileManipulator.deleteDir(webappDir)) {
             throw new CarbonException("exploded Webapp directory " + webappDir + " deletion failed");
         }
-
+        currentCarbonAppContextHolder.endApplicationFlow();
     }
 
     /**

@@ -98,7 +98,10 @@ public class TomcatUtil {
     
     public static String getApplicationNameFromContext(String contextName) {
         String appName;
-        if(contextName.contains("/t/")) {
+        if(contextName.contains("t#") && contextName.contains("#webapps#")) {
+            String[] temp = contextName.split("#");
+            appName = temp[temp.length - 1];
+        } else if (contextName.contains("/t/") && contextName.contains("/webapps/")){
             String[] temp = contextName.split("/");
             appName = temp[temp.length - 1];
         } else {
@@ -112,12 +115,8 @@ public class TomcatUtil {
         HotUpdateService hotUpdate = DataHolder.getHotUpdateService();
         //checking for whether the request is for virtual host or not, if the server installed with url-mappings only.
         if(hotUpdate != null && requestedHostName.endsWith(hotUpdate.getSuffixOfHost())) {
-            String serverUrl = CarbonUtils.getServerURL(
-                    CarbonUtils.getServerConfiguration(), DataHolder.getServerConfigContext());
             //in case server url from carbon.xml used as a suffix, then localhost request won't get executed here
-            if(!serverUrl.equalsIgnoreCase(requestedHostName)) {
-                isVirtualHostRequest = true;
-            }
+            isVirtualHostRequest = true;
         }
         return isVirtualHostRequest;
     }

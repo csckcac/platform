@@ -394,6 +394,7 @@ public class TomcatGenericWebappsDeployer {
             faultyWebapps.remove(fileName);
             log.info("Removed faulty webapp " + faultyWebapp);
         }
+        currentCarbonAppContextHolder.endApplicationFlow();
     }
 
     /**

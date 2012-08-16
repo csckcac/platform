@@ -23,11 +23,6 @@ var proxyServiceDataSet ;
 var endPointDataSet ;
 var sequenceDataSet ;
 
-var xTicksArrayServerGraph ;
-var xTicksArrayProxyServiceGraph ;
-var xTicksArrayEndPointGraph ;
-var xTicksArraySequenceGraph ;
-
 var showGraphDivHome = false;
 var showGraphDivInterval = 0;
 var REFRESH_GRAPHS = 70000;
@@ -36,39 +31,29 @@ var shouldRefesh = 0;
 // Response Times
 var graphAvgResponseTimeArrayObj;
 
-function draw(xTicksArray, datasetArray, target) {
-    if (xTicksArray == null || datasetArray == null) {
+function draw(dataSetArray, target) {
+    if (dataSetArray == null || dataSetArray.length == null) {
         return;
     }
-    var xTicks = xTicksArray.get();
-    var dataset = datasetArray.get();
-    if (xTicks == null || xTicks.length == 0) {
-        return;
-    }
-    if (dataset == null || dataset.length == null) {
-        return;
-    }
-    var hexColor = MochiKit.Color.Color.fromHexString;
-    var options = {
-        "IECanvasHTC": "/plotkit/iecanvas.htc",
-        "axisLabelColor": hexColor("#666666"),
-        "backgroundColor":hexColor("#f5f5f5"),
-        "axisLabelFont": "Arial",
-        "axisLabelFontSize": 12,
-        "axisLabelWidth": 180,
-        "colorScheme": PlotKit.Base.palette(hexColor("#a9c5d9")),
-        "padding": {left: 2, right: 2, top: 2, bottom: 2},
-        "xTicks": xTicks,
-        "pieRadius": 0.3,
-        "drawYAxis": false
-    };
-    var layout = new PlotKit.Layout("pie", options);
-    layout.addDataset("sqrt", dataset);
-    layout.evaluate();
-    var canvas = MochiKit.DOM.getElement(target);
-    var plotter = new PlotKit.SweetCanvasRenderer(canvas, layout, options);
-    plotter.clear();
-    plotter.render();
+    $.plot($("#" + target), dataSetArray,
+    {
+        series: {
+               pie: {
+                   show: true,
+                   label: {
+                    show: true,
+                    formatter: function(label, series){
+                        return '<div style="font-size:8pt;text-align:center;padding:2px;color:black;">'+label+' '+Math.round(series.percent)+'%</div>';
+                    },
+                    background: { opacity: 0 }
+                }
+               }
+           },
+            legend: {
+                show: false
+            }
+       });
+    return;
 }
 function drawGraphs() {
     drawServerGraph();
@@ -78,57 +63,45 @@ function drawGraphs() {
     resetGraphData();
 }
 function drawServerGraph() {
-    draw(xTicksArrayServerGraph, serverDataSet, "serverGraph");
+    draw(serverDataSet, "serverGraph");
 }
 function drawProxyServiceGraph() {
-    draw(xTicksArrayProxyServiceGraph, proxyServiceDataSet, "proxyServiceGraph");
+    draw(proxyServiceDataSet, "proxyServiceGraph");
 }
 function drawEndPointGraph() {
-    draw(xTicksArrayEndPointGraph, endPointDataSet, "endPointGraph");
+    draw(endPointDataSet, "endPointGraph");
 }
 function drawSequencesGraph() {
-    draw(xTicksArraySequenceGraph, sequenceDataSet, "sequenceGraph");
+    draw(sequenceDataSet, "sequenceGraph");
 }
-function fillDataForGraph(xTicksArray, dataSetArray, valueStr) {
+function fillDataForGraph(valueStr) {
     var values = valueStr.split(";");
+    var data = [];
     for (var i = 0; i < values.length - 1; i++) {
         var aValue = values[i].split(",");
-        xTicksArray.add(aValue[0]);
-        dataSetArray.add(parseFloat(aValue[1]));
+        data.push({ label: aValue[0], data: parseFloat(aValue[1])});
     }
+    return data;
 }
 function resetGraphData() {
-    serverDataSet = new DataSetArray();
-    proxyServiceDataSet = new DataSetArray();
-    endPointDataSet = new DataSetArray();
-    sequenceDataSet = new DataSetArray();
-
-    xTicksArrayServerGraph = new XTicksArray();
-    xTicksArrayProxyServiceGraph = new XTicksArray();
-    xTicksArrayEndPointGraph = new XTicksArray();
-    xTicksArraySequenceGraph = new XTicksArray();
+    serverDataSet = [];
+    proxyServiceDataSet = [];
+    endPointDataSet = [];
+    sequenceDataSet = [];
 }
 function populateAllGraphs(serverStr, psStr, epStr, seqStr) {
 
     if (serverStr != "") {
-        serverDataSet = new DataSetArray();
-        xTicksArrayServerGraph = new XTicksArray();
-        fillDataForGraph(xTicksArrayServerGraph, serverDataSet, serverStr);
+        serverDataSet = fillDataForGraph(serverStr);
     }
     if (psStr != "") {
-        proxyServiceDataSet = new DataSetArray();
-        xTicksArrayProxyServiceGraph = new XTicksArray();
-        fillDataForGraph(xTicksArrayProxyServiceGraph, proxyServiceDataSet, psStr);
+        proxyServiceDataSet = fillDataForGraph(psStr);
     }
     if (epStr != "") {
-        endPointDataSet = new DataSetArray();
-        xTicksArrayEndPointGraph = new XTicksArray();
-        fillDataForGraph(xTicksArrayEndPointGraph, endPointDataSet, epStr);
+        endPointDataSet = fillDataForGraph(epStr);
     }
     if (seqStr != "") {
-        sequenceDataSet = new DataSetArray();
-        xTicksArraySequenceGraph = new XTicksArray();
-        fillDataForGraph(xTicksArraySequenceGraph, sequenceDataSet, seqStr);
+        sequenceDataSet = fillDataForGraph(seqStr);
     }
 }
 function isNumeric(sText) {

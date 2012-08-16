@@ -25,14 +25,15 @@
 <%@ page import="org.wso2.carbon.utils.ServerConstants" %>
 <%@ page import="org.wso2.carbon.ui.CarbonUIMessage" %>
 
+<!--[if IE]><script language="javascript" type="text/javascript" src="js/excanvas.min.js"></script><![endif]-->
+<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="js/jquery.flot.pie.js"></script>
+
+
 <script type="text/javascript" src="js/statistics.js"></script>
 <script type="text/javascript" src="js/graphs.js"></script>
-<script language="javascript" src="js/mochikit/MochiKit.js"></script>
-<script language="javascript" src="js/plotkit/Base.js"></script>
-<script language="javascript" src="js/plotkit/Layout.js"></script>
-<script language="javascript" src="js/plotkit/Canvas.js"></script>
-<script language="javascript" src="js/plotkit/SweetCanvas.js"></script>
-<script language="javascript" src="js/plotkit/excanvas.js"></script>
+
 <fmt:bundle basename="org.wso2.carbon.mediation.statistics.ui.i18n.Resources">
     <carbon:breadcrumb label="Mediation Statistics"
                        resourceBundle="org.wso2.carbon.mediation.statistics.ui.i18n.Resources"
@@ -62,9 +63,50 @@
         var epStr = '<%=graphData.getEndPointData()%>';
         var seqStr = '<%=graphData.getSequenceData()%>';
         populateAllGraphs(serverStr, psStr, epStr, seqStr);
-        MochiKit.DOM.addLoadEvent(drawGraphs);
+        $(document).ready(drawGraphs);
+        //MochiKit.DOM.addLoadEvent(drawGraphs);
     </script>
 
+    <%--
+
+    <h1>Flot Examples</h1>
+
+ <div id="graph3" style="width:600px;height:300px;"></div>
+
+    <p>Simple example. You don't need to specify much to get an
+       attractive look. Put in a placeholder, make sure you set its
+       dimensions (otherwise the plot library will barf) and call the
+       plot function with the data. The axes are automatically
+       scaled.</p>
+
+    <script type="text/javascript">
+        var data = [];
+        var series = Math.floor(Math.random() * 10) + 1;
+        for (var i = 0; i < series; i++) {
+            data[i] = { label: "Series" + (i + 1), data: Math.floor(Math.random() * 100) + 1 }
+        }
+
+        $.plot($("#graph3"), data,
+        {
+            series: {
+                pie: {
+                    show: true,
+                    radius: 1,
+                    label: {
+                        show: true,
+                        radius: 3 / 4,
+                        formatter: function(label, series) {
+                            return '<div style="font-size:8pt;text-align:center;padding:2px;color:white;">' + label + '<br/>' + Math.round(series.percent) + '%</div>';
+                        },
+                        background: { opacity: 0.5 }
+                    }
+                }
+            },
+            legend: {
+                show: false
+            }
+        });
+    </script>--%>
     <div id="middle">
         <h2><fmt:message key="mediation.statistics"/></h2>
 
@@ -88,8 +130,7 @@
                                             <% if (graphData.getServerData() == null || graphData.getServerData().trim().equals("")) { %>
                                             <p><i><fmt:message key="no.server.data"/></i></p>
                                             <% } else { %>
-                                            <canvas id="serverGraph" height="200"
-                                                    width="500"></canvas>
+                                            <div id="serverGraph" style="width:500px;height:200px;"></div>
                                             <% } %>
                                         </div>
                                     </td>
@@ -114,8 +155,7 @@
                                             <p><i>
                                                     <fmt:message key="no.proxy.service.data"/>
                                                         <% } else { %>
-                                                <canvas id="proxyServiceGraph" height="200"
-                                                        width="500"></canvas>
+                                                <div id="proxyServiceGraph" style="width:500px;height:200px;"></div>
                                                         <% } %>
                                         </div>
                                     </td>
@@ -141,8 +181,7 @@
                                             <% if (graphData.getSequenceData() == null || graphData.getSequenceData().trim().equals("")) { %>
                                             <p><i><fmt:message key="no.sequence.data"/></i></p>
                                             <% } else { %>
-                                            <canvas id="sequenceGraph" height="200"
-                                                    width="500"></canvas>
+                                            <div id="sequenceGraph" style="width:500px;height:200px;"></div>
                                             <% } %>
                                         </div>
                                     </td>
@@ -166,8 +205,7 @@
                                             <% if (graphData.getEndPointData() == null || graphData.getEndPointData().trim().equals("")) { %>
                                             <p><i><fmt:message key="no.endpoint.data"/></i></p>
                                             <% } else { %>
-                                            <canvas id="endPointGraph" height="200"
-                                                    width="500"></canvas>
+                                            <div id="endPointGraph" style="width:500px;height:200px;"></div>
                                             <% } %>
                                         </div>
                                     </td>
@@ -178,8 +216,9 @@
                 </table>
             </div>
             <script type="text/javascript">
-                jQuery.noConflict();
-                var refresh;
+                //jQuery.noConflict();
+
+                /*var refresh;
                 var firstTimeRefresh = true;
 
                 function refreshStats() {
@@ -202,7 +241,7 @@
                 jQuery(document).ready(function() {
                     refreshStats();
                     refresh = setInterval("refreshStats()", 30000);
-                });
+                });*/
             </script>
         </div>
     </div>

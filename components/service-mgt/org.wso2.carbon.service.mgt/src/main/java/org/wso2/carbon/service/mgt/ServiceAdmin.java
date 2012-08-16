@@ -846,9 +846,6 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     }
 
     private void deleteServiceGroup(String serviceGroupName) throws AxisFault {
-        CarbonApplicationContextHolder carbonApplicationContextHolder =
-                CarbonApplicationContextHolder.getThreadLocalCarbonApplicationContextHolder();
-        carbonApplicationContextHolder.startApplicationFlow();
         AxisConfiguration axisConfig = getAxisConfig();
         AxisServiceGroup asGroup = axisConfig.getServiceGroup(serviceGroupName);
 
@@ -864,6 +861,9 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
 
         String fileName = null;
         for (Iterator<AxisService> serviceIter = asGroup.getServices(); serviceIter.hasNext(); ) {
+            CarbonApplicationContextHolder carbonApplicationContextHolder =
+                    CarbonApplicationContextHolder.getCurrentCarbonAppContextHolder();
+            carbonApplicationContextHolder.startApplicationFlow();
             AxisService axisService = serviceIter.next();
             URL fn = axisService.getFileName();
             if (fn != null) {
@@ -874,6 +874,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             axisConfig.removeService(axisService.getName());
             //adding log per service in order to notify user about the service's state when viewing logs.
             log.info("Undeploying Axis2 Service: " + axisService.getName());
+            carbonApplicationContextHolder.endApplicationFlow();
         }
         // remove the service group from axis config and config context
         AxisServiceGroup serviceGroup = axisConfig.removeServiceGroup(asGroup.getServiceGroupName());
@@ -933,7 +934,6 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         if (ghostFile != null && ghostFile.exists() && !ghostFile.delete()) {
             log.error("Error while deleting ghost service file : " + ghostFile.getAbsolutePath());
         }
-        carbonApplicationContextHolder.endApplicationFlow();
     }
 
     public ServiceMetaData getServiceData(String serviceName) throws Exception {

@@ -79,6 +79,7 @@
 			}
 			if (applicationNames == null) {
 				applicationNames = new String[]{"No applications"};
+				appName = applicationNames[0];
 			}
 			paginatedLogEvents = logViewerClient.getPaginatedApplicationLogEvents(pageNumber,type,keyword,appName);
 			if (paginatedLogEvents != null) {
@@ -152,8 +153,7 @@
 												for (String name : applicationNames) {
 											%>
 											<%
-											    if(!name.equalsIgnoreCase("STRATOS_ROOT")) {
-											    	if (name.equals(appName)) {
+											   	if (name.equals(appName)) {
 											%>
 											<option selected="selected" value="<%=name%>">
 												<%=name%>
@@ -169,8 +169,7 @@
 											%>
 											<%
 											    }
-												}
-											%>
+											    %>
 
 									</select></td>
                             <td style="width: 100%;"></td>

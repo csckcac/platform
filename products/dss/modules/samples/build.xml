@@ -17,15 +17,15 @@
 
 <project name="dataservice" default="deploy">
     <property environment="env"/>
-    <property name="dshome" value="../"/>    
+    <property name="as.home" value="../../"/>
     <property name="src" value="src"/>
     <property name="classes" value="classes"/>
     <property name="db.dir" value="database"/>
-    <property name="ds.repository" value="${dshome}/repository/deployment/server/dataservices"/>
+    <property name="ds.repository" value="${as.home}/repository/deployment/server/dataservices"/>
 
-    <property name="carbon.home" value="${dshome}"/>
-    <property name="dshome.lib" value="${dshome}/lib"/>
-    <property name="dshome.components.lib" value="${dshome}/repository/components/lib"/>
+    <property name="carbon.home" value="${as.home}"/>
+    <property name="as.home.lib" value="${as.home}/lib"/>
+    <property name="as.home.components.lib" value="${as.home}/repository/components/lib"/>
     <property name="ds.product.version" value="2.5.0"/>
 
     <property name="userid" value="wso2ds"/>
@@ -36,16 +36,16 @@
     <property name="dbURL2"
 		   value="jdbc:h2:file:${basedir}/${db.dir}/DATA_SERV_SAMP2"/>
 
-    <ant antfile="${dshome}/bin/build.xml"/>
+    <ant antfile="${as.home}/bin/build.xml"/>
 
     <path id="all.jar.classpath">
-		<fileset dir="${dshome}/repository/lib">
+		<fileset dir="${as.home}/repository/lib">
 			<include name="**/*.jar"/>
 		</fileset>
 	</path>
 	
 	<path id="client.class.path">
-		<fileset dir="${dshome}/repository/lib">          
+		<fileset dir="${as.home}/repository/lib">
 			<include name="**/*.jar" />
 		</fileset>
 		<pathelement location="${classes}" />

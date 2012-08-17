@@ -27,12 +27,11 @@
 <p><b>Introduction</b> 
 </p>
 <p><a href="http://wso2.com/products/data-services-server/">WSO2 Data
-Services Server</a> provides the feature to secure passwords fields
+Services Server</a> provides the feature to securely store sensitive data such as password fields
 using the Secure Vault functionality. Users can encript their
 passwords using tokens instead of the actual password inside the data
-service configuration file and decript the actual password using
-password provider class. This example will guide you how to secure
-your password for a relational database. 
+service configuration file. This guide will explain you how to secure
+your password in data-source configuration. 
 </p>
 <p><b>Step 1 - Run ciphertool script from bin directory</b> 
    <br/>Linux: sh ciphertool.sh -Dconfigure
@@ -40,20 +39,23 @@ your password for a relational database.
 </p>
 
 <p><b>Step 2 - Encrypt the plain text using ciphertool</b></p>
-<p>Again run the ciphertool script without -Dconfigure. It will ask for the KeyStore Password of Carbon Server.
-The default value of the KeyStore password is 'wso2carbon'. Then provide the plain text value that need to be encrypt. It will return you the encrypted text value.</p>
+<p>Again run the ciphertool script without '-Dconfigure'. It will ask for the KeyStore Password of Carbon Server.
+The default value of the KeyStore password is 'wso2carbon'. Then provide the plain text value that need to be encrypted. It will return you the encrypted text value.</p>
 <p><img alt="DS" src="images/user-guide/secure-vault/step1.png" />
 </p>
 <p>Figure 1: Encrypt plain text value using ciphertool</p>
 
-<p><b>Step 3 - Add new alias and encrypted value to cipher-text.properties</b></p>
+<p><b>Step 3 - Update the cipher-text.properties file by adding new alias and encrypted value</b></p>
 <p>cipher-text.properties file is located at {DSS_HOME}/repository/conf/security/ directory. Open this file and add alias name and encripted value.(alias name can be any name as you preferred.)
 <br/>Eg: DSS.Samples.DB.Pwd=d6RmzIGebavMJULd1F2FBjIz0jKw469xwB7LRZF8q50alZ+wr6ueQOGudXz/csK5/srP3us2aI9w\nm/mW+j/P+lWad3g7kgah8koBxSxfM/W911vl9ipcndxfBl4tT0gi/AS1PEqzOhdrI34mrrEiOId7\nov/aWbQ7fm6ChAOz6Ak\=
 </p>
 
 <p><b>Step 4 - Use alias inside .dbs file</b></p>
-<p>The namespace xmlns:svns="http://org.wso2.securevault/configuration" and alias shoud be added to data-service as follows.</p>
+<p>In 'Add Data Source' page, you need to enable the flag 'Use as Scret Alias' and provide the alias name instead of actual password in 'Password' filed.</p>
+<p><img alt="DS" src="images/user-guide/secure-vault/step2.a.png" /></p>
+<p>Figure 2: Enabling 'Scret Alias' flag and providing Alias name</p>
+<p>This will add the namespace and alias to the .dbs file as follows.</p>
 <p><img alt="DS" src="images/user-guide/secure-vault/step2.png" /></p>
-<p>Figure 2: .dbs configuration</p>
+<p>Figure 3: .dbs configuration</p>
     </body>
 </html>

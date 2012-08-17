@@ -8,6 +8,6 @@
   <name>${artifactId}</name>
   <description>${artifactId}</description>
   <modules>
-    <module>CApp</module>
+    <module>${artifactId}.CApp</module>
   </modules>
 </project>

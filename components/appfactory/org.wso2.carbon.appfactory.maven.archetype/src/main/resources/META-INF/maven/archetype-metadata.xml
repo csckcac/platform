@@ -7,7 +7,7 @@
       </excludes>
     </fileSet>
     <fileSet filtered="true" encoding="UTF-8">
-      <directory>__artifactId__.CApp</directory>
+      <directory>__rootArtifactId__.CApp</directory>
       <includes>
         <include>pom.xml</include>
         <include>.project</include>

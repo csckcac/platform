@@ -41,13 +41,6 @@
 <!--Yahoo includes for dom event handling-->
 <script src="../yui/build/yahoo-dom-event/yahoo-dom-event.js" type="text/javascript"></script>
 
-<script type="text/javascript">
-    editAreaLoader.init({
-        id : "rawConfig"		// text area id
-        ,syntax: "xml"			// syntax to be uses for highlighting
-        ,start_highlight: true  // to display with highlight mode on start-up
-    });
-</script>
 
 <script type="text/javascript">
     var allowTabChange = true;
@@ -191,6 +184,7 @@
 
     <%
         String synapseConfig = null;
+		Boolean loadEditArea = false;
         List<ConfigurationInformation> synapseConfigList = null;
 
         ResponseInformation configurationList;
@@ -238,7 +232,10 @@
             } else {
                 synapseConfig = "";
             }
-
+			if(synapseConfig.length() < 50000){
+				loadEditArea = true;
+			}
+			
             synapseConfigList = (List<ConfigurationInformation>) configurationList.getResult();
             if (synapseConfigList == null) {
                 synapseConfigList = new ArrayList<ConfigurationInformation>();
@@ -253,6 +250,16 @@
     <%
         }
     %>
+
+	<% if(loadEditArea){ %>
+	<script type="text/javascript">
+    editAreaLoader.init({
+        id : "rawConfig"		// text area id
+        ,syntax: "xml"			// syntax to be uses for highlighting
+        ,start_highlight: true  // to display with highlight mode on start-up
+    });
+    </script>
+	<% } %>
 
     <div id="middle">
         <h2><fmt:message key="manage.synapse.config"/></h2>
@@ -285,6 +292,12 @@
                                                 <td id="rawConfigTD">
                                                     <textarea name="rawConfig" id="rawConfig"
                                                               style="border:solid 1px #cccccc; width: 99%; height: 400px; margin-top:5px;"><%=synapseConfig%></textarea>
+															  
+													<% if(!loadEditArea){ %>		  
+													<div style="padding:10px;color:#444;">
+														<fmt:message key="syntax.disabled"/>
+													</div>
+													<% } %>
                                                 </td>
                                             </tr>
                                         </table>

@@ -192,7 +192,7 @@
                                     org.wso2.carbon:org.wso2.carbon.dataservices.feature:${carbon.platform.version}
                                 </featureArtifactDef>
 
-				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dataservices.task.feature:${carbon.platform.version}</featureArtifactDef>
+				<!--featureArtifactDef>org.wso2.carbon:org.wso2.carbon.dataservices.task.feature:${carbon.platform.version}</featureArtifactDef-->
 
 				 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.ndatasource.feature:${carbon.platform.version}
@@ -490,10 +490,10 @@
                                     <version>${carbon.platform.version}</version>
                                 </feature>
 
-				<feature>
+				<!--feature>
                                     <id>org.wso2.carbon.dataservices.task.feature.group</id>
                                     <version>${carbon.version}</version>
-                                </feature>
+                                </feature-->
 
 				<feature>
                                     <id>org.wso2.carbon.ndatasource.feature.group</id>

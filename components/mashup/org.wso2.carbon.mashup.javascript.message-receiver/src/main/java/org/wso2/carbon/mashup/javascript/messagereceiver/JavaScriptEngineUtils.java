@@ -86,13 +86,14 @@ public class JavaScriptEngineUtils {
 
     public static void initialize() {
         ScriptableObject scope = getActiveScope();
+        Context cx = Context.getCurrentContext();
         Map<String, String> globalObjects = hostObjectService.getGlobalObjects();
         Set<Map.Entry<String, String>> entries = globalObjects.entrySet();
         for (Map.Entry<String, String> entry : entries) {
             String hostObject = entry.getKey();
             String objectName = entry.getValue();
             if ((objectName != null) && (!"".equals(objectName)) && (hostObject != null) && (!"".equals(hostObject))) {
-                Scriptable entryHostObject = RhinoEngine.newObject(hostObject, scope, new Object[0]);
+                Scriptable entryHostObject = cx.newObject(scope, hostObject, new Object[0]);
                 JavaScriptProperty property = new JavaScriptProperty(objectName);
                 property.setValue(entryHostObject);
                 property.setAttribute(ScriptableObject.READONLY);
@@ -111,6 +112,8 @@ public class JavaScriptEngineUtils {
     }
 
     public static void setActiveScope(ScriptableObject scope) {
+        Context cx = Context.getCurrentContext();
+        cx.evaluateString(scope, "new XML();", "XML() initialization", 0, null);
         RhinoEngine.putContextProperty(MashupConstants.ACTIVE_SCOPE, scope);
     }
 

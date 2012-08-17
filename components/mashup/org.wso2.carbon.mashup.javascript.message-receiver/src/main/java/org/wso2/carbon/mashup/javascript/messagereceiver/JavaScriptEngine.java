@@ -156,7 +156,7 @@ public class JavaScriptEngine {
                 functionArgs = (Object[]) args;
             } else if (args != null) {
                 Object[] objects = {args};
-                args = RhinoEngine.newObject("XML", scope, objects);
+                args = cx.newObject(scope, "XML", objects);
                 functionArgs = new Object[]{args};
             } else {
                 functionArgs = new Object[0];

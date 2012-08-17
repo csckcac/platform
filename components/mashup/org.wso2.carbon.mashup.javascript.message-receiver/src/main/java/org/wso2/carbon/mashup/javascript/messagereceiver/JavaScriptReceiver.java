@@ -97,7 +97,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         SOAPEnvelope soapEnvelope = inMessage.getEnvelope();
         try {
 
-            JavaScriptEngineUtils.getEngine().enterContext();
+            Context cx = JavaScriptEngineUtils.getEngine().enterContext();
             // Create JS Engine, Inject HostObjects
             String serviceName = inMessage.getAxisService().getName();
             JavaScriptEngine engine = new JavaScriptEngine(serviceName);
@@ -156,8 +156,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     XmlSchemaType schemaType = xmlSchemaElement.getSchemaType();
                     if (schemaType instanceof XmlSchemaComplexType) {
                         XmlSchemaComplexType complexType = ((XmlSchemaComplexType) schemaType);
-                        List params = handleComplexTypeInRequest(complexType, payload, engine,
-                                new ArrayList());
+                        List params = handleComplexTypeInRequest(complexType, payload, cx, new ArrayList());
                         args = params.toArray();
                     } else if (xmlSchemaElement.getSchemaTypeName() == Constants.XSD_ANYTYPE) {
                         args = payload;
@@ -346,7 +345,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
     }
 
     private List handleComplexTypeInRequest(XmlSchemaComplexType complexType, OMElement payload,
-                                            JavaScriptEngine engine, List paramNames)
+                                            Context cx, List paramNames)
             throws AxisFault {
         XmlSchemaParticle particle = complexType.getParticle();
         List params = new ArrayList();
@@ -384,7 +383,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     List innerParamNames = new ArrayList();
                     List innerParams = handleComplexTypeInRequest((XmlSchemaComplexType) schemaType,
                             complexTypePayload,
-                            engine, innerParamNames);
+                            cx, innerParamNames);
                     Scriptable scriptable = RhinoEngine.newObject(JavaScriptEngineUtils.getActiveScope());
                     for (int i = 0; i < innerParams.size(); i++) {
                         scriptable.put((String) innerParamNames.get(i), scriptable,
@@ -400,7 +399,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         XmlSchemaSimpleTypeRestriction simpleTypeRestriction =
                                 (XmlSchemaSimpleTypeRestriction) content;
                         String elementName = innerElement.getName();
-                        Object object = handleSimpleElement(payload, engine, elementName,
+                        Object object = handleSimpleElement(payload, cx, elementName,
                                 innerElement.getMinOccurs(),
                                 simpleTypeRestriction.getBaseTypeName());
                         XmlSchemaObjectCollection facets = simpleTypeRestriction.getFacets();
@@ -428,7 +427,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         throw new AxisFault("Unsupported restriction in Schema");
                     }
                 } else {
-                    params.add(handleSimpleTypeInRequest(payload, engine, innerElement));
+                    params.add(handleSimpleTypeInRequest(payload, cx, innerElement));
                     paramNames.add(innerElement.getName());
                 }
             }
@@ -438,7 +437,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         return params;
     }
 
-    private Object handleSimpleTypeInRequest(OMElement payload, JavaScriptEngine engine,
+    private Object handleSimpleTypeInRequest(OMElement payload, Context cx,
                                              XmlSchemaElement innerElement) throws AxisFault {
         long maxOccurs = innerElement.getMaxOccurs();
         // Check whether the schema advertises this element as an array
@@ -447,15 +446,15 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
             String innerElemenrName = innerElement.getName();
             Iterator iterator1 = payload.getChildrenWithName(new QName(
                     innerElemenrName));
-            return handleArray(iterator1, innerElement.getSchemaTypeName(), engine);
+            return handleArray(iterator1, innerElement.getSchemaTypeName(), cx);
         } else {
-            return handleSimpleElement(payload, engine, innerElement.getName(),
+            return handleSimpleElement(payload, cx, innerElement.getName(),
                     innerElement.getMinOccurs(),
                     innerElement.getSchemaTypeName());
         }
     }
 
-    private Object handleSimpleElement(OMElement payload, JavaScriptEngine engine,
+    private Object handleSimpleElement(OMElement payload, Context cx,
                                        String innerElementName, long minOccurs, QName schemaType)
             throws AxisFault {
         QName payloadQname = payload.getQName();
@@ -488,7 +487,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                                 + " defined in the schema can not be found in the request");
             }
         }
-        return createParam(omElement, schemaType, engine);
+        return createParam(omElement, schemaType, cx);
     }
 
     private void handleSimpleTypeinResponse(XmlSchemaElement innerElement, Object jsObject,
@@ -750,20 +749,19 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      *
      * @param omElement - The OMElement that the parameter should be created for
      * @param type      - The schemaType of the incoming message element
-     * @param engine    - Reference to the javascript engine
+     * @param cx    - Current Rhino Context
      * @return - An Object that can be passed into a JS function
      * @throws AxisFault - In case an exception occurs
      */
-    private Object createParam(OMElement omElement, QName type, JavaScriptEngine engine)
+    private Object createParam(OMElement omElement, QName type, Context cx)
             throws AxisFault {
 
-        RhinoEngine rhinoEngine = JavaScriptEngineUtils.getEngine();
         ScriptableObject serviceScope = JavaScriptEngineUtils.getActiveScope();
         if (Constants.XSD_ANYTYPE.equals(type)) {
             OMElement element = omElement.getFirstElement();
             if (element != null) {
                 Object[] objects = {element};
-                return RhinoEngine.newObject("XML", serviceScope, objects);
+                return cx.newObject(serviceScope, "XML", objects);
             } else if (omElement.getText() != null) {
                 OMAttribute omAttribute = omElement.getAttribute(new QName("http://www.w3.org/2001/XMLSchema-instance", "type"));
                 if (omAttribute != null) {
@@ -772,7 +770,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                         String[] strings = value.split(":");
                         TypeTable table = new TypeTable();
                         QName qName = table.getQNamefortheType(strings[1]);
-                        return createParam(omElement, qName, engine);
+                        return createParam(omElement, qName, cx);
                     }
                 }
                 return omElement.getText();
@@ -913,7 +911,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_DATETIME.equals(type)) {
             try {
                 Calendar calendar = ConverterUtil.convertToDateTime(value);
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
+                return cx.newObject(serviceScope, "Date", new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "date time"));
             }
@@ -921,7 +919,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_DATE.equals(type)) {
             try {
                 Date date = ConverterUtil.convertToDate(value);
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{date.getTime()});
+                return cx.newObject(serviceScope, "Date", new Object[]{date.getTime()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "date"));
             }
@@ -929,7 +927,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
         if (Constants.XSD_TIME.equals(type)) {
             try {
                 Time time = ConverterUtil.convertToTime(value);
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{time.getAsCalendar().getTimeInMillis()});
+                return cx.newObject(serviceScope, "Date", new Object[]{time.getAsCalendar().getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "time"));
             }
@@ -945,7 +943,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
+                return cx.newObject(serviceScope, "Date", new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "yearMonth"));
             }
@@ -961,7 +959,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
+                return cx.newObject(serviceScope, "Date", new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "MonthDay"));
             }
@@ -976,7 +974,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
+                return cx.newObject(serviceScope, "Date", new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "year"));
             }
@@ -991,7 +989,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
+                return cx.newObject(serviceScope, "Date", new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "month"));
             }
@@ -1006,7 +1004,7 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                 if (timezone != null) {
                     calendar.setTimeZone(TimeZone.getTimeZone(timezone));
                 }
-                return RhinoEngine.newObject("Date", serviceScope, new Object[]{calendar.getTimeInMillis()});
+                return cx.newObject(serviceScope, "Date", new Object[]{calendar.getTimeInMillis()});
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "day"));
             }
@@ -1037,11 +1035,11 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
                     Object[] namespaceObjects = {prefix,
                             namespaceURI};
                     e4xNamespace =
-                            RhinoEngine.newObject("Namespace", serviceScope, namespaceObjects);
+                            cx.newObject(serviceScope, "Namespace", namespaceObjects);
                 }
                 Object[] qnameObjects = {e4xNamespace,
                         value};
-                return RhinoEngine.newObject("QName", serviceScope, qnameObjects);
+                return cx.newObject(serviceScope, "QName", qnameObjects);
             } catch (Exception e) {
                 throw new AxisFault(getFaultString(value, "string"));
             }
@@ -1068,16 +1066,16 @@ public class JavaScriptReceiver extends AbstractInOutMessageReceiver implements 
      *
      * @param iterator - Iterator to the omelements that belong to the array
      * @param type     - The schematype of the omelement
-     * @param engine   Reference to the javascript engine
+     * @param cx   Current Rhino Context
      * @return - An array Object that can be passed into a JS function
      * @throws AxisFault - In case an exception occurs
      */
-    private Object handleArray(Iterator iterator, QName type, JavaScriptEngine engine)
+    private Object handleArray(Iterator iterator, QName type, Context cx)
             throws AxisFault {
         ArrayList objectList = new ArrayList();
         while (iterator.hasNext()) {
             OMElement omElement = (OMElement) iterator.next();
-            objectList.add(createParam(omElement, type, engine));
+            objectList.add(createParam(omElement, type, cx));
         }
         int length = objectList.size();
         NativeArray nativeArray = new NativeArray(0);

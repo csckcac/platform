@@ -65,8 +65,8 @@ public class SAMLSSOServiceProviderDAO extends AbstractDAO<SAMLSSOServiceProvide
 			serviceProviderDO.setAttributeConsumingServiceIndex(resource.getProperty(IdentityRegistryResources.PROP_SAML_SSO_ATTRIB_CONSUMING_SERVICE_INDEX));
 		}
 
-		if (resource.getProperty(IdentityRegistryResources.PROP_SAML_SSO_ATTRIBUTE_PROFILE) != null) {
-			serviceProviderDO.setAttributeProfile(resource.getProperty(IdentityRegistryResources.PROP_SAML_SSO_ATTRIBUTE_PROFILE));
+		if (resource.getProperty(IdentityRegistryResources.PROP_SAML_SSO_REQUESTED_CLAIMS) != null) {
+			serviceProviderDO.setRequestedClaims(resource.getPropertyValues(IdentityRegistryResources.PROP_SAML_SSO_REQUESTED_CLAIMS));
 		}
 
 		return serviceProviderDO;
@@ -117,9 +117,7 @@ public class SAMLSSOServiceProviderDAO extends AbstractDAO<SAMLSSOServiceProvide
 			String doSignAssertions = serviceProviderDO.isDoSignAssertions() ? "true" : "false";
 			resource.addProperty(IdentityRegistryResources.PROP_SAML_SSO_DO_SIGN_ASSERTIONS,
 			                     doSignAssertions);
-
-			resource.addProperty(IdentityRegistryResources.PROP_SAML_SSO_ATTRIBUTE_PROFILE,
-			                     serviceProviderDO.getAttributeProfile());
+			resource.setProperty(IdentityRegistryResources.PROP_SAML_SSO_REQUESTED_CLAIMS, serviceProviderDO.getRequestedClaimsList());
 			resource.addProperty(IdentityRegistryResources.PROP_SAML_SSO_ATTRIB_CONSUMING_SERVICE_INDEX,
 			                     serviceProviderDO.getAttributeConsumingServiceIndex());
 

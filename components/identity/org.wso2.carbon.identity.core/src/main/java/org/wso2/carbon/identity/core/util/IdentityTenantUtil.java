@@ -34,6 +34,7 @@ import org.wso2.carbon.registry.core.session.UserRegistry;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -84,7 +85,7 @@ public class IdentityTenantUtil {
         try {
             if (domainName == null && username == null) {
                 ServerConfiguration serverConfig = ServerConfiguration.getInstance();
-                domainName = null;
+                domainName = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
             }
             if (username == null) {
                 return AnonymousSessionUtil.getSystemRegistryByDomainName(registryService,
@@ -103,8 +104,7 @@ public class IdentityTenantUtil {
             throws IdentityException {
         try {
             if (domainName == null && username == null) {
-                ServerConfiguration serverConfig = ServerConfiguration.getInstance();
-                domainName = null;
+                domainName = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
             }
 
             if (username == null) {

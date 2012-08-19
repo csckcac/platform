@@ -131,7 +131,7 @@ public class IdentityRegistryResources {
     public static final String PROP_SAML_SSO_PUB_KEY_FILE_PATH = "pub-Key-file-path";    
     public final static String PROP_SAML_SSO_GEN_KEY_PASS = "private-key-password";
     public static final String PROP_SAML_SSO_ATTRIB_CONSUMING_SERVICE_INDEX = "AttributeConsumingServiceIndex";
-    public static final String PROP_SAML_SSO_ATTRIBUTE_PROFILE = "AttributeProfile";
+    public static final String PROP_SAML_SSO_REQUESTED_CLAIMS = "RequestedClaims";
     
     // OpenID Admin
     public final static String SUB_DOMAIN = "SubDomain";

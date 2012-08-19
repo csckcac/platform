@@ -17,6 +17,9 @@
  */
 package org.wso2.carbon.identity.sso.saml.builders;
 
+import java.util.Iterator;
+import java.util.Map;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xml.security.signature.XMLSignature;
@@ -35,7 +38,6 @@ import org.opensaml.saml2.core.AuthnContextClassRef;
 import org.opensaml.saml2.core.AuthnStatement;
 import org.opensaml.saml2.core.Conditions;
 import org.opensaml.saml2.core.NameID;
-import org.opensaml.saml2.core.NameIDType;
 import org.opensaml.saml2.core.Response;
 import org.opensaml.saml2.core.Status;
 import org.opensaml.saml2.core.StatusCode;
@@ -59,8 +61,6 @@ import org.opensaml.saml2.core.impl.StatusMessageBuilder;
 import org.opensaml.saml2.core.impl.SubjectBuilder;
 import org.opensaml.saml2.core.impl.SubjectConfirmationBuilder;
 import org.opensaml.saml2.core.impl.SubjectConfirmationDataBuilder;
-import org.opensaml.xml.XMLObjectBuilder;
-import org.opensaml.xml.XMLObjectBuilderFactory;
 import org.opensaml.xml.schema.XSString;
 import org.opensaml.xml.schema.impl.XSStringBuilder;
 import org.wso2.carbon.identity.base.IdentityException;
@@ -149,7 +149,7 @@ public class ResponseBuilder {
 			 * <AuthnRequest> and
 			 * according to the spec 2.0 the subject MUST be in the assertion
 			 */
-			Claim[] claims = SAMLSSOUtil.getAttributes(authReqDTO);
+			Map<String, String> claims = SAMLSSOUtil.getAttributes(authReqDTO);
 			if (claims != null) {
 				samlAssertion.getAttributeStatements().add(buildAttributeStatement(claims));
 			}
@@ -193,13 +193,16 @@ public class ResponseBuilder {
 		return stat;
 	}
 
-	private AttributeStatement buildAttributeStatement(Claim[] claims) {
+	private AttributeStatement buildAttributeStatement(Map<String, String> claims) {
 		AttributeStatement attStmt = null;
 		if (claims != null) {
 			attStmt = new AttributeStatementBuilder().buildObject();
-			for (int i = 0; i < claims.length; i++) {
+			Iterator<String> ite = claims.keySet().iterator();
+			
+			for (int i = 0; i < claims.size(); i++) {
 				Attribute attrib = new AttributeBuilder().buildObject();
-				attrib.setName(claims[i].getClaimUri());
+				String claimUri = ite.next();
+				attrib.setName(claimUri);
 				// look
 				// https://wiki.shibboleth.net/confluence/display/OpenSAML/OSTwoUsrManJavaAnyTypes
 				XSStringBuilder stringBuilder =
@@ -208,7 +211,7 @@ public class ResponseBuilder {
 				XSString stringValue =
 				                       stringBuilder.buildObject(AttributeValue.DEFAULT_ELEMENT_NAME,
 				                                                 XSString.TYPE_NAME);
-				stringValue.setValue(claims[i].getValue());
+				stringValue.setValue(claims.get(claimUri));
 				attrib.getAttributeValues().add(stringValue);
 				attStmt.getAttributes().add(attrib);
 			}

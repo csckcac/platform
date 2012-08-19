@@ -22,8 +22,10 @@ import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.core.util.KeyStoreUtil;
+import org.wso2.carbon.identity.base.IdentityConstants;
 import org.wso2.carbon.identity.base.IdentityException;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
+import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.sso.saml.admin.SAMLSSOConfigAdmin;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderInfoDTO;
@@ -31,8 +33,8 @@ import org.wso2.carbon.identity.sso.saml.util.SAMLSSOUtil;
 import org.wso2.carbon.security.SecurityConfigException;
 import org.wso2.carbon.security.keystore.KeyStoreAdmin;
 import org.wso2.carbon.security.keystore.service.KeyStoreData;
+import org.wso2.carbon.user.api.Claim;
 import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 public class SAMLSSOConfigService extends AbstractAdmin{
@@ -90,21 +92,34 @@ public class SAMLSSOConfigService extends AbstractAdmin{
         return ssoConfigAdmin.removeServiceProvider(issuer);
     }
     
-    public String[] getUserProfiles(String userName) throws IdentityException{
-    	String tenatUser = MultitenantUtils.getTenantAwareUsername(userName);
+    public String[] getClaimURIs() throws IdentityException{
+    	String tenatUser = MultitenantUtils.getTenantAwareUsername(CarbonContext.getCurrentContext().getUsername());
     	String domainName = MultitenantUtils.getTenantDomain(tenatUser);
-    	String[] userProfileNames = null;
+    	String[] claimUris = null;
     	try {
 	        UserRealm realm = IdentityTenantUtil.getRealm(domainName, tenatUser);
-	        userProfileNames = realm.getUserStoreManager().getProfileNames(tenatUser);
+	        String claimDialect = IdentityUtil.getProperty(IdentityConstants.ServerConfig.SSO_ATTRIB_CLAIM_DIALECT);
+	        
+	        if(claimDialect == null || claimDialect.equals("")){
+	        	// set default
+	        	claimDialect = "http://wso2.org/claims";
+	        }
+	        
+	        Claim[] claims = realm.getClaimManager().getAllClaims(claimDialect);
+	        claimUris = new String[claims.length];
+	        
+	        for(int i=0; i< claims.length; i++){
+	        	claimUris[i] = claims[i].getClaimUri();
+	        }
+	        
         } catch (IdentityException e) {
         	log.error("Error while getting realm for "+ tenatUser, e );
             throw new IdentityException("Error while getting realm for "+ tenatUser + e);
-        } catch (UserStoreException e) {
-        	log.error("Error while reading user profiles for user " + tenatUser, e);
-            throw new IdentityException("Error while reading user profiles " + tenatUser + e);
+        } catch (org.wso2.carbon.user.api.UserStoreException e) {
+        	log.error("Error while getting claims for "+ tenatUser, e );
+            throw new IdentityException("Error while getting claims for "+ tenatUser + e);
         }
-    	return userProfileNames;
+    	return claimUris;
     }
 
     private String[] getStoreEntries(String keyStoreName) throws IdentityException {

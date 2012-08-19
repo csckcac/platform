@@ -296,7 +296,7 @@ public class AuthnRequestProcessor {
             authReqDTO.setDoSingleLogout(spDO.isDoSingleLogout());
             authReqDTO.setLogoutURL(spDO.getLogoutURL());
             authReqDTO.setDoSignAssertions(spDO.isDoSignAssertions());
-            authReqDTO.setAttributeProfile(spDO.getAttributeProfile());
+            authReqDTO.setRequestedClaims((spDO.getRequestedClaims()));
             return true;
 
         } catch (Exception e) {

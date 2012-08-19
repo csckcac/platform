@@ -24,6 +24,7 @@ import java.security.KeyStore;
 import java.security.cert.CertificateEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.zip.DataFormatException;
 import java.util.zip.Inflater;
@@ -79,10 +80,8 @@ import org.wso2.carbon.identity.sso.saml.builders.X509CredentialImpl;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOAuthnReqDTO;
 import org.wso2.carbon.identity.sso.saml.exception.IdentitySAML2SSOException;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
-import org.wso2.carbon.user.core.claim.Claim;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
@@ -485,7 +484,7 @@ public class SAMLSSOUtil {
 	 * @return Map with attributes and values
 	 * @throws IdentityException
 	 */
-	public static Claim[] getAttributes(SAMLSSOAuthnReqDTO authnReqDTO) throws IdentityException {
+	public static Map<String, String> getAttributes(SAMLSSOAuthnReqDTO authnReqDTO) throws IdentityException {
 		AuthnRequestImpl request =
 		                           (AuthnRequestImpl) SAMLSSOUtil.unmarshall(SAMLSSOUtil.decode(authnReqDTO.getAssertionString()));
 
@@ -535,29 +534,15 @@ public class SAMLSSOUtil {
 	 * @return
 	 * @throws IdentityException
 	 */
-	private static Claim[] setClaimsAndValues(SAMLSSOAuthnReqDTO authnReqDTO)
+	private static Map<String, String> setClaimsAndValues(SAMLSSOAuthnReqDTO authnReqDTO)
 	                                                                         throws IdentityException {
-		Claim[] claimAndValue = null;
 		try {
-			UserRealm realm =
+			UserStoreManager userStroreManager =
 			                  AnonymousSessionUtil.getRealmByUserName(SAMLSSOUtil.getRegistryService(),
 			                                                          SAMLSSOUtil.getRealmService(),
-			                                                          authnReqDTO.getUsername());
-			UserStoreManager userStroreManager = realm.getUserStoreManager();
-			// claim manager returns claims without values
-			claimAndValue =
-			                (Claim[]) realm.getClaimManager()
-			                               .getAllClaims(IdentityUtil.getProperty(IdentityConstants.ServerConfig.SSO_ATTRIB_CLAIM_DIALECT));
-			// getting values from the user store manager
-			for (int i = 0; i < claimAndValue.length; i++) {
-				String value =
-				               userStroreManager.getUserClaimValue(authnReqDTO.getUsername(),
-				                                                   claimAndValue[i].getClaimUri(),
-				                                                   authnReqDTO.getAttributeProfile());
-				claimAndValue[i].setValue(value);
-			}
-
-			return (Claim[]) claimAndValue;
+			                                                          authnReqDTO.getUsername()).getUserStoreManager();
+			String[] requestedClaims = (String[]) authnReqDTO.getRequestedClaims();
+			 return userStroreManager.getUserClaimValues(authnReqDTO.getUsername(), requestedClaims, null);
 
 		} catch (CarbonException e) {
 			log.error("Error while setting attributes. Unable to retrieve claims", e);
@@ -565,11 +550,6 @@ public class SAMLSSOUtil {
 			                            "Error while setting attributes. Unable to retrieve claims",
 			                            e);
 		} catch (UserStoreException e) {
-			log.error("Error while setting attributes. Unable to retrieve claims", e);
-			throw new IdentityException(
-			                            "Error while setting attributes. Unable to retrieve claims",
-			                            e);
-		} catch (org.wso2.carbon.user.api.UserStoreException e) {
 			log.error("Error while setting attributes. Unable to retrieve claims", e);
 			throw new IdentityException(
 			                            "Error while setting attributes. Unable to retrieve claims",

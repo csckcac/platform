@@ -16,28 +16,16 @@
 
 package org.wso2.carbon.identity.sso.saml.admin;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
-import java.util.Hashtable;
-import java.util.Map;
-
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.base.IdentityException;
-import org.wso2.carbon.identity.core.IdentityRegistryResources;
 import org.wso2.carbon.identity.core.model.SAMLSSOServiceProviderDO;
 import org.wso2.carbon.identity.core.persistence.IdentityPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.dto.SAMLSSOServiceProviderInfoDTO;
 import org.wso2.carbon.registry.core.Registry;
-import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.session.UserRegistry;
-import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.WSO2Constants;
 
 /**
  * This class is used for managing SAML SSO providers. Adding, retrieving and removing service
@@ -71,9 +59,9 @@ public class SAMLSSOConfigAdmin {
         serviceProviderDO.setDoSingleLogout(serviceProviderDTO.isDoSingleLogout());
         serviceProviderDO.setLogoutURL(serviceProviderDTO.getLogoutURL());
         serviceProviderDO.setDoSignAssertions(serviceProviderDTO.isDoSignAssertions());
-        if(serviceProviderDTO.getAttributeProfile() != null && !serviceProviderDTO.getAttributeProfile().equals("")){
+        if(serviceProviderDTO.getRequestedClaims().length != 0){
         	serviceProviderDO.setAttributeConsumingServiceIndex(Integer.toString(IdentityUtil.getRandomInteger()));
-        	serviceProviderDO.setAttributeProfile(serviceProviderDTO.getAttributeProfile());
+        	serviceProviderDO.setRequestedClaims(serviceProviderDTO.getRequestedClaims());
         }
         IdentityPersistenceManager persistenceManager = IdentityPersistenceManager
                 .getPersistanceManager();
@@ -108,7 +96,7 @@ public class SAMLSSOConfigAdmin {
                 providerDTO.setAssertionConsumerUrl(providerDO.getAssertionConsumerUrl());
                 providerDTO.setCertAlias(providerDO.getCertAlias());
                 providerDTO.setAttributeConsumingServiceIndex(providerDO.getAttributeConsumingServiceIndex());
-                providerDTO.setAttributeProfile(providerDO.getAttributeProfile());
+                providerDTO.setRequestedClaims(providerDO.getRequestedClaims());
                 
                 serviceProviders[i] = providerDTO;
             }
@@ -142,102 +130,6 @@ public class SAMLSSOConfigAdmin {
             log.error("Error removing a Service Provider");
             throw new IdentityException("Error removing a Service Provider", e);
         }
-    }
-
-    /**
-     * Dumping the generated pub. cert to a file
-     *
-     * @param configurationContext
-     * @param cert content of the certificate
-     * @param uuid UUID used for the file name
-     * @return file system location of the pub. cert
-     */
-    private String dumpPubCert(ConfigurationContext configurationContext, byte[] cert, String uuid) {
-        Map fileResourcesMap = null;
-        String workdir = null;
-        File pubCert = null;
-        OutputStream outStream = null;
-        String filePath = null;
-
-        workdir = (String) configurationContext.getProperty(ServerConstants.WORK_DIR);
-        pubCert = new File(workdir + File.separator + "pub_certs");
-
-        if (uuid == null) {
-            uuid = String.valueOf(System.currentTimeMillis() + Math.random()) + ".cert";
-        }
-
-        if (!pubCert.exists()) {
-            pubCert.mkdirs();
-        }
-
-        filePath = workdir + File.separator + "pub_certs" + File.separator + uuid;
-
-        try {
-            outStream = new FileOutputStream(filePath);
-            outStream.write(cert);
-            outStream.flush();
-            outStream.close();
-        } catch (Exception e) {
-            // TODO:
-            e.printStackTrace();
-            return null;
-        }
-
-        fileResourcesMap = (Map) configurationContext.getProperty(WSO2Constants.FILE_RESOURCE_MAP);
-        if (fileResourcesMap == null) {
-            fileResourcesMap = new Hashtable();
-            configurationContext.setProperty(WSO2Constants.FILE_RESOURCE_MAP, fileResourcesMap);
-        }
-        fileResourcesMap.put(uuid, filePath);
-        return WSO2Constants.ContextPaths.DOWNLOAD_PATH + "?id=" + uuid;
-    }
-
-    /**
-     * Method used to get the file path location, if the cert is already generated.
-     *
-     * @return File path, if the certificate is already is generated, return null otherwise
-     * @throws Exception
-     */
-    private String getPubKeyFilePath() throws Exception {
-        Resource r;
-        if (registry.resourceExists(IdentityRegistryResources.SAML_SSO_GEN_KEY)) {
-            r = registry.get(IdentityRegistryResources.SAML_SSO_GEN_KEY);
-            String filePath = r.getProperty(IdentityRegistryResources.PROP_SAML_SSO_PUB_KEY_FILE_PATH);
-            verifyCertExistence(filePath, (byte[]) r.getContent(),
-                    MessageContext.getCurrentMessageContext().getConfigurationContext());
-            return filePath;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Check whether the certificate is availalble in the file system, if not dump it again.
-     *
-     * @param uuid UUID used in the file path
-     * @param cert binary content of the cert.
-     * @param configurationContext configuration context of the current message
-     */
-    private void verifyCertExistence(String uuid, byte[] cert, ConfigurationContext configurationContext) {
-        uuid = uuid.substring("/filedownload?id=".length(), uuid.length());
-        String workDir = (String) configurationContext.getProperty(ServerConstants.WORK_DIR);
-        File pubCert = new File(workDir + File.separator + "pub_certs" + File.separator + uuid);
-
-        //if cert is still available then exit
-        if (pubCert.exists()) {
-            Map fileResourcesMap = (Map) configurationContext.getProperty(WSO2Constants.FILE_RESOURCE_MAP);
-            if (fileResourcesMap == null) {
-                fileResourcesMap = new Hashtable();
-                configurationContext.setProperty(WSO2Constants.FILE_RESOURCE_MAP, fileResourcesMap);
-            }
-            if (fileResourcesMap.get(uuid) == null) {
-                fileResourcesMap.put(uuid, pubCert);
-            }
-            return;
-        }
-
-        //otherwise dump the cert
-        dumpPubCert(configurationContext, cert, uuid);
     }
 
 }

@@ -17,6 +17,7 @@
 */
 package org.wso2.carbon.identity.sso.saml.dto;
 
+
 public class SAMLSSOAuthnReqDTO {
 
     private String username;
@@ -31,11 +32,10 @@ public class SAMLSSOAuthnReqDTO {
     private String loginPageURL;
     private String rpSessionId;
     private String assertionString;
-    private String attributeProfile;
-    
     private boolean doSingleLogout;
     private boolean doSignAssertions;
     private boolean useFullyQualifiedUsernameAsSubject;
+    private String[] requestedClaims;
     
 
     public String getCertAlias() {
@@ -168,12 +168,12 @@ public class SAMLSSOAuthnReqDTO {
         this.assertionString = assertionString;
     }
 
-	public String getAttributeProfile() {
-	    return attributeProfile;
+	public String[] getRequestedClaims() {
+	    return requestedClaims;
     }
 
-	public void setAttributeProfile(String attributeProfile) {
-	    this.attributeProfile = attributeProfile;
+	public void setRequestedClaims(String[] requestedClaims) {
+	    this.requestedClaims = requestedClaims;
     }
 
  }

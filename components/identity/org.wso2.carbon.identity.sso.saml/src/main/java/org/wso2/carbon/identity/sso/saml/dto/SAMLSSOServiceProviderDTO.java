@@ -17,6 +17,7 @@
 */
 package org.wso2.carbon.identity.sso.saml.dto;
 
+
 public class SAMLSSOServiceProviderDTO {
 
     private String issuer;
@@ -24,10 +25,10 @@ public class SAMLSSOServiceProviderDTO {
     private String certAlias;
     private String logoutURL;
     private String attributeConsumingServiceIndex;
-    private String attributeProfile;
     private boolean useFullyQualifiedUsername;
     private boolean doSingleLogout;
     private boolean doSignAssertions;
+    private String[] requestedClaims;
 
     public String getIssuer() {
         return issuer;
@@ -93,12 +94,18 @@ public class SAMLSSOServiceProviderDTO {
 	    this.attributeConsumingServiceIndex = attributeConsumingServiceIndex;
     }
 
-	public String getAttributeProfile() {
-	    return attributeProfile;
+	/**
+     * @return the requestedClaims
+     */
+    public String[] getRequestedClaims() {
+	    return requestedClaims;
     }
 
-	public void setAttributeProfile(String attributeProfile) {
-	    this.attributeProfile = attributeProfile;
+	/**
+     * @param requestedClaims the requestedClaims to set
+     */
+    public void setRequestedClaims(String[] requestedClaims) {
+	    this.requestedClaims = requestedClaims;
     }
 
 }

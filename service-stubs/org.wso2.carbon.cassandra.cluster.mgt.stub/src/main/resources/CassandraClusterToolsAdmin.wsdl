@@ -1,0 +1,1579 @@
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:ax25="http://mgt.cluster.cassandra.carbon.wso2.org/xsd" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:tns="http://mgt.cluster.cassandra.carbon.wso2.org" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://mgt.cluster.cassandra.carbon.wso2.org">
+<wsdl:documentation>CassandraClusterToolsAdmin</wsdl:documentation>
+<wsdl:types>
+<xs:schema xmlns:ns="http://org.apache.axis2/xsd" xmlns:ax26="http://mgt.cluster.cassandra.carbon.wso2.org/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://org.apache.axis2/xsd">
+<xs:import namespace="http://mgt.cluster.cassandra.carbon.wso2.org/xsd"/>
+<xs:element name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="CassandraClusterToolsDataAdminException" nillable="true" type="ax25:CassandraClusterToolsDataAdminException"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesInKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesInKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="upgradeSSTablesColumnFamilyResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="takeSnapshotOfNode">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="takeSnapshotOfNodeResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="takeSnapshotOfKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="takeSnapshotOfKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="stopRPCServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="stopGossipServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="startRPCServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="startGossipServer">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="setIncrementalBackUpStatus">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="status" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="scrubColumnFamilyResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="repairColumnFamilyResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="performGC">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="moveNode">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="newToken" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="moveNodeResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="joinCluster">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="joinClusterResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="isRPCRunning">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="isRPCRunningResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="isJoined">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="isJoinedResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="isGossipServerEnable">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="isGossipServerEnableResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="getIncrementalBackUpStatus">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="getIncrementalBackUpStatusResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="flushColumnFamilyResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="drainNode">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="drainNodeResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="decommissionNode">
+<xs:complexType>
+<xs:sequence/>
+</xs:complexType>
+</xs:element>
+<xs:element name="decommissionNodeResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="compactColumnFamilyResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="clearSnapshotOfNode">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="clearSnapshotOfNodeResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="clearSnapshotOfKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="snapShotName" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="clearSnapshotOfKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpKeyspace">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpKeyspaceResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpColumnFamily">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="keyspace" nillable="true" type="xs:string"/>
+<xs:element minOccurs="0" name="columnFamily" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+<xs:element name="cleanUpColumnFamilyResponse">
+<xs:complexType>
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="xs:boolean"/>
+</xs:sequence>
+</xs:complexType>
+</xs:element>
+</xs:schema>
+<xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://mgt.cluster.cassandra.carbon.wso2.org/xsd">
+<xs:complexType name="CassandraClusterToolsDataAdminException">
+<xs:sequence/>
+</xs:complexType>
+</xs:schema>
+</wsdl:types>
+<wsdl:message name="flushColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:flushColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="flushColumnFamilyResponse">
+<wsdl:part name="parameters" element="ns1:flushColumnFamilyResponse"/>
+</wsdl:message>
+<wsdl:message name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<wsdl:part name="parameters" element="ns1:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:message>
+<wsdl:message name="clearSnapshotOfNodeRequest">
+<wsdl:part name="parameters" element="ns1:clearSnapshotOfNode"/>
+</wsdl:message>
+<wsdl:message name="clearSnapshotOfNodeResponse">
+<wsdl:part name="parameters" element="ns1:clearSnapshotOfNodeResponse"/>
+</wsdl:message>
+<wsdl:message name="compactColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:compactColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="compactColumnFamilyResponse">
+<wsdl:part name="parameters" element="ns1:compactColumnFamilyResponse"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesInKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesInKeyspace"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesInKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesInKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="isJoinedRequest">
+<wsdl:part name="parameters" element="ns1:isJoined"/>
+</wsdl:message>
+<wsdl:message name="isJoinedResponse">
+<wsdl:part name="parameters" element="ns1:isJoinedResponse"/>
+</wsdl:message>
+<wsdl:message name="stopGossipServerRequest">
+<wsdl:part name="parameters" element="ns1:stopGossipServer"/>
+</wsdl:message>
+<wsdl:message name="takeSnapshotOfKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:takeSnapshotOfKeyspace"/>
+</wsdl:message>
+<wsdl:message name="takeSnapshotOfKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:takeSnapshotOfKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="getIncrementalBackUpStatusRequest">
+<wsdl:part name="parameters" element="ns1:getIncrementalBackUpStatus"/>
+</wsdl:message>
+<wsdl:message name="getIncrementalBackUpStatusResponse">
+<wsdl:part name="parameters" element="ns1:getIncrementalBackUpStatusResponse"/>
+</wsdl:message>
+<wsdl:message name="setIncrementalBackUpStatusRequest">
+<wsdl:part name="parameters" element="ns1:setIncrementalBackUpStatus"/>
+</wsdl:message>
+<wsdl:message name="repairKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:repairKeyspace"/>
+</wsdl:message>
+<wsdl:message name="repairKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:repairKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="stopRPCServerRequest">
+<wsdl:part name="parameters" element="ns1:stopRPCServer"/>
+</wsdl:message>
+<wsdl:message name="decommissionNodeRequest">
+<wsdl:part name="parameters" element="ns1:decommissionNode"/>
+</wsdl:message>
+<wsdl:message name="decommissionNodeResponse">
+<wsdl:part name="parameters" element="ns1:decommissionNodeResponse"/>
+</wsdl:message>
+<wsdl:message name="compactKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:compactKeyspace"/>
+</wsdl:message>
+<wsdl:message name="compactKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:compactKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="isGossipServerEnableRequest">
+<wsdl:part name="parameters" element="ns1:isGossipServerEnable"/>
+</wsdl:message>
+<wsdl:message name="isGossipServerEnableResponse">
+<wsdl:part name="parameters" element="ns1:isGossipServerEnableResponse"/>
+</wsdl:message>
+<wsdl:message name="isRPCRunningRequest">
+<wsdl:part name="parameters" element="ns1:isRPCRunning"/>
+</wsdl:message>
+<wsdl:message name="isRPCRunningResponse">
+<wsdl:part name="parameters" element="ns1:isRPCRunningResponse"/>
+</wsdl:message>
+<wsdl:message name="repairColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:repairColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="repairColumnFamilyResponse">
+<wsdl:part name="parameters" element="ns1:repairColumnFamilyResponse"/>
+</wsdl:message>
+<wsdl:message name="performGCRequest">
+<wsdl:part name="parameters" element="ns1:performGC"/>
+</wsdl:message>
+<wsdl:message name="cleanUpColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:cleanUpColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="cleanUpColumnFamilyResponse">
+<wsdl:part name="parameters" element="ns1:cleanUpColumnFamilyResponse"/>
+</wsdl:message>
+<wsdl:message name="clearSnapshotOfKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:clearSnapshotOfKeyspace"/>
+</wsdl:message>
+<wsdl:message name="clearSnapshotOfKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:clearSnapshotOfKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="startRPCServerRequest">
+<wsdl:part name="parameters" element="ns1:startRPCServer"/>
+</wsdl:message>
+<wsdl:message name="cleanUpKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:cleanUpKeyspace"/>
+</wsdl:message>
+<wsdl:message name="cleanUpKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:cleanUpKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="drainNodeRequest">
+<wsdl:part name="parameters" element="ns1:drainNode"/>
+</wsdl:message>
+<wsdl:message name="drainNodeResponse">
+<wsdl:part name="parameters" element="ns1:drainNodeResponse"/>
+</wsdl:message>
+<wsdl:message name="takeSnapshotOfNodeRequest">
+<wsdl:part name="parameters" element="ns1:takeSnapshotOfNode"/>
+</wsdl:message>
+<wsdl:message name="takeSnapshotOfNodeResponse">
+<wsdl:part name="parameters" element="ns1:takeSnapshotOfNodeResponse"/>
+</wsdl:message>
+<wsdl:message name="scrubKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:scrubKeyspace"/>
+</wsdl:message>
+<wsdl:message name="scrubKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:scrubKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:message name="startGossipServerRequest">
+<wsdl:part name="parameters" element="ns1:startGossipServer"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="upgradeSSTablesColumnFamilyResponse">
+<wsdl:part name="parameters" element="ns1:upgradeSSTablesColumnFamilyResponse"/>
+</wsdl:message>
+<wsdl:message name="scrubColumnFamilyRequest">
+<wsdl:part name="parameters" element="ns1:scrubColumnFamily"/>
+</wsdl:message>
+<wsdl:message name="scrubColumnFamilyResponse">
+<wsdl:part name="parameters" element="ns1:scrubColumnFamilyResponse"/>
+</wsdl:message>
+<wsdl:message name="joinClusterRequest">
+<wsdl:part name="parameters" element="ns1:joinCluster"/>
+</wsdl:message>
+<wsdl:message name="joinClusterResponse">
+<wsdl:part name="parameters" element="ns1:joinClusterResponse"/>
+</wsdl:message>
+<wsdl:message name="moveNodeRequest">
+<wsdl:part name="parameters" element="ns1:moveNode"/>
+</wsdl:message>
+<wsdl:message name="moveNodeResponse">
+<wsdl:part name="parameters" element="ns1:moveNodeResponse"/>
+</wsdl:message>
+<wsdl:message name="flushKeyspaceRequest">
+<wsdl:part name="parameters" element="ns1:flushKeyspace"/>
+</wsdl:message>
+<wsdl:message name="flushKeyspaceResponse">
+<wsdl:part name="parameters" element="ns1:flushKeyspaceResponse"/>
+</wsdl:message>
+<wsdl:portType name="CassandraClusterToolsAdminPortType">
+<wsdl:operation name="flushColumnFamily">
+<wsdl:input message="tns:flushColumnFamilyRequest" wsaw:Action="urn:flushColumnFamily"/>
+<wsdl:output message="tns:flushColumnFamilyResponse" wsaw:Action="urn:flushColumnFamilyResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:flushColumnFamilyCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfNode">
+<wsdl:input message="tns:clearSnapshotOfNodeRequest" wsaw:Action="urn:clearSnapshotOfNode"/>
+<wsdl:output message="tns:clearSnapshotOfNodeResponse" wsaw:Action="urn:clearSnapshotOfNodeResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:clearSnapshotOfNodeCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamily">
+<wsdl:input message="tns:compactColumnFamilyRequest" wsaw:Action="urn:compactColumnFamily"/>
+<wsdl:output message="tns:compactColumnFamilyResponse" wsaw:Action="urn:compactColumnFamilyResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:compactColumnFamilyCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<wsdl:input message="tns:upgradeSSTablesInKeyspaceRequest" wsaw:Action="urn:upgradeSSTablesInKeyspace"/>
+<wsdl:output message="tns:upgradeSSTablesInKeyspaceResponse" wsaw:Action="urn:upgradeSSTablesInKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:upgradeSSTablesInKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<wsdl:input message="tns:isJoinedRequest" wsaw:Action="urn:isJoined"/>
+<wsdl:output message="tns:isJoinedResponse" wsaw:Action="urn:isJoinedResponse"/>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<wsdl:input message="tns:stopGossipServerRequest" wsaw:Action="urn:stopGossipServer"/>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<wsdl:input message="tns:takeSnapshotOfKeyspaceRequest" wsaw:Action="urn:takeSnapshotOfKeyspace"/>
+<wsdl:output message="tns:takeSnapshotOfKeyspaceResponse" wsaw:Action="urn:takeSnapshotOfKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:takeSnapshotOfKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<wsdl:input message="tns:getIncrementalBackUpStatusRequest" wsaw:Action="urn:getIncrementalBackUpStatus"/>
+<wsdl:output message="tns:getIncrementalBackUpStatusResponse" wsaw:Action="urn:getIncrementalBackUpStatusResponse"/>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<wsdl:input message="tns:setIncrementalBackUpStatusRequest" wsaw:Action="urn:setIncrementalBackUpStatus"/>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<wsdl:input message="tns:repairKeyspaceRequest" wsaw:Action="urn:repairKeyspace"/>
+<wsdl:output message="tns:repairKeyspaceResponse" wsaw:Action="urn:repairKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:repairKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<wsdl:input message="tns:stopRPCServerRequest" wsaw:Action="urn:stopRPCServer"/>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<wsdl:input message="tns:decommissionNodeRequest" wsaw:Action="urn:decommissionNode"/>
+<wsdl:output message="tns:decommissionNodeResponse" wsaw:Action="urn:decommissionNodeResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:decommissionNodeCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<wsdl:input message="tns:compactKeyspaceRequest" wsaw:Action="urn:compactKeyspace"/>
+<wsdl:output message="tns:compactKeyspaceResponse" wsaw:Action="urn:compactKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:compactKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<wsdl:input message="tns:isGossipServerEnableRequest" wsaw:Action="urn:isGossipServerEnable"/>
+<wsdl:output message="tns:isGossipServerEnableResponse" wsaw:Action="urn:isGossipServerEnableResponse"/>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<wsdl:input message="tns:isRPCRunningRequest" wsaw:Action="urn:isRPCRunning"/>
+<wsdl:output message="tns:isRPCRunningResponse" wsaw:Action="urn:isRPCRunningResponse"/>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamily">
+<wsdl:input message="tns:repairColumnFamilyRequest" wsaw:Action="urn:repairColumnFamily"/>
+<wsdl:output message="tns:repairColumnFamilyResponse" wsaw:Action="urn:repairColumnFamilyResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:repairColumnFamilyCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<wsdl:input message="tns:performGCRequest" wsaw:Action="urn:performGC"/>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamily">
+<wsdl:input message="tns:cleanUpColumnFamilyRequest" wsaw:Action="urn:cleanUpColumnFamily"/>
+<wsdl:output message="tns:cleanUpColumnFamilyResponse" wsaw:Action="urn:cleanUpColumnFamilyResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:cleanUpColumnFamilyCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<wsdl:input message="tns:clearSnapshotOfKeyspaceRequest" wsaw:Action="urn:clearSnapshotOfKeyspace"/>
+<wsdl:output message="tns:clearSnapshotOfKeyspaceResponse" wsaw:Action="urn:clearSnapshotOfKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:clearSnapshotOfKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<wsdl:input message="tns:startRPCServerRequest" wsaw:Action="urn:startRPCServer"/>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<wsdl:input message="tns:cleanUpKeyspaceRequest" wsaw:Action="urn:cleanUpKeyspace"/>
+<wsdl:output message="tns:cleanUpKeyspaceResponse" wsaw:Action="urn:cleanUpKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:cleanUpKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<wsdl:input message="tns:drainNodeRequest" wsaw:Action="urn:drainNode"/>
+<wsdl:output message="tns:drainNodeResponse" wsaw:Action="urn:drainNodeResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:drainNodeCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<wsdl:input message="tns:takeSnapshotOfNodeRequest" wsaw:Action="urn:takeSnapshotOfNode"/>
+<wsdl:output message="tns:takeSnapshotOfNodeResponse" wsaw:Action="urn:takeSnapshotOfNodeResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:takeSnapshotOfNodeCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<wsdl:input message="tns:scrubKeyspaceRequest" wsaw:Action="urn:scrubKeyspace"/>
+<wsdl:output message="tns:scrubKeyspaceResponse" wsaw:Action="urn:scrubKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:scrubKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<wsdl:input message="tns:startGossipServerRequest" wsaw:Action="urn:startGossipServer"/>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamily">
+<wsdl:input message="tns:upgradeSSTablesColumnFamilyRequest" wsaw:Action="urn:upgradeSSTablesColumnFamily"/>
+<wsdl:output message="tns:upgradeSSTablesColumnFamilyResponse" wsaw:Action="urn:upgradeSSTablesColumnFamilyResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:upgradeSSTablesColumnFamilyCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamily">
+<wsdl:input message="tns:scrubColumnFamilyRequest" wsaw:Action="urn:scrubColumnFamily"/>
+<wsdl:output message="tns:scrubColumnFamilyResponse" wsaw:Action="urn:scrubColumnFamilyResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:scrubColumnFamilyCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<wsdl:input message="tns:joinClusterRequest" wsaw:Action="urn:joinCluster"/>
+<wsdl:output message="tns:joinClusterResponse" wsaw:Action="urn:joinClusterResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:joinClusterCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<wsdl:input message="tns:moveNodeRequest" wsaw:Action="urn:moveNode"/>
+<wsdl:output message="tns:moveNodeResponse" wsaw:Action="urn:moveNodeResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:moveNodeCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<wsdl:input message="tns:flushKeyspaceRequest" wsaw:Action="urn:flushKeyspace"/>
+<wsdl:output message="tns:flushKeyspaceResponse" wsaw:Action="urn:flushKeyspaceResponse"/>
+<wsdl:fault message="tns:CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException" wsaw:Action="urn:flushKeyspaceCassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:operation>
+</wsdl:portType>
+<wsdl:binding name="CassandraClusterToolsAdminSoap11Binding" type="tns:CassandraClusterToolsAdminPortType">
+<soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<wsdl:operation name="clearSnapshotOfNode">
+<soap:operation soapAction="urn:clearSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushColumnFamily">
+<soap:operation soapAction="urn:flushColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamily">
+<soap:operation soapAction="urn:compactColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<soap:operation soapAction="urn:upgradeSSTablesInKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<soap:operation soapAction="urn:takeSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<soap:operation soapAction="urn:stopGossipServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<soap:operation soapAction="urn:isJoined" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<soap:operation soapAction="urn:getIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<soap:operation soapAction="urn:setIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<soap:operation soapAction="urn:repairKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<soap:operation soapAction="urn:stopRPCServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<soap:operation soapAction="urn:decommissionNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<soap:operation soapAction="urn:isGossipServerEnable" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<soap:operation soapAction="urn:isRPCRunning" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamily">
+<soap:operation soapAction="urn:repairColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<soap:operation soapAction="urn:compactKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<soap:operation soapAction="urn:performGC" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamily">
+<soap:operation soapAction="urn:cleanUpColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<soap:operation soapAction="urn:startRPCServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<soap:operation soapAction="urn:clearSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<soap:operation soapAction="urn:cleanUpKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<soap:operation soapAction="urn:drainNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<soap:operation soapAction="urn:takeSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamily">
+<soap:operation soapAction="urn:upgradeSSTablesColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<soap:operation soapAction="urn:startGossipServer" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<soap:operation soapAction="urn:scrubKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamily">
+<soap:operation soapAction="urn:scrubColumnFamily" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<soap:operation soapAction="urn:joinCluster" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<soap:operation soapAction="urn:moveNode" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<soap:operation soapAction="urn:flushKeyspace" style="document"/>
+<wsdl:input>
+<soap:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="CassandraClusterToolsAdminSoap12Binding" type="tns:CassandraClusterToolsAdminPortType">
+<soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+<wsdl:operation name="clearSnapshotOfNode">
+<soap12:operation soapAction="urn:clearSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushColumnFamily">
+<soap12:operation soapAction="urn:flushColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamily">
+<soap12:operation soapAction="urn:compactColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<soap12:operation soapAction="urn:upgradeSSTablesInKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<soap12:operation soapAction="urn:takeSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<soap12:operation soapAction="urn:stopGossipServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<soap12:operation soapAction="urn:isJoined" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<soap12:operation soapAction="urn:getIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<soap12:operation soapAction="urn:setIncrementalBackUpStatus" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<soap12:operation soapAction="urn:repairKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<soap12:operation soapAction="urn:stopRPCServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<soap12:operation soapAction="urn:decommissionNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<soap12:operation soapAction="urn:isGossipServerEnable" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<soap12:operation soapAction="urn:isRPCRunning" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamily">
+<soap12:operation soapAction="urn:repairColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<soap12:operation soapAction="urn:compactKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<soap12:operation soapAction="urn:performGC" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamily">
+<soap12:operation soapAction="urn:cleanUpColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<soap12:operation soapAction="urn:startRPCServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<soap12:operation soapAction="urn:clearSnapshotOfKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<soap12:operation soapAction="urn:cleanUpKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<soap12:operation soapAction="urn:drainNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<soap12:operation soapAction="urn:takeSnapshotOfNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamily">
+<soap12:operation soapAction="urn:upgradeSSTablesColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<soap12:operation soapAction="urn:startGossipServer" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<soap12:operation soapAction="urn:scrubKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamily">
+<soap12:operation soapAction="urn:scrubColumnFamily" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<soap12:operation soapAction="urn:joinCluster" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<soap12:operation soapAction="urn:moveNode" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<soap12:operation soapAction="urn:flushKeyspace" style="document"/>
+<wsdl:input>
+<soap12:body use="literal"/>
+</wsdl:input>
+<wsdl:output>
+<soap12:body use="literal"/>
+</wsdl:output>
+<wsdl:fault name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException">
+<soap12:fault use="literal" name="CassandraClusterToolsAdminCassandraClusterToolsDataAdminException"/>
+</wsdl:fault>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:binding name="CassandraClusterToolsAdminHttpBinding" type="tns:CassandraClusterToolsAdminPortType">
+<http:binding verb="POST"/>
+<wsdl:operation name="clearSnapshotOfNode">
+<http:operation location="clearSnapshotOfNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="flushColumnFamily">
+<http:operation location="flushColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="compactColumnFamily">
+<http:operation location="compactColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesInKeyspace">
+<http:operation location="upgradeSSTablesInKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfKeyspace">
+<http:operation location="takeSnapshotOfKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="stopGossipServer">
+<http:operation location="stopGossipServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="isJoined">
+<http:operation location="isJoined"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="getIncrementalBackUpStatus">
+<http:operation location="getIncrementalBackUpStatus"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="setIncrementalBackUpStatus">
+<http:operation location="setIncrementalBackUpStatus"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="repairKeyspace">
+<http:operation location="repairKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="stopRPCServer">
+<http:operation location="stopRPCServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="decommissionNode">
+<http:operation location="decommissionNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="isGossipServerEnable">
+<http:operation location="isGossipServerEnable"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="isRPCRunning">
+<http:operation location="isRPCRunning"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="repairColumnFamily">
+<http:operation location="repairColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="compactKeyspace">
+<http:operation location="compactKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="performGC">
+<http:operation location="performGC"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="cleanUpColumnFamily">
+<http:operation location="cleanUpColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="startRPCServer">
+<http:operation location="startRPCServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="clearSnapshotOfKeyspace">
+<http:operation location="clearSnapshotOfKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="cleanUpKeyspace">
+<http:operation location="cleanUpKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="drainNode">
+<http:operation location="drainNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="takeSnapshotOfNode">
+<http:operation location="takeSnapshotOfNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="upgradeSSTablesColumnFamily">
+<http:operation location="upgradeSSTablesColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="startGossipServer">
+<http:operation location="startGossipServer"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+</wsdl:operation>
+<wsdl:operation name="scrubKeyspace">
+<http:operation location="scrubKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="scrubColumnFamily">
+<http:operation location="scrubColumnFamily"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="joinCluster">
+<http:operation location="joinCluster"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="moveNode">
+<http:operation location="moveNode"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+<wsdl:operation name="flushKeyspace">
+<http:operation location="flushKeyspace"/>
+<wsdl:input>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:input>
+<wsdl:output>
+<mime:content type="text/xml" part="parameters"/>
+</wsdl:output>
+</wsdl:operation>
+</wsdl:binding>
+<wsdl:service name="CassandraClusterToolsAdmin">
+<wsdl:port name="CassandraClusterToolsAdminHttpsSoap11Endpoint" binding="tns:CassandraClusterToolsAdminSoap11Binding">
+<soap:address location="https://192.168.1.2:9443/services/CassandraClusterToolsAdmin.CassandraClusterToolsAdminHttpsSoap11Endpoint/"/>
+</wsdl:port>
+<wsdl:port name="CassandraClusterToolsAdminHttpsSoap12Endpoint" binding="tns:CassandraClusterToolsAdminSoap12Binding">
+<soap12:address location="https://192.168.1.2:9443/services/CassandraClusterToolsAdmin.CassandraClusterToolsAdminHttpsSoap12Endpoint/"/>
+</wsdl:port>
+<wsdl:port name="CassandraClusterToolsAdminHttpsEndpoint" binding="tns:CassandraClusterToolsAdminHttpBinding">
+<http:address location="https://192.168.1.2:9443/services/CassandraClusterToolsAdmin.CassandraClusterToolsAdminHttpsEndpoint/"/>
+</wsdl:port>
+</wsdl:service>
+</wsdl:definitions>

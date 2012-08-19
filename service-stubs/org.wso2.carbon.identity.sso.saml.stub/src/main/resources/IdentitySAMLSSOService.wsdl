@@ -97,6 +97,7 @@
                     <xs:element minOccurs="0" name="logoutURL" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="nameIDFormat" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="password" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="requestedClaims" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="rpSessionId" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="subject" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="useFullyQualifiedUsernameAsSubject" type="xs:boolean" />

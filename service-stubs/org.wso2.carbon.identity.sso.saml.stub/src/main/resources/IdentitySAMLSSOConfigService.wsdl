@@ -25,20 +25,6 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
-            <xs:element name="getUserProfiles">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element minOccurs="0" name="userName" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
-            <xs:element name="getUserProfilesResponse">
-                <xs:complexType>
-                    <xs:sequence>
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
-                    </xs:sequence>
-                </xs:complexType>
-            </xs:element>
             <xs:element name="getServiceProviders">
                 <xs:complexType>
                     <xs:sequence />
@@ -48,6 +34,18 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" nillable="true" type="ax2289:SAMLSSOServiceProviderInfoDTO" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getClaimURIs">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getClaimURIsResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="xs:string" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -90,12 +88,12 @@
                 <xs:sequence>
                     <xs:element minOccurs="0" name="assertionConsumerUrl" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="attributeConsumingServiceIndex" nillable="true" type="xs:string" />
-                    <xs:element minOccurs="0" name="attributeProfile" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="certAlias" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="doSignAssertions" type="xs:boolean" />
                     <xs:element minOccurs="0" name="doSingleLogout" type="xs:boolean" />
                     <xs:element minOccurs="0" name="issuer" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="logoutURL" nillable="true" type="xs:string" />
+                    <xs:element maxOccurs="unbounded" minOccurs="0" name="requestedClaims" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="useFullyQualifiedUsername" type="xs:boolean" />
                 </xs:sequence>
             </xs:complexType>
@@ -121,6 +119,12 @@
     <wsdl:message name="getCertAliasOfPrimaryKeyStoreResponse">
         <wsdl:part name="parameters" element="ns1:getCertAliasOfPrimaryKeyStoreResponse" />
     </wsdl:message>
+    <wsdl:message name="getClaimURIsRequest">
+        <wsdl:part name="parameters" element="ns1:getClaimURIs" />
+    </wsdl:message>
+    <wsdl:message name="getClaimURIsResponse">
+        <wsdl:part name="parameters" element="ns1:getClaimURIsResponse" />
+    </wsdl:message>
     <wsdl:message name="getServiceProvidersRequest">
         <wsdl:part name="parameters" element="ns1:getServiceProviders" />
     </wsdl:message>
@@ -133,12 +137,6 @@
     <wsdl:message name="addRPServiceProviderResponse">
         <wsdl:part name="parameters" element="ns1:addRPServiceProviderResponse" />
     </wsdl:message>
-    <wsdl:message name="getUserProfilesRequest">
-        <wsdl:part name="parameters" element="ns1:getUserProfiles" />
-    </wsdl:message>
-    <wsdl:message name="getUserProfilesResponse">
-        <wsdl:part name="parameters" element="ns1:getUserProfilesResponse" />
-    </wsdl:message>
     <wsdl:portType name="IdentitySAMLSSOConfigServicePortType">
         <wsdl:operation name="removeServiceProvider">
             <wsdl:input message="tns:removeServiceProviderRequest" wsaw:Action="urn:removeServiceProvider" />
@@ -150,6 +148,11 @@
             <wsdl:output message="tns:getCertAliasOfPrimaryKeyStoreResponse" wsaw:Action="urn:getCertAliasOfPrimaryKeyStoreResponse" />
             <wsdl:fault message="tns:IdentityException" name="IdentityException" wsaw:Action="urn:getCertAliasOfPrimaryKeyStoreIdentityException" />
         </wsdl:operation>
+        <wsdl:operation name="getClaimURIs">
+            <wsdl:input message="tns:getClaimURIsRequest" wsaw:Action="urn:getClaimURIs" />
+            <wsdl:output message="tns:getClaimURIsResponse" wsaw:Action="urn:getClaimURIsResponse" />
+            <wsdl:fault message="tns:IdentityException" name="IdentityException" wsaw:Action="urn:getClaimURIsIdentityException" />
+        </wsdl:operation>
         <wsdl:operation name="getServiceProviders">
             <wsdl:input message="tns:getServiceProvidersRequest" wsaw:Action="urn:getServiceProviders" />
             <wsdl:output message="tns:getServiceProvidersResponse" wsaw:Action="urn:getServiceProvidersResponse" />
@@ -159,11 +162,6 @@
             <wsdl:input message="tns:addRPServiceProviderRequest" wsaw:Action="urn:addRPServiceProvider" />
             <wsdl:output message="tns:addRPServiceProviderResponse" wsaw:Action="urn:addRPServiceProviderResponse" />
             <wsdl:fault message="tns:IdentityException" name="IdentityException" wsaw:Action="urn:addRPServiceProviderIdentityException" />
-        </wsdl:operation>
-        <wsdl:operation name="getUserProfiles">
-            <wsdl:input message="tns:getUserProfilesRequest" wsaw:Action="urn:getUserProfiles" />
-            <wsdl:output message="tns:getUserProfilesResponse" wsaw:Action="urn:getUserProfilesResponse" />
-            <wsdl:fault message="tns:IdentityException" name="IdentityException" wsaw:Action="urn:getUserProfilesIdentityException" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="IdentitySAMLSSOConfigServiceSoap11Binding" type="tns:IdentitySAMLSSOConfigServicePortType">
@@ -192,6 +190,18 @@
                 <soap:fault use="literal" name="IdentityException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="getClaimURIs">
+            <soap:operation soapAction="urn:getClaimURIs" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IdentityException">
+                <soap:fault use="literal" name="IdentityException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getServiceProviders">
             <soap:operation soapAction="urn:getServiceProviders" style="document" />
             <wsdl:input>
@@ -206,18 +216,6 @@
         </wsdl:operation>
         <wsdl:operation name="addRPServiceProvider">
             <soap:operation soapAction="urn:addRPServiceProvider" style="document" />
-            <wsdl:input>
-                <soap:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap:body use="literal" />
-            </wsdl:output>
-            <wsdl:fault name="IdentityException">
-                <soap:fault use="literal" name="IdentityException" />
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="getUserProfiles">
-            <soap:operation soapAction="urn:getUserProfiles" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -255,6 +253,18 @@
                 <soap12:fault use="literal" name="IdentityException" />
             </wsdl:fault>
         </wsdl:operation>
+        <wsdl:operation name="getClaimURIs">
+            <soap12:operation soapAction="urn:getClaimURIs" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
+            <wsdl:fault name="IdentityException">
+                <soap12:fault use="literal" name="IdentityException" />
+            </wsdl:fault>
+        </wsdl:operation>
         <wsdl:operation name="getServiceProviders">
             <soap12:operation soapAction="urn:getServiceProviders" style="document" />
             <wsdl:input>
@@ -269,18 +279,6 @@
         </wsdl:operation>
         <wsdl:operation name="addRPServiceProvider">
             <soap12:operation soapAction="urn:addRPServiceProvider" style="document" />
-            <wsdl:input>
-                <soap12:body use="literal" />
-            </wsdl:input>
-            <wsdl:output>
-                <soap12:body use="literal" />
-            </wsdl:output>
-            <wsdl:fault name="IdentityException">
-                <soap12:fault use="literal" name="IdentityException" />
-            </wsdl:fault>
-        </wsdl:operation>
-        <wsdl:operation name="getUserProfiles">
-            <soap12:operation soapAction="urn:getUserProfiles" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
@@ -312,6 +310,15 @@
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:output>
         </wsdl:operation>
+        <wsdl:operation name="getClaimURIs">
+            <http:operation location="getClaimURIs" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
+        </wsdl:operation>
         <wsdl:operation name="getServiceProviders">
             <http:operation location="getServiceProviders" />
             <wsdl:input>
@@ -323,15 +330,6 @@
         </wsdl:operation>
         <wsdl:operation name="addRPServiceProvider">
             <http:operation location="addRPServiceProvider" />
-            <wsdl:input>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:input>
-            <wsdl:output>
-                <mime:content type="text/xml" part="parameters" />
-            </wsdl:output>
-        </wsdl:operation>
-        <wsdl:operation name="getUserProfiles">
-            <http:operation location="getUserProfiles" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>

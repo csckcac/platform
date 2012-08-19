@@ -17,23 +17,17 @@
 */
 package org.wso2.carbon.identity.sso.saml.ui.client;
 
+import java.util.ArrayList;
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.identity.base.IdentityException;
-import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.sso.saml.stub.IdentitySAMLSSOConfigServiceStub;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO;
 import org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderInfoDTO;
-import org.wso2.carbon.user.core.UserRealm;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-
-import java.rmi.RemoteException;
-import java.util.ArrayList;
 
 public class SAMLSSOConfigServiceClient {
 
@@ -100,15 +94,14 @@ public class SAMLSSOConfigServiceClient {
         }
     }
     
-    public String[] getUserProfiles(String userName) throws AxisFault {
-    	String[] userProfileNames = null;
+    public String[] getClaimURIs() throws AxisFault {
+    	String[] claimUris = null;
     	try {
-	        userProfileNames = stub.getUserProfiles(userName);
+	        claimUris = stub.getClaimURIs();
         } catch (Exception e) {
-        	log.error("Error while getting user profiles", e);
-            throw new AxisFault(e.getMessage(), e);
+        	 log.error("Error when reading claims", e);
+             throw new AxisFault(e.getMessage(), e);
         }
-        
-    	return userProfileNames;
+    	return claimUris;
     }
 }

@@ -25,6 +25,12 @@
 <%@ page import="java.util.ResourceBundle" %>
 <%@ page import="org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOServiceProviderDTO" %>
 
+<jsp:useBean id="samlSsoServuceProviderConfigBean"
+	type="org.wso2.carbon.identity.sso.saml.ui.SAMLSSOProviderConfigBean"
+	class="org.wso2.carbon.identity.sso.saml.ui.SAMLSSOProviderConfigBean"
+	scope="session" />
+<jsp:setProperty name="samlSsoServuceProviderConfigBean" property="*" />
+
 <script type="text/javascript" src="global-params.js"></script>
 <script type="text/javascript" src="../carbon/admin/js/breadcrumbs.js"></script>
 <script type="text/javascript" src="../carbon/admin/js/cookies.js"></script>
@@ -61,11 +67,13 @@ try	{
         serviceProviderDTO.setDoSignAssertions(true);
     }
     if("true".equals(request.getParameter("enableAttributeProfile"))){
-    	serviceProviderDTO.setAttributeProfile(request.getParameter("profile"));
+    	serviceProviderDTO.setRequestedClaims(samlSsoServuceProviderConfigBean.getSelectedClaimsAttay());
     }
     serviceProviderDTO.setLogoutURL(request.getParameter("logoutURL"));
 
     boolean status = client.addServiceProvider(serviceProviderDTO);
+    
+    samlSsoServuceProviderConfigBean.clearBean();
     
     if(status){
         String message = resourceBundle.getString("sp.added.successfully");
@@ -75,7 +83,6 @@ try	{
         String message = resourceBundle.getString("error.adding.sp");
         CarbonUIMessage.sendCarbonUIMessage(message,CarbonUIMessage.ERROR, request);
     }
-
 %>
 	 <script>
           location.href ='manage_service_providers.jsp?region=region1&item=manage_saml_sso';

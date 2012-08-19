@@ -38,6 +38,9 @@
         <module>org.wso2.carbon.cassandra.dataaccess.feature</module>
         <module>org.wso2.carbon.cassandra.mgt.feature</module>
         <module>org.wso2.carbon.cassandra.mgt.ui.feature</module>
+	 <module>org.wso2.carbon.cassandra.cluster.feature</module>
+        <module>org.wso2.carbon.cassandra.cluster.mgt.feature</module>
+        <module>org.wso2.carbon.cassandra.cluster.mgt.ui.feature</module>
         <module>org.wso2.carbon.cassandra.feature</module>
     </modules>
 
@@ -114,6 +117,26 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.cassandra.mgt.stub</artifactId>
+                <version>${wso2carbon.version.cassandra}</version>
+            </dependency>
+	    <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.cluster.mgt.stub</artifactId>
+                <version>${wso2carbon.version.cassandra}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.cluster.mgt.ui</artifactId>
+                <version>${wso2carbon.version.cassandra}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.cluster.mgt</artifactId>
+                <version>${wso2carbon.version.cassandra}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.cassandra.cluster</artifactId>
                 <version>${wso2carbon.version.cassandra}</version>
             </dependency>
             <dependency>

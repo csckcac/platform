@@ -25,11 +25,11 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.cassandra.cluster</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Cassandra Cluster Tools</name>
+    <name>WSO2 Carbon - Cassandra MBean Service Provider</name>
     <url>http://wso2.org</url>
 
     <build>
-        <plugins>             
+        <plugins>
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-scr-plugin</artifactId>
@@ -37,7 +37,7 @@
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
-                
+
                 <extensions>true</extensions>
                 <configuration>
                     <instructions>
@@ -65,6 +65,32 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.authentication</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cassandra</groupId>
+            <artifactId>apache-cassandra</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.user.api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cassandra.dataaccess</artifactId>
+            <version>${wso2carbon.version.cassandra}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.cassandra.server</artifactId>
+            <version>${wso2carbon.version.cassandra}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>

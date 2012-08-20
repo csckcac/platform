@@ -5,9 +5,7 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.clustering.ClusteringAgent;
 import org.apache.axis2.clustering.Member;
-import org.apache.axis2.clustering.management.DefaultGroupManagementAgent;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
@@ -31,15 +29,13 @@ import org.wso2.carbon.lb.common.conf.util.HostContext;
 import org.wso2.carbon.lb.common.conf.util.TenantDomainContext;
 import org.wso2.carbon.lb.endpoint.SubDomainAwareGroupManagementAgent;
 import org.wso2.carbon.lb.endpoint.TenantLoadBalanceMembershipHandler;
+import org.wso2.carbon.lb.endpoint.cache.URLMappingCache;
+import org.wso2.carbon.lb.endpoint.internal.RegistryManager;
 import org.wso2.carbon.lb.endpoint.util.ConfigHolder;
 import org.wso2.carbon.utils.CarbonUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,7 +48,6 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
     private String algorithm;
     private String configuration;
     private String failOver;
-
 
     /**
      * Axis2 based membership handler which handles members in multiple clustering domains
@@ -69,6 +64,17 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
     
     private LoadBalancerConfiguration lbConfig;
 
+    /**
+     *  to keep the host vs url mappings entry.
+     */
+    private Map<String, String> suffixes = new HashMap<String, String>();
+
+    /**
+     * keep the size of cache which used to keep hostNames of url mapping.
+     */
+    private URLMappingCache mappingCache;
+    
+    private int sizeOfCache;
     @Override
     public void init(SynapseEnvironment synapseEnvironment) {
         try {
@@ -78,6 +84,8 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             lbConfig.init(configURL);
 //            hostDomainMap = lbConfig.getHostDomainMap();
             hostContexts = lbConfig.getHostContextMap();
+            sizeOfCache = lbConfig.getLoadBalancerConfig().getSizeOfCache();
+            mappingCache = new URLMappingCache(sizeOfCache);
 
         } catch (Exception e) {
             log.error("Error While reading Load Balancer configuration file" + e.toString());
@@ -107,7 +115,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             if (hostContexts != null) {
                 // iterate through each host context
                 for (HostContext hostCtxt : hostContexts.values()) {
-
+                    suffixes.put(hostCtxt.getUrlSuffix(), hostCtxt.getHostName());
                     // each host can has multiple Tenant Contexts, iterate through them
                     for (TenantDomainContext tenantCtxt : hostCtxt.getTenantDomainContexts()) {
 
@@ -176,7 +184,6 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
 
     public void send(MessageContext synCtx) {
         /*   setCookieHeader(synCtx);     */
-        int tenantId = getTenantId(synCtx.getTo().toString());
         Member currentMember = null;
         SessionInformation sessionInformation = null;
 
@@ -228,14 +235,45 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             sessionInformation.updateExpiryTime();
             sendToApplicationMember(synCtx, currentMember, faultHandler, false);
         } else {
-            // prepare for a new session
-            currentMember = tlbMembershipHandler.getNextApplicationMember(targetHost, tenantId);
-            if (currentMember == null) {
-                String msg = "No application members available";
-                log.error(msg);
-                throw new SynapseException(msg);
+            Boolean isURLMapping = false;
+            String host = null;
+            int tenantId;
+            for(Map.Entry<String, String> entry : suffixes.entrySet()) {
+                if(targetHost.contains("." + entry.getKey())) {
+                    isURLMapping = true;
+                    host = entry.getValue();
+                    break;
+                }
             }
-            sendToApplicationMember(synCtx, currentMember, faultHandler, true);
+            // prepare for a new session
+            if(isURLMapping) {
+                //if the hostName is like "appid.as.wso2.com" where as.wso2.com is URL suffix, and the URL is only
+                //"https://appid.as.wso2.com/", then the tenant will be identified from governance registry by the URL.
+                String serviceContext = mappingCache.getMapping(targetHost);
+                if(serviceContext == null) {
+                    RegistryManager registryManager = new RegistryManager();
+                    try {
+                        serviceContext = registryManager.getApplicationURLFromRegistry(targetHost);
+                        mappingCache.addValidMapping(targetHost, serviceContext);
+                    } catch (Exception e) {
+                        log.error("error while getting tenant id for url mapping from registry", e);
+                    }
+                }
+                if(serviceContext != null) {
+                    tenantId = getTenantId(serviceContext);
+                    currentMember = tlbMembershipHandler.getNextApplicationMember(host,tenantId);
+                    sendToApplicationMember(synCtx,currentMember,faultHandler,true);
+                }
+            } else {
+                tenantId = getTenantId(synCtx.getTo().toString());
+                currentMember = tlbMembershipHandler.getNextApplicationMember(targetHost, tenantId);
+                if (currentMember == null) {
+                    String msg = "No application members available";
+                    log.error(msg);
+                    throw new SynapseException(msg);
+                }
+                sendToApplicationMember(synCtx, currentMember, faultHandler, true);
+            }
         }
     }
 

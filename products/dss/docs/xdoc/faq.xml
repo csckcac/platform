@@ -34,6 +34,9 @@
                 <li>
                     <a href="#sec-policy">Why are the security policies getting removed, when the data service is updated ?</a>
                 </li>
+		<li>
+                    <a href="#error-200-OK">Why is HTTP status code 200 OK returned for data service requests ?</a>
+                </li>
             </ol>
 
 		<br/>
@@ -65,6 +68,12 @@
                    </h3>
 		        <p>
 			   When you update the service, it is getting changed and re-deployed. So if you have edited the service, you have to finalize the service by adding necessary policies. 
+		        </p>
+		   <h3 id="#error-200-OK">
+                    5. Why is HTTP status code 200 OK returned for data service requests ?
+                   </h3>
+		        <p>
+			   This is observed for data service requests which have a result, which is because of the default streaming behavior. When streaming is enabled for a service, the actual data service request execution is happenning at the very edge of the execution path, so at this point, the HTTP headers would have written out. So to get a proper HTTP 500 code for SOAP faults, streaming must be disabled. Streaming property can be set in service level as well as the operation level. 
 		        </p>
                 
     </body>

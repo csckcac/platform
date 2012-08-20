@@ -21,12 +21,10 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.scim.consumer</artifactId>
-	    <version>${wso2carbon.version}</version>
         </dependency>
 	<dependency>
             <groupId>org.wso2.charon</groupId>
             <artifactId>org.wso2.charon.core</artifactId>
-            <version>${version.charon}</version>
         </dependency>
     </dependencies>
 
@@ -66,6 +64,9 @@
                                 <bundleDef>org.wso2.charon:org.wso2.charon.core</bundleDef>
 				<bundleDef>org.wso2.carbon:org.wso2.carbon.identity.scim.consumer</bundleDef>
                             </bundles>
+			    <importFeatures>
+                                <importFeatureDef>org.wso2.carbon.identity.scim.common:${wso2carbon.version}</importFeatureDef>
+                            </importFeatures>
                         </configuration>
                     </execution>
                 </executions>

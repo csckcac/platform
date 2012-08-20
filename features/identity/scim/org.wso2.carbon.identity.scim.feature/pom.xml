@@ -33,6 +33,12 @@
 	<description>This feature contains the bundles required for Identity SCIM functionality</description>
 
 	<dependencies>
+	<dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.identity.scim.common.feature</artifactId>
+            <version>${wso2carbon.version}</version>
+            <type>zip</type>
+	</dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.scim.provider.feature</artifactId>
@@ -64,6 +70,7 @@
 							<id>org.wso2.carbon.identity.scim</id>
 							<propertiesFile>../../../etc/feature.properties</propertiesFile>
                             <includedFeatures>
+				<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.identity.scim.common.feature</includedFeatureDef>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.identity.scim.provider.feature</includedFeatureDef>
 				<includedFeatureDef>org.wso2.carbon:org.wso2.carbon.identity.scim.consumer.feature</includedFeatureDef>
                             </includedFeatures>

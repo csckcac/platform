@@ -29,6 +29,7 @@
     <url>http://wso2.org</url>
 
             <modules>
+		<module>org.wso2.carbon.identity.scim.common.feature</module>
                 <module>org.wso2.carbon.identity.scim.provider.feature</module>
 		<module>org.wso2.carbon.identity.scim.feature</module>
                 <module>org.wso2.carbon.identity.scim.consumer.feature</module>

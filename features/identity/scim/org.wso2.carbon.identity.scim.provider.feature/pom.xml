@@ -56,7 +56,6 @@
                                 <artifactItem>
                                     <groupId>org.wso2.carbon</groupId>
                                     <artifactId>org.wso2.carbon.identity.scim.provider</artifactId>
-                                    <version>${wso2carbon.version}</version>
                                     <type>war</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/src/main/resources/</outputDirectory>
@@ -119,6 +118,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.wso2.carbon.claim.mgt:${wso2carbon.version}</importFeatureDef>
+				<importFeatureDef>org.wso2.carbon.identity.scim.common:${wso2carbon.version}</importFeatureDef>
                             </importFeatures>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.carbon:org.wso2.carbon.jaxws.webapp.mgt.server.feature:${wso2carbon.version}</includedFeatureDef>

@@ -7,21 +7,6 @@ function deactivate(domain) {
         });
     }, "Session timed out. Please login again.");
 }
-function updatePlan(plan, existingPlan) {
-    var newPlan = plan.options[plan.selectedIndex].value;
-    if(newPlan==existingPlan){
-        CARBON.showInfoDialog("Please select the new plan before updating");
-    }else{
-        sessionAwareFunction(function() {
-        CARBON.showConfirmationDialog("Are you sure you want to update your UsagePlan ? "
-                                      , function() {
-            var submitForm = document.getElementById("usagePlanUpdate_form");
-            submitForm.submit();
-        });
-    }, "Session timed out. Please login again.");    
-    }
-
-}
 
 function checkDomain(nname)
 {

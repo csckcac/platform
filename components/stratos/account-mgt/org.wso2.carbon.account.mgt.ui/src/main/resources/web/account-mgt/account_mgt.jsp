@@ -44,7 +44,6 @@
         request="<%=request%>"/>
 <fmt:bundle basename="org.wso2.carbon.account.mgt.ui.i18n.Resources">
 
-
 <%
     if ("true".equals(session.getAttribute("domain-validation-failure"))) {
         session.removeAttribute("domain-validation-failure");
@@ -109,7 +108,7 @@
 
 
         if ("true".equals(request.getParameter("isUpdate"))) {
-            usagePlan = request.getParameter("usage-plan-name");
+            usagePlan = request.getParameter("selectedUsagePlan");
             if (org.wso2.carbon.account.mgt.ui.utils.Util.updateUsagePlan(request, config, session)) {
 %>
 <script type="text/javascript">
@@ -418,15 +417,47 @@
     </thead>
     <tbody>
 
+<script type="text/javascript">
+<%
+    boolean chargeOnRegistration = CommonUtil.isChargedOnRegistration();
+%>
+
+function updatePlan(plan, existingPlan, regTenantDomain) {
+    var newPlan = plan.options[plan.selectedIndex].value;
+    if(newPlan==existingPlan){
+        CARBON.showInfoDialog("Please select the new plan before updating");
+    }else{
+        sessionAwareFunction(function() {
+        CARBON.showConfirmationDialog("Are you sure you want to update your UsagePlan ? "
+                                      , function() {
+
+
+
+
+
+            var submitForm = document.getElementById("usagePlanUpdate_form");
+            submitForm.submit();
+        });
+    }, "Session timed out. Please login again.");
+    }
+}
+</script>
+
     <tr>
         <td class="nopadding">
-            <form method="POST" id="usagePlanUpdate_form" action="account_mgt.jsp">
+            <form method="POST" id="usagePlanUpdate_form"
+            <% if (chargeOnRegistration){ %>
+            action="init_payment_ajaxprocessor.jsp"
+            <% } else { %>
+            action="account_mgt.jsp"
+            <% } %>
+            >
                 <input type="hidden" name="isUpdate" value="true"/>
                 <table class="normal-nopadding" cellspacing="0">
                     <tbody>
                     <td><fmt:message key="select.usage.plan.for.tenant"/></td>
                     <td>
-                        <select name="usage-plan-name" id="usage-plan-name">
+                        <select name="selectedUsagePlan" id="selectedUsagePlan">
                         </select>
                         <a href="<%=CommonUtil.getStratosConfig().getUsagePlanURL()%>"
                            target="_blank">
@@ -442,7 +473,7 @@
                     <tr>
                         <td width="200px"></td>
                         <td colspan="2"><input
-                                onclick="return updatePlan(document.getElementById('usage-plan-name'), '<%=usagePlan%>');"
+                                onclick="return updatePlan(document.getElementById('selectedUsagePlan'), '<%=usagePlan%>', '<%=currentDomain%>');"
                                 type="button"
                                 value="Update Plan"/>
                         </td>
@@ -483,14 +514,14 @@
                                       option.value = name;
                                       option.selected = name;
                                       option.innerHTML = name;
-                                      document.getElementById('usage-plan-name').appendChild(option);
+                                      document.getElementById('selectedUsagePlan').appendChild(option);
 
                                   }
                                   else {
                                       option = document.createElement("option");
                                       option.value = name;
                                       option.innerHTML = name
-                                      document.getElementById('usage-plan-name').appendChild(option);
+                                      document.getElementById('selectedUsagePlan').appendChild(option);
                                   }
                               }
                           }

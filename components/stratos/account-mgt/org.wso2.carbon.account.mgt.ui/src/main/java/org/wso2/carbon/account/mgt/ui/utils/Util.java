@@ -102,7 +102,7 @@ public class Util {
         String tenantDomain="";
         try{
             tenantDomain=(String)session.getAttribute("tenantDomain");
-            String usagePlanName=(String)request.getParameter("usage-plan-name");
+            String usagePlanName=(String)request.getParameter("selectedUsagePlan");
             UsagePlanClient client=new UsagePlanClient(config, session);
             updated = client.updateUsagePlan(usagePlanName);
         }

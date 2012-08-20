@@ -98,11 +98,11 @@
         </fileSet>
 
         <!-- copy documentation -->
-        <fileSet>
+        <!--<fileSet>
             <directory>target/site</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/docs</outputDirectory>
             <fileMode>755</fileMode>
-        </fileSet>
+        </fileSet> -->
 
 
         <!-- copy sample database -->

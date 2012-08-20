@@ -23,6 +23,8 @@
 
 	<OpenIDUserPattern>https://localhost:9443/openid/</OpenIDUserPattern>
 
+	<OpenIDSkipUserConsent>false</OpenIDSkipUserConsent>
+
      <JDBCPersistenceManager>
         <DataSource>
         	<!-- Include a data source name (jndiConfigName) from the set of data sources defined in master-datasources.xml -->

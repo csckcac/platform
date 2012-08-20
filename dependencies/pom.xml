@@ -56,6 +56,7 @@
                 <module>qpid/0.12-wso2v1</module>
                 <module>rampart/1.6.1-wso2v4</module>
                 <module>sandesha/1.6.1-wso2v1/</module>
+		<module>openid4java/0.9.6-wso2v2</module>
                 <!--module>shindig</module-->
                 <module>svnclient</module>
 		<module>synapse/2.1.0-wso2v6</module>
@@ -98,6 +99,7 @@
 		<module>orbit/datanucleus-core</module>
 		<module>orbit/amber</module>
 		<module>orbit/hadoop-core</module>
+		<module>orbit/openid4java</module>
 	     </modules>
    <dependencyManagement>
 	<dependencies>

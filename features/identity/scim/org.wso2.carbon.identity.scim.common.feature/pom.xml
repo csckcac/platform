@@ -21,12 +21,10 @@
 	<dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.scim.common</artifactId>
-	    <version>4.0.1</version>
         </dependency>
 	<dependency>
             <groupId>org.wso2.charon</groupId>
             <artifactId>org.wso2.charon.core</artifactId>
-            <version>1.0.0-wso2v2</version>
         </dependency>
     </dependencies>
 

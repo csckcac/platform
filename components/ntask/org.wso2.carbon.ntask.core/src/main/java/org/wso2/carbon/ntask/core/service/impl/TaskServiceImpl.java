@@ -25,6 +25,8 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.coordination.core.services.CoordinationService;
+import org.wso2.carbon.core.init.CarbonServerManager;
+import org.wso2.carbon.core.init.CarbonStartupListener;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.api.Resource;
@@ -48,7 +50,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
  * This class represents the TaskService implementation.
  * @see TaskService
  */
-public class TaskServiceImpl implements TaskService {
+public class TaskServiceImpl implements TaskService, CarbonStartupListener {
 
 	private static final Log log = LogFactory.getLog(TaskServiceImpl.class);
 	
@@ -63,13 +65,19 @@ public class TaskServiceImpl implements TaskService {
 	
 	private RegistryTaskAvailabilityManager taskAvailabilityManager;
 	
+	private boolean serverInit;
+	
 	public TaskServiceImpl() throws TaskException {
 		this.registeredTaskTypes = new HashSet<String>();
 		this.taskManagerMap = new HashMap<TaskManagerId, TaskManager>();
 		this.taskAvailabilityManager = new RegistryTaskAvailabilityManager();
-		this.initTaskManagers();
+		CarbonServerManager.addCarbonStartupListener(this);
 	}
 	
+	public boolean isServerInit() {
+		return serverInit;
+	}
+
 	public Set<String> getRegisteredTaskTypes() {
 		return registeredTaskTypes;
 	}
@@ -79,6 +87,9 @@ public class TaskServiceImpl implements TaskService {
 	}
 	
 	private void initTaskManagers() throws TaskException {
+		if (log.isDebugEnabled()) {
+			log.debug("Initializing all task managers...");
+		}
 		List<Integer> tenants = this.getAllTenantIds();
 		for (int tid : tenants) {
 			this.initTaskManagersForTenant(tid);
@@ -234,11 +245,25 @@ public class TaskServiceImpl implements TaskService {
 	}
 
 	@Override
-	public void registerTaskType(String taskType) throws TaskException {
+	public synchronized void registerTaskType(String taskType) throws TaskException {
 		this.registeredTaskTypes.add(taskType);
 		/* the task manager must be initialized again,
 		 * to create any missing ones */
-		this.initTaskManagers();
+		if (this.isServerInit()) {
+		    this.initTaskManagers();
+		}
+	}
+
+	@Override
+	public synchronized void serverInitialized() {
+		try {
+			this.initTaskManagers();
+			this.serverInit = true;
+		} catch (TaskException e) {
+			String msg = "Error initializing task managers: " + e.getMessage();
+			log.error(msg, e);
+			throw new RuntimeException(msg, e);
+		}
 	}
 	
 }

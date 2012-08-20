@@ -27,7 +27,11 @@ public class EntitlementConstants {
 
 	public static final String POLICY_EDITOR_TYPE = "policyEditor";
 
-	public static final String BASIC_POLICY_EDITOR_META_DATA = "basicPolicyEditorMetaData";
+	public static final String POLICY_EDITOR_RULE_DATA = "policyEditorRuleData";
+
+	public static final String POLICY_EDITOR_RULE_TARGET_DATA = "policyEditorRuleTargetData";
+
+	public static final String POLICY_EDITOR_TARGET_DATA = "policyEditorTargetData";
 
 	public static final String BASIC_POLICY_EDITOR_META_DATA_AMOUNT = "NoOfBasicPolicyEditorMetaData";
 

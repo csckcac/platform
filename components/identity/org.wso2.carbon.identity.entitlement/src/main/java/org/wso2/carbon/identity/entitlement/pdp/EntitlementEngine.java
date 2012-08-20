@@ -32,8 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.wso2.balana.ctx.RequestCtxFactory;
 import org.wso2.balana.ctx.AbstractRequestCtx;
 import org.wso2.balana.ctx.xacml2.RequestCtx;
-import org.wso2.balana.finder.ResourceFinder;
-import org.wso2.balana.finder.ResourceFinderModule;
+import org.wso2.balana.finder.*;
 import net.sf.jsr107cache.Cache;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -58,9 +57,6 @@ import org.wso2.balana.PDP;
 import org.wso2.balana.PDPConfig;
 import org.wso2.balana.ParsingException;
 import org.wso2.balana.ctx.ResponseCtx;
-import org.wso2.balana.finder.AttributeFinder;
-import org.wso2.balana.finder.PolicyFinder;
-import org.wso2.balana.finder.PolicyFinderModule;
 import org.wso2.balana.finder.impl.CurrentEnvModule;
 import org.wso2.balana.finder.impl.SelectorModule;
 import org.wso2.carbon.identity.entitlement.pip.CarbonResourceFinder;
@@ -143,7 +139,7 @@ public class EntitlementEngine {
 		// Setup the AttributeFinder just like we setup the PolicyFinder. Note
 		// that unlike with the policy finder, the order matters here.
 		AttributeFinder attributeFinder = new AttributeFinder();
-		List<Object> attributeModules = new ArrayList<Object>();
+		List<AttributeFinderModule> attributeModules = new ArrayList<AttributeFinderModule>();
 		attributeModules.add(envAttributeModule);
 		attributeModules.add(selectorAttributeModule);
 		carbonAttributeFinder = new CarbonAttributeFinder(tenantId);

@@ -7,7 +7,7 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 public class MultiThreadedLargeMessageTopicTest extends MultiThreadedTopicTest{
-    private int messageSize = 132*1024; ;
+    private int messageSize = 164*1024; ;
     Random random = new Random();
     
     
@@ -16,7 +16,7 @@ public class MultiThreadedLargeMessageTopicTest extends MultiThreadedTopicTest{
     private MultiThreadedLargeMessageTopicTest() {
         byte[] buf = new byte[messageSize];
         for(int i =0;i< buf.length;i++){
-            buf[i] = (byte)random.nextInt(1024);
+            buf[i] = 'A';
         }
         
         message = new String(buf); 
@@ -44,7 +44,7 @@ public class MultiThreadedLargeMessageTopicTest extends MultiThreadedTopicTest{
         
         
         MultiThreadedLargeMessageTopicTest base = new MultiThreadedLargeMessageTopicTest();
-        int producerCount = 10; 
+        int producerCount = 1; 
         int consumerCount = 5; 
         String queueName = "topic1";
 

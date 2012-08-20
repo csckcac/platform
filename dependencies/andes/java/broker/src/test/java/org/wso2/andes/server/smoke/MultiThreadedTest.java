@@ -72,6 +72,7 @@ public class MultiThreadedTest {
         private int  threadIndex; 
         public SimpleConsumer(String queueName, int threadIndex) {
             super(queueName);
+            this.threadIndex = threadIndex;
         }
         @Override
         public void run() {
@@ -90,7 +91,7 @@ public class MultiThreadedTest {
 
                         //if (count % 100 == 0) {
                           String msgAsStr = textMessage.getText(); 
-                            System.out.println("got(" + count + ")" + msgAsStr.substring(0, (int)Math.min(7, msgAsStr.length())) + " "+ receivedCount+ "/" + sentCount);
+                            System.out.println(threadIndex+ " got(" + count + ")" + msgAsStr.substring(0, (int)Math.min(7, msgAsStr.length())) + " "+ receivedCount+ "/" + sentCount);
                         //}
                         if (count % 200 == 0) {
                             double throughput = count * 1000d / (System.currentTimeMillis() - start);

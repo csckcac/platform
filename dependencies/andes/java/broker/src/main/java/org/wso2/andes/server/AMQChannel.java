@@ -37,6 +37,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
+import me.prettyprint.hector.api.exceptions.HNotFoundException;
+
 import org.apache.log4j.Logger;
 import org.wso2.andes.AMQException;
 import org.wso2.andes.AMQSecurityException;
@@ -84,6 +86,7 @@ import org.wso2.andes.server.queue.BaseQueue;
 import org.wso2.andes.server.queue.IncomingMessage;
 import org.wso2.andes.server.queue.QueueEntry;
 import org.wso2.andes.server.registry.ApplicationRegistry;
+import org.wso2.andes.server.store.CassandraMessageStore;
 import org.wso2.andes.server.store.CassandraQueue;
 import org.wso2.andes.server.store.MessageQueue;
 import org.wso2.andes.server.store.MessageStore;
@@ -298,6 +301,9 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
             //TODO find a proper way to get the IP of the client
             mmd.set_clientIP(_session.toString().substring(0,_session.toString().indexOf(":")));
             final StoredMessage<MessageMetaData> handle = _messageStore.addMessage(mmd);
+            if( handle instanceof CassandraMessageStore.StoredCassandraMessage){
+                ((CassandraMessageStore.StoredCassandraMessage) handle).setChannelID(this.getChannelId());
+            }
             _currentMessage.setStoredMessage(handle);
 
           /*  final StoredMessage<MessageMetaData> handleCassandra =  cassandraMessageStore.addMessage(mmd);
@@ -402,7 +408,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                             }
                         }
                     }
-                });
+                }, this.getChannelId());
             }
             finally
             {
@@ -591,7 +597,9 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
         }
 
         getConfigStore().removeConfiguredObject(this);
-
+        
+        //here we will wait for  all jobs from this channel to end
+        AndesExecuter.wait4JobsfromThisChannel2End(this.getChannelId());
     }
 
     private void unsubscribeAllConsumers() throws AMQException

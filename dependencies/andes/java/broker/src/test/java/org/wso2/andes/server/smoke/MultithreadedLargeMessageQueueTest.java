@@ -7,7 +7,8 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 public class MultithreadedLargeMessageQueueTest extends MultiThreadedTest{
-    private int messageSize = 164*1024; ;
+    //private int messageSize = 164*1024; ;
+    private int messageSize = 1024*1024; ;
     Random random = new Random();
     
     
@@ -21,19 +22,20 @@ public class MultithreadedLargeMessageQueueTest extends MultiThreadedTest{
         }
         
         message = new String(buf); 
-        messageCountPerThread = 100;
+        messageCountPerThread = 10;
     }
     @Override
     protected TextMessage createMessage(int threadIndex, int i, Session session, int globalMsgIndex)
             throws JMSException {
         String msgAsStr = threadIndex+ ":" +String.valueOf(i) + "#" + message;
-        System.out.println("Sent "+ msgAsStr.length());
         return session.createTextMessage(msgAsStr);
     }
     @Override
     protected void postProcessesReceivedMessage(int threadIndex, int i, TextMessage message, int globalMsgReceivedIndex) {
         try {
-            System.out.println("Recieved message Size ="+ message.getText().length());
+            if(message.getText().length() < this.message.length()){
+                System.out.println("Some data missing in the message ="+ message.getText().length());
+            }
         } catch (JMSException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -48,8 +50,8 @@ public class MultithreadedLargeMessageQueueTest extends MultiThreadedTest{
      */
     public static void main(String[] args) throws Exception {
         MultithreadedLargeMessageQueueTest base = new MultithreadedLargeMessageQueueTest();
-        int producerCount = 1; 
-        int consumerCount = 1; 
+        int producerCount = 10; 
+        int consumerCount = 10; 
         String queueName = "queue1";
 
         for(int i = 0;i< consumerCount;i++){

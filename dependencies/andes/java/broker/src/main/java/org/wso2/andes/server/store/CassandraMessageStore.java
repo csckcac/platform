@@ -90,7 +90,7 @@ public class CassandraMessageStore implements MessageStore {
 
 
     private Keyspace keyspace;
-    private final static String KEYSPACE = "QpidKeySpace";
+    public final static String KEYSPACE = "QpidKeySpace";
     private final static String LONG_TYPE = "LongType";
     private final static String UTF8_TYPE = "UTF8Type";
     private final static String INTEGER_TYPE = "IntegerType";
@@ -745,31 +745,15 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
             src.duplicate().get(chunkData);
             
-            
-            AndesExecuter.submit(new Runnable() {
-                public void run() {
-                    try {
-                        long start = System.currentTimeMillis(); 
-                        Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
-                        CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY, rowKey,
-                                offset, chunkData, messageMutator, false);
-                        messageMutator.execute(); 
-                        if(log.isDebugEnabled()){
-                            log.debug("Content Write for "+rowKey + " took "+ (System.currentTimeMillis() -start) + "ms" ); 
-                        }
-                    } catch (Throwable e) {
-                        log.error("Error processing completed messages", e);
-                        
-                        /**
-                         * TODO close the session, have a find a way to get access to protocol session. 
-                         *  if (_session instanceof AMQProtocolEngine) {
-                            ((AMQProtocolEngine) _session).closeProtocolSession();
-                        }
-                         */
-                    }
-                }
-           });
-            
+
+            long start = System.currentTimeMillis(); 
+            Mutator<String> messageMutator = HFactory.createMutator(keyspace, stringSerializer);
+            CassandraDataAccessHelper.addIntegerByteArrayContentToRaw(MESSAGE_CONTENT_COLUMN_FAMILY, rowKey,
+                    offset, chunkData, messageMutator, false);
+            messageMutator.execute(); 
+            if(log.isDebugEnabled()){
+                log.debug("Content Write for "+rowKey + " took "+ (System.currentTimeMillis() -start) + "ms" ); 
+            }
             //above inner class is instead of following
             //publishMessageContentWriter.addMessage(rowKey.trim(), offset, chunkData);
         } catch (Exception e) {
@@ -1992,10 +1976,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         return configured;
     }
 
-    private class StoredCassandraMessage implements StoredMessage {
+    public class StoredCassandraMessage implements StoredMessage {
 
         private final long _messageId;
         private StorableMessageMetaData metaData; 
+        private int channelID; 
         
         private StoredCassandraMessage(long messageId, StorableMessageMetaData metaData) {
             this._messageId = messageId;
@@ -2023,13 +2008,23 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         }
 
         @Override
-        public void addContent(int offsetInMessage, ByteBuffer src) {
-
-            try {
-                CassandraMessageStore.this.addMessageContent(_messageId + "", offsetInMessage, src);
-            } catch (AMQStoreException e) {
-                log.error("Error while adding Message Content to Store",e);
-            }
+        public void addContent(final int offsetInMessage, final ByteBuffer src) {
+            AndesExecuter.submit(new Runnable() {
+                public void run() {
+                    try {
+                        CassandraMessageStore.this.addMessageContent(_messageId + "", offsetInMessage, src);
+                    } catch (Throwable e) {
+                        log.error("Error processing completed messages", e);
+                        
+                        /**
+                         * TODO close the session, have a find a way to get access to protocol session. 
+                         *  if (_session instanceof AMQProtocolEngine) {
+                            ((AMQProtocolEngine) _session).closeProtocolSession();
+                        }
+                         */
+                    }
+                }
+           }, channelID);
         }
 
         @Override
@@ -2042,6 +2037,14 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
         public TransactionLog.StoreFuture flushToStore() {
             storeMetaData(_messageId, metaData);
             return IMMEDIATE_FUTURE;
+        }
+
+        public int getChannelID() {
+            return channelID;
+        }
+
+        public void setChannelID(int channelID) {
+            this.channelID = channelID;
         }
 
         @Override
@@ -2096,7 +2099,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                         }
 
                     }
-                });
+                }, -1);
             } catch (Throwable e) {
 
                 log.error("Error adding Queue Entry ", e);
@@ -2117,7 +2120,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                              log.error("Error deleting Queue Entry", e);
                         }
                     }
-                });
+                }, -1);
             } catch (Throwable e) {
                 log.error("Error deleting Queue Entry", e);
                 throw new AMQStoreException("Error deleting Queue Entry :"
@@ -2533,7 +2536,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                                             e.printStackTrace();
                                         }
                                     }
-                               });
+                               }, -1);
 
             } catch (InterruptedException e) {
                 throw new RuntimeException("Error while adding Incomming message", e);

@@ -117,7 +117,7 @@
         <!-- deploying samples -->
         <fileSet>
             <directory>../samples/dbs/rdbms</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/dataservices</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/dataservices/samples</outputDirectory>
             <includes>
                 <include>RDBMSSample.dbs</include>
                 <include>RDBMSSample_services.xml</include>

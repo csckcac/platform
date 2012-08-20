@@ -20,13 +20,11 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.identity.scim.provider</artifactId>
-	    <version>${wso2carbon.version}</version>
             <type>war</type>
         </dependency>
 	<dependency>
             <groupId>org.wso2.charon</groupId>
             <artifactId>org.wso2.charon.core</artifactId>
-            <version>${version.charon}</version>
         </dependency>
     </dependencies>
 

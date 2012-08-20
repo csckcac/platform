@@ -65,6 +65,7 @@ public class NDataSourceHelper {
 
 		WSDataSourceMetaInfo dataSourceMetaInfo = new WSDataSourceMetaInfo();
 		dataSourceMetaInfo.setName(name);
+		dataSourceMetaInfo.setSystem(Boolean.parseBoolean(request.getParameter("isSystem")));
 		if (description != null && !("".equals(description))) {
 			dataSourceMetaInfo.setDescription(description);
 		}

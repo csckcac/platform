@@ -17,7 +17,6 @@
 */
 package org.wso2.carbon.lb.common.conf;
 
-import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.commons.util.PropertyHelper;
@@ -28,24 +27,9 @@ import org.wso2.carbon.lb.common.conf.util.HostContext;
 import org.wso2.carbon.lb.common.conf.util.LoadBalancerConfigUtil;
 import org.wso2.carbon.lb.common.conf.util.TenantDomainContext;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Serializable;
+import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Data object which hold configuration data of the load analyzer task
@@ -161,7 +145,7 @@ public class LoadBalancerConfiguration implements Serializable {
 
         if (lbConfigNode == null) {
             String msg = "Mandatory " + Constants.LOAD_BALANCER_ELEMENT +
-                         " element can not be" + " found in the configuration file.";
+                    " element can not be" + " found in the configuration file.";
             log.error(msg);
             throw new RuntimeException(msg);
         }
@@ -174,7 +158,7 @@ public class LoadBalancerConfiguration implements Serializable {
 
         if (servicesConfigNode == null) {
             String msg = "Mandatory " + Constants.SERVICES_ELEMENT +
-                         " element can not be found in the configuration file.";
+                    " element can not be found in the configuration file.";
             log.error(msg);
             throw new RuntimeException(msg);
         }
@@ -295,7 +279,7 @@ public class LoadBalancerConfiguration implements Serializable {
         Node defaultNode = servicesConfigNode.findChildNodeByName(Constants.DEFAULTS_ELEMENT);
 
         if (defaultNode != null) {
-            
+
             createConfiguration(defaultServiceConfig = new ServiceConfiguration(), defaultNode);
         }
 
@@ -311,12 +295,12 @@ public class LoadBalancerConfiguration implements Serializable {
                 Node domainsNode;
 
                 if (serviceNode.getChildNodes().isEmpty() ||
-                    !(domainsNode = serviceNode.getChildNodes().get(0)).getName().equals(
-                            Constants.DOMAIN_ELEMENT)) {
+                        !(domainsNode = serviceNode.getChildNodes().get(0)).getName().equals(
+                                Constants.DOMAIN_ELEMENT)) {
 
                     String msg = "The mandatory domains element, child of the " + serviceName +
-                                 " element is not specified in the configuration file. \n"+
-                                 serviceNode.toString();
+                            " element is not specified in the configuration file. \n"+
+                            serviceNode.toString();
                     log.error(msg);
                     throw new RuntimeException(msg);
                 }
@@ -324,7 +308,7 @@ public class LoadBalancerConfiguration implements Serializable {
                 if (domainsNode.getChildNodes().isEmpty()) {
                     // this is probably a mistake, so we don't proceed
                     String msg = "No domain is specified under " + Constants.DOMAIN_ELEMENT +
-                                 " of " + serviceName + " element.";
+                            " of " + serviceName + " element.";
                     log.error(msg);
                     throw new RuntimeException(msg);
                 }
@@ -376,7 +360,7 @@ public class LoadBalancerConfiguration implements Serializable {
                     if(isDuplicatedHost(serviceNode.getName(), serviceConfig)){
                         // this is probably a mistake, so we don't proceed
                         String msg = "Duplicated host names detected for different service domains.\n" +
-                        		"Element: \n"+serviceNode.toString();
+                                "Element: \n"+serviceNode.toString();
                         log.error(msg);
                         throw new RuntimeException(msg);
                     }
@@ -454,19 +438,20 @@ public class LoadBalancerConfiguration implements Serializable {
         }
         hostNamesTracker.put(name, allHosts);
     }
-    
-    
+
+
     public Map<String, HostContext> getHostContextMap() {
-        
+
         Map<String, HostContext> hostCtxt = new HashMap<String, HostContext>();
         List<Integer> tenantIds;
-        
+        Map<String, String> URLSuffixes;
+
         // iterate through each service 
         for (Iterator<Set<String>> it = hostNamesTracker.values().iterator(); it.hasNext();) {
-            
+
             // iterate through host names of this service
             for (String hostName : ((Set<String>) it.next())) {
-
+                                                                  
                 // building HostContext
                 HostContext ctxt = new HostContext(hostName);
 
@@ -475,33 +460,38 @@ public class LoadBalancerConfiguration implements Serializable {
 
                     // iterate through sub domain of this domain
                     for (Map.Entry<String, ServiceConfiguration> childMap : parentMap.getValue()
-                                                                                     .entrySet()) {
-
-                        // iterate through hosts of this 
+                            .entrySet()) {
+                        // iterate through hosts of this
                         for (String host : childMap.getValue().getHosts()) {
                             // if a matching Service configuration is found.
                             if (host.equals(hostName)) {
-
                                 // get tenant ids for this range
                                 tenantIds =
-                                            LoadBalancerConfigUtil.getTenantIds(childMap.getValue()
-                                                                                        .getTenantRange());
+                                        LoadBalancerConfigUtil.getTenantIds(childMap.getValue()
+                                                .getTenantRange());
 
                                 // iterate through all tenant ids under this host
                                 for (Integer tId : tenantIds) {
 
                                     // create a new TenantDomainContext
                                     TenantDomainContext tenantCtxt =
-                                                                     new TenantDomainContext(
-                                                                                             tId,
-                                                                                             parentMap.getKey(),
-                                                                                             childMap.getKey());
+                                            new TenantDomainContext(
+                                                    tId,
+                                                    parentMap.getKey(),
+                                                    childMap.getKey());
                                     // add it to this HostContext
                                     ctxt.addTenantDomainContext(tenantCtxt);
                                 }
 
                                 break;
                             }
+                        }
+                        //iterate through URL suffixes
+                        for(Map.Entry<String, String> entry : childMap.getValue().getUrl_suffix().entrySet()) {
+                            if(entry.getKey().equals(hostName)) {
+                                ctxt.setUrlSuffix(entry.getValue());
+                            }
+
                         }
                     }
                 }
@@ -511,7 +501,7 @@ public class LoadBalancerConfiguration implements Serializable {
             }
 
         }
-        
+
 //        for (Map.Entry<String, Map<String, ServiceConfiguration>> parentMap : serviceConfigurations.entrySet()) {
 //            
 //            for (Map.Entry<String, ServiceConfiguration> childMap : parentMap.getValue().entrySet()) {
@@ -544,9 +534,9 @@ public class LoadBalancerConfiguration implements Serializable {
 //            
 //        }
         return hostCtxt;
-        
+
     }
-    
+
 
 //    public Map<String, List<TenantDomainRangeContext>> getHostDomainMap() {
 //
@@ -868,6 +858,7 @@ public class LoadBalancerConfiguration implements Serializable {
         private int autoscalerTaskInterval = 5000;
         private String autoscalerServiceEpr;
         private int serverStartupDelay = 60000;
+        private int sizeOfCache = 0 ;
 
         public String getElasticIP() {
             return elasticIP;
@@ -916,10 +907,18 @@ public class LoadBalancerConfiguration implements Serializable {
         public void setServer_startup_delay(String delay) {
             this.serverStartupDelay = Integer.parseInt(delay);
         }
+
+        public int getSizeOfCache() {
+            return sizeOfCache;
+        }
+
+        public void setSize_of_cache(int sizeOfCache) {
+            this.sizeOfCache = sizeOfCache;
+        }
     }
 
     public class ServiceConfiguration extends Configuration implements Serializable {
-       
+
         private static final long serialVersionUID = 8707314702788040116L;
         private int minAppInstances = 1;
         private boolean minAppInstancesSet;
@@ -940,6 +939,7 @@ public class LoadBalancerConfiguration implements Serializable {
         private boolean messageExpiryTimeSet;
 
         private List<String> hosts = new ArrayList<String>();
+        private Map<String, String> urlSuffixes = new HashMap<String, String>();
         private boolean hostsSet;
 
         private String domain;
@@ -1038,7 +1038,7 @@ public class LoadBalancerConfiguration implements Serializable {
         public void setMin_app_instances(int minAppInstances) {
             if (minAppInstances < 1) {
                 LoadBalancerConfigUtil.handleException("minAppInstances in the autoscaler task configuration " +
-                                                       "should be at least 1");
+                        "should be at least 1");
             }
             this.minAppInstances = minAppInstances;
             this.minAppInstancesSet = true;
@@ -1047,7 +1047,7 @@ public class LoadBalancerConfiguration implements Serializable {
         public void setMax_app_instances(int maxAppInstances) {
             if (maxAppInstances < 1) {
                 LoadBalancerConfigUtil.handleException("maxAppInstances in the autoscaler task configuration " +
-                                                       "should be at least 1");
+                        "should be at least 1");
             }
             this.maxAppInstances = maxAppInstances;
             this.maxAppInstancesSet = true;
@@ -1066,7 +1066,7 @@ public class LoadBalancerConfiguration implements Serializable {
         public void setInstances_per_scale_up(int instancesPerScaleUp) {
             if (instancesPerScaleUp < 1) {
                 LoadBalancerConfigUtil.handleException("instancesPerScaleUp in the autoscaler task configuration " +
-                                                       "should be at least 1");
+                        "should be at least 1");
             }
             this.instancesPerScaleUp = instancesPerScaleUp;
             this.instancesPerScaleUpSet = true;
@@ -1075,14 +1075,14 @@ public class LoadBalancerConfiguration implements Serializable {
         public void setMessage_expiry_time(int messageExpiryTime) {
             if (messageExpiryTime < 1) {
                 LoadBalancerConfigUtil.handleException("messageExpiryTime in the autoscaler task configuration " +
-                                                       "should be at least 1");
+                        "should be at least 1");
             }
             this.messageExpiryTime = messageExpiryTime;
             this.messageExpiryTimeSet = true;
         }
 
         public void setHosts(String hostsStr) {
-            // clear all unnecessary values --> property will get overwritten 
+            // clear all unnecessary values --> property will get overwritten
             hosts = new ArrayList<String>();
             // there can be multiple hosts, let's find out.
             String[] host = hostsStr.split(Constants.HOSTS_DELIMITER);
@@ -1093,6 +1093,29 @@ public class LoadBalancerConfiguration implements Serializable {
                 }
             }
 
+        }
+
+        public void setUrl_suffix(String suffix) {
+            // clear all unnecessary values --> property will get overwritten
+            //hosts = new ArrayList<String>();
+            // there can be multiple hosts, let's find out.
+            String[] suffixes = suffix.split(Constants.HOSTS_DELIMITER);
+            int count = 0;
+            if(suffixes.length == this.hosts.size()) {
+                for (String string : suffixes) {
+                    if (!string.isEmpty()) {
+                        this.urlSuffixes.put(this.hosts.get(count), string);
+                        count++;
+                    }
+                }
+            
+            } else {
+                //Error
+            }
+        }
+
+        public Map<String, String> getUrl_suffix() {
+            return this.urlSuffixes;
         }
 
         public void setTenant_range(String range) {

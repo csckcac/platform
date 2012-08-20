@@ -51,6 +51,7 @@ public class HostContext {
      */
     private LoadbalanceAlgorithm algorithm;
     
+    private String urlSuffix;
     
     public HostContext(String hostName) {
         this.hostName = hostName;
@@ -137,6 +138,14 @@ public class HostContext {
 
     public Map<Integer, TenantDomainContext> getTenantIdToTenantDomainContextMap() {
         return tenantIdToTenantDomainContextMap;
+    }
+    
+    public void setUrlSuffix(String suffix)  {
+        this.urlSuffix = suffix;
+    }
+
+    public String getUrlSuffix() {
+        return this.urlSuffix;
     }
 
 }

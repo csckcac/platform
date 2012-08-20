@@ -718,7 +718,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
    public void clearBrowserQueue(List<QueueEntry> messages,String queueName) throws CassandraDataAccessException {
        for (QueueEntry message: messages) {
-           CassandraDataAccessHelper.deleteStringColumnFromRaw(BROWSER_QUEUE_COLUMN_FAMILY,queueName,message.getMessage().getMessageNumber()+"",keyspace);
+           CassandraDataAccessHelper.deleteLongColumnFromRaw(BROWSER_QUEUE_COLUMN_FAMILY,queueName,message.getMessage().getMessageNumber(),keyspace);
        }
    }
 

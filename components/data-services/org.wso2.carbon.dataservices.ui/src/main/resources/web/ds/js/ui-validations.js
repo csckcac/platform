@@ -1375,8 +1375,12 @@ function changeWebHarvestConfig(obj, document) {
     if(configType == 'file') {
         document.getElementById('web_harvest_config').style.display = '';
         document.getElementById('web_harvest_config_textArea').style.display = 'none';
+        document.getElementById('config_reg').style.display = '';
+        document.getElementById('gov_reg').style.display = '';
     } else {
         document.getElementById('web_harvest_config').style.display = 'none';
+        document.getElementById('config_reg').style.display = 'none';
+        document.getElementById('gov_reg').style.display = 'none';
         document.getElementById('web_harvest_config_textArea').style.display = '';
     }
 }

@@ -65,6 +65,8 @@ function setValueConf() {
     	var elementId ='rdf_datasource';
     } else if(document.getElementById('datasourceType').value == 'CSV') {
     	var elementId ='csv_datasource';
+    } else if(document.getElementById('datasourceType').value == 'WEB_CONFIG') {
+        var elementId ='web_harvest_config';
     }
     $(elementId).value = $(elementId).value.replace("/_system/config", "conf:");
 }
@@ -77,7 +79,9 @@ function setValueGov() {
 	    	var elementId ='sparql_datasource';
 	} else if(document.getElementById('datasourceType').value == 'CSV') {
 	    	var elementId ='csv_datasource';
-	}
+	} else if(document.getElementById('datasourceType').value == 'WEB_CONFIG') {
+        var elementId ='web_harvest_config';
+    }
 	$(elementId).value = $(elementId).value.replace("/_system/governance", "gov:");
 }
 
@@ -1303,6 +1307,8 @@ private Config addNotAvailableFunctions(Config config,String selectedType, HttpS
 
         <textarea cols="40" rows="5" name="web_harvest_config_textArea" <%=!checked ? "style=\'display:none\'" : ""%> id="web_harvest_config_textArea"><%=configEle%></textarea>
         <input type="text" size="50" id="<%=propertyName%>" <%=checked ? "style=\'display:none\'" : ""%> name="<%=propertyName%>"  value="<%=filePath%>"/>
+        <td id="config_reg" ><a onclick="showResourceTree('<%=propertyName%>', setValueConf, '/_system/config')" style="background-image:url(images/registry_picker.gif);" class="icon-link" href="#" > Configuration Registry </a></td>
+        <td id="gov_reg" ><a onclick="showResourceTree('<%=propertyName%>', setValueGov, '/_system/governance')" style="background-image:url(images/registry_picker.gif);" class="icon-link" href="#" > Govenance Registry </a></td>
 
         <% } else {
         	if(propertyName.equals("gspread_password")||propertyName.equals("jndi_password")) {%>

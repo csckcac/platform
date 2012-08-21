@@ -55,6 +55,11 @@ public class DataTaskContext {
 		return dataService;
 	}
 	
+	/**
+	 * Checks if the given services are available.
+	 * @param services An array of service names to be checked
+	 * @return Returns true if all the given services are available
+	 */
 	public boolean checkServices(String... services) {
 		for (String service : services) {
 			if (this.getDataService(service) == null) {
@@ -64,6 +69,15 @@ public class DataTaskContext {
 		return true;
 	}
 	
+	/**
+	 * Invokes a single data service operation.
+	 * @param serviceName The name of the data service
+	 * @param operationName The data service operation name
+	 * @param params The parameters to be passed into the operation
+	 * @return The result from the service call, if any available, or returns null,
+	 * if it is an in-only operation
+	 * @throws DataServiceFault If an error occurs in the service invocation
+	 */
 	public OMElement invokeOperation(String serviceName, String operationName, 
 			Map<String, ParamValue> params) throws DataServiceFault {
 		DataService dataService = this.getDataService(serviceName);
@@ -73,6 +87,13 @@ public class DataTaskContext {
 		return DSTools.invokeOperation(dataService, operationName, params);
 	}
 	
+	/**
+	 * Invokes a batch data service operation
+	 * @param serviceName The name of the data service
+	 * @param operationName The data service batch operation name
+	 * @param batchParams The batch parameters to be passed into the operation
+	 * @throws DataServiceFault If an error occurs in the service invocation
+	 */
 	public void invokeOperation(String serviceName, String operationName, 
 			List<Map<String, ParamValue>> batchParams) throws DataServiceFault {
 		DataService dataService = this.getDataService(serviceName);
@@ -82,6 +103,15 @@ public class DataTaskContext {
 		DSTools.invokeOperation(dataService, operationName, batchParams);
 	}
 	
+	/**
+	 * Accesses a data services resource.
+	 * @param serviceName The name of the data service
+	 * @param resourcePath The resource path used to access the resource
+	 * @param params The parameters passed into the resource access
+	 * @param accessMethod The HTTP access method
+	 * @return The result from the resource access, if any available, or else null
+	 * @throws DataServiceFault If an error occurs in the service invocation
+	 */
 	public OMElement accessResource(String serviceName, String resourcePath, 
 			Map<String, ParamValue> params, String accessMethod) throws DataServiceFault {
 		DataService dataService = this.getDataService(serviceName);
@@ -91,6 +121,12 @@ public class DataTaskContext {
 		return DSTools.accessResource(dataService, resourcePath, params, accessMethod);
 	}
 	
+	/**
+	 * Sets the Carbon user for the current thread of execution.
+	 * @param username The username
+	 * @param password The password
+	 * @throws DataServiceFault If an error occurs in the service invocation
+	 */
 	public void setDataServicesUser(String username, String password) throws DataServiceFault {
 		if (DBUtils.authenticate(username, password)) {
 			DSTools.setDataServicesUser(new DataServiceUser(username, 

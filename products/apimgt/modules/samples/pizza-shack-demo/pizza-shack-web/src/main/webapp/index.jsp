@@ -68,7 +68,7 @@
             
                 <li class="span3">
                     <div class="thumbnail">
-                        <img src="<%="http://localhost:9765/pizzashack-1.0.0" + item.getImageUrl()%>" alt="">
+                        <img src="<%="http://localhost:9764/pizzashack-api-1.0.0" + item.getImageUrl()%>" alt="">
 
                         <div class="caption">
                             <h5><%=item.getName()%></h5>

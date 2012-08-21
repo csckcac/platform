@@ -1,0 +1,23 @@
+<%
+include('../config_reader.jag');
+var log = new Log();
+
+
+function getUserConfirmationObject(secreteKey) {
+    try {
+        var result = getConfirmationObject(secreteKey);
+        var ax2342=new Namespace("http://util.verification.email.carbon.wso2.org/xsd");
+        var ns=new Namespace("http://services.verification.email.carbon.wso2.org");
+        var data=new XML(result.ns::["return"].ax2342::data+"");
+
+        var confirmationObject=new Array();
+        confirmationObject.admin=(data.admin.text());
+        confirmationObject.email=data.email.text();
+        confirmationObject.confirmationKey=data.confirmationKey.text();
+        return confirmationObject;
+    } catch(e) {
+        throw "Error while getting confirmation object";
+    }
+}
+
+%>

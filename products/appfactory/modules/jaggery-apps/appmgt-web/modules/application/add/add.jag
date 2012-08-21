@@ -1,0 +1,65 @@
+<%
+include('../config_reader.jag');
+include('../constants.jag');
+
+// used for logging
+var log = new Log();
+
+// creates application in stratos and return svn repository path to application.
+var createApplication = function (applicationName, userName) {
+
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = new Array();
+    options.useSOAP = 1.1;
+    options.timeout = 1000000;
+    options.action = "urn:process";
+
+    var payload = '<p:CreateApplicationRequest xmlns:p="http://wso2.org"><applicationName xmlns="http://wso2.org">' + applicationName + '</applicationName><userName xmlns="http://wso2.org">' + userName + '</userName></p:CreateApplicationRequest>';
+
+    var result;
+    try {
+        var endPoint = getProperty(WS_CREATE_APP);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseE4X;
+        var resultNS = new Namespace("http://wso2.org");
+        var repositoryPath = result.resultNS::["result"].text()
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking service endpoint:" + endPoint + " returned result:" + result);
+        }
+    } catch (e) {
+        log.error("Error while creating application \n" + e.message);
+        throw "Error while creating application";
+    }
+    return repositoryPath;
+};
+
+// creates an svn repository for the created application
+var createRepository = function (applicationKey) {
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = new Array();
+    options.useSOAP = 1.1;
+    options.timeout = 1000000;
+    options.action = "urn:process";
+
+    var payload = '<p:createRepository xmlns:p="http://SCMClient.ws.scm.sonia"><applicationName xmlns="http://SCMClient.ws.scm.sonia">' + applicationName + '</applicationName></p:createRepository>';
+    var result;
+    try {
+        var endPoint = getProperty(WS_CREATE_REPO);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseText;
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking service endpoint:" + endPoint + " returned result:" + result);
+        }
+    } catch (e) {
+        log.error("Error while creating repository \n" + e.message);
+        throw "Error while creating repository";
+    }
+    return result;
+};
+
+
+%>

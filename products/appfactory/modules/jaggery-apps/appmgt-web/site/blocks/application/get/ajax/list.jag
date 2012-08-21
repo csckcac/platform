@@ -1,0 +1,113 @@
+<%
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
+include("/jagg/config_reader.jag");
+(function () {
+    var mod, obj, result,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json");
+
+   if (action == "getAppShortInfo") {
+   		var applicationKey = request.getParameter("applicationKey");
+   		var userName = request.getParameter("userName");
+   	
+      	var applicationInfo = getAppInfo(applicationKey);
+      	var url = getProperty(SCM_SERVER_URL)+'/svn/'+applicationKey
+      	applicationInfo.repoLink = url;
+        var url = applicationInfo.repoLink;
+        var repository = require("svnClient");
+        var svnClient = new repository.SVNClient(url, getProperty(SCM_ADMIN_USER_NAME),getProperty(SCM_ADMIN_PASSWORD));
+        applicationInfo.lastRevisionNo=svnClient.getRepositoryInfo()[2];
+        applicationInfo.roles = getUserRolesForApplication(applicationKey, userName);
+
+        return applicationInfo;
+   }else if (action == "getTrunkURL") {
+   		var applicationKey = request.getParameter("applicationKey");
+		return getProperty(SCM_SERVER_URL)+'/svn/'+applicationKey+'/trunk';
+   }else if (action == "newKey") {
+   		var applicationKey = request.getParameter("newKey");
+   	
+   	    var path = APPLICATIONS + newKey;
+        try {
+            return resourceExists(path);
+        } catch (e) {
+            log.error("Error while accessing registry resource \n"+e.message);
+            throw "Error while accessing registry resource";
+        }
+   }else if(action == "getUniqueAppVersions") {
+   		var applicationKey = request.getParameter("applicationKey");
+   	
+        var appInfos = new Array();
+        var stages = getProperties('ApplicationDeployment.DeploymentStage');
+		for(var i=0; i<stages.length;i++){
+		    var stage = stages[i];
+		    var appVersions = getAppVersionsInStage(stage, applicationKey);
+		    if(appVersions != null) {
+		    	appInfos = appInfos.concat(appVersions);
+		    } 
+		}
+		
+		var uniqueVersions = new Array();
+		for (var i = 0; i<appInfos.length; i++ ) {
+		    var versions = appInfos[i].versions;
+		    for (var j = 0; j<versions.length; j++ ) {
+		        var version = versions[j];
+		    	if (uniqueVersions.indexOf(version) == -1) {
+		        	uniqueVersions.push(version);
+		    	}
+		    }
+		}
+		return uniqueVersions;
+   }else if(action == "initAppVersion") {
+   	   	var applicationKey = request.getParameter("applicationKey");
+   	   	
+   	   	var versionNo=0;
+
+    	var stages = getProperties('ApplicationDeployment.DeploymentStage');
+    	for(var i=0; i<stages.length;i++){
+        	var stage = stages[i];
+          	for(var j=0; j<3;j++){
+          		try {
+                     var resource = createResource();
+                 } catch (e) {
+                     log.error("Error while creating registry resource \n"+e.message);
+                     throw new Error("Error while creating registry resource");
+                 }
+                 var version = 'Version '+versionNo;
+                 var path = APPLICATIONS+APPLICATION_STAGES +stage+'/'+ applicationKey+'/'+version;
+                 try {
+
+                 if( resourceExists(path)!='true'){
+                     putResource(path, resource);
+                     versionNo=versionNo+1;
+                     }
+                 } catch (e) {
+                     log.error("Error while storing resource \n"+e.message);
+                     throw new Error("Error while storing registry resource");
+                 }
+            }
+       }
+   }else if(action == "containsApplication") {
+   		var existingApplications = request.getParameter("existingApplications");
+   		var newApplication = request.getParameter("newApplication");
+   		
+   	    var applicationAlreadyExist = false;
+        var applicationArray = existingApplications.split(",");
+        for (var i = 0; i <= applicationArray.length - 1; ++i) {
+            log.debug("existing application : new application "+ applicationArray[i] +" "+newApplication)
+            if(applicationArray[i] == newApplication) {
+                applicationAlreadyExist = true;
+                log.debu("new application already exist in existing application list");
+                break;
+            }
+        }
+        return applicationAlreadyExist;
+   }else {
+		print({
+		          error:true,
+		          message:msg.error.invalidAction(action)
+		      });
+   }
+
+}());
+%>

@@ -1,0 +1,93 @@
+<%
+ include('../config_reader.jag');
+ include('../constants.jag');
+
+ // used for logging
+ var log = new Log();
+
+// get the roles of the logged in user for the given application
+var getRoles=function (applicationKey, userName) {
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = [];
+    options.useSOAP = 1.1;
+    options.timeout = 1000000;
+    options.action = "urn:getRolesOfUserPerApplication";
+    options["HTTPHeaders"] = [
+        { name : "Cookie", value :getAdminCookie() }
+    ];
+    var payload = '<p:getRolesOfUserPerApplication xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><xs:appId xmlns:xs="http://service.mgt.application.appfactory.carbon.wso2.org">' + applicationKey + '</xs:appId><xs:userName xmlns:xs="http://service.mgt.application.appfactory.carbon.wso2.org">' + userName + '</xs:userName></p:getRolesOfUserPerApplication>';
+    var result;
+
+    try {
+        var endPoint = getProperty(WS_GET_ROLE_OF_USER_FOR_APP);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseE4X;
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking service endpoint:" + endPoint + " returned result:" + result);
+        }
+    } catch (e) {
+        log.error("Error while retrieving roles \n" + e.message);
+        throw "Error while retrieving roles";
+    }
+    return result;
+};
+
+//getUsers of the application
+var getUsers=function (applicationKey) {
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = [];
+    options.useSOAP = 1.1;
+    options.timeout = 1000000;
+    options.action = "urn:GetUsersOfApplication";
+    options["HTTPHeaders"] = [
+        { name : "Cookie", value :getAdminCookie() }
+    ];
+
+    var payload = '<p:GetUsersOfApplication xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><p:applicationId>' + applicationKey + '</p:applicationId></p:GetUsersOfApplication>';
+    var result;
+    try {
+        var endPoint = getProperty(WS_USERS_OF_APP);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseE4X;
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking service endpoint:" + endPoint + " returned result:" + result);
+        }
+    } catch (e) {
+        log.error("Error while retrieving users of application \n" + e.message);
+        throw "Error while retrieving users of application";
+    }
+    return result;
+};
+
+var getUsersInfoOfApplication=function(applicationKey) {
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = [];
+    options.useSOAP = 1.2;
+    options.timeout = 1000000;
+    options.action = "urn:getUserInfo";
+    options["HTTPHeaders"] = [
+        { name : "Cookie", value :getAdminCookie() }
+    ];
+
+    var payload = '<p:getUserInfo xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><p:applicationId>' + applicationKey + '</p:applicationId></p:getUserInfo>';
+    var result;
+    try {
+        var endPoint = getProperty(WS_USERS_INFO_OF_APP);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseE4X;
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking service endpoint:" + endPoint + " returned result:" + result);
+        }
+    } catch (e) {
+        log.error("Error while retrieving user info \n" + e.message);
+        throw "Error while retrieving user info";
+    }
+    return result;
+};
+%>

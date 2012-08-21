@@ -1,0 +1,32 @@
+{
+"result" :
+  {
+  "layout": "layout2",
+  "data" : [{
+      "title" : "Applications",
+      "column" : "first",
+      "id" : "applications",
+      "url" : "widgets/allapplications.jag",
+      "open" : true
+    },{
+      "title" : "Application Versions",
+      "column" : "first",
+      "id" : "applicationversions",
+      "url" : "widgets/applicationversions.jag",
+      "open" : true
+    },{
+      "title" : "Application Versions In Production",
+      "column" : "first",
+      "id" : "applicationversionsinlive",
+      "url" : "widgets/liveapplicationversions.jag",
+      "open" : true
+    },{
+      "title" : "Application Events",
+      "column" : "first",
+      "id" : "allapplicationevents",
+      "url" : "widgets/allversionevents.jag",
+      "open" : true
+    }
+  ]
+  }
+}

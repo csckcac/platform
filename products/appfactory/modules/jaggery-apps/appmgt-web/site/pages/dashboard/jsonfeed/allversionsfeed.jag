@@ -1,0 +1,50 @@
+<%
+	var log = new Log();
+	
+	include('../mgt/application_manager.jag');
+	include('../constants.jag');
+	
+	var userName = session.get("LOGGED_IN_USER");
+
+	var outerArray = {};
+
+ 	var contentArray = new Array();
+ 
+	try{
+		
+		var applicationList = getAllAppVersionsInStages(userName);
+
+	    if(applicationList == undefined || applicationList.length == 0){
+			log.info("No Applications are created.");
+	    }
+
+		var counter = 0;
+	    for (var i = 0; i < applicationList.length; i++) {
+	    	
+	    	var applicationInfo = applicationList[i];
+	    	var applicationKey = applicationInfo.key;
+			var appInfo = getAppShortInfo(applicationKey,userName);
+
+			for (var j = 0; j < applicationInfo.versions.length; j++) {
+				var applicationRow = new Array(); 
+				applicationRow[0] = '<a href="application.jag?applicationName=' + appInfo.name + '&applicationKey=' + appInfo.key + '">' + appInfo.name + '</a>';    
+				applicationRow[1] = applicationInfo.versions[j];
+				applicationRow[2] = applicationInfo.stage;
+				applicationRow[3] = '<span class="label badge-info-green">PASSED</span>';
+				applicationRow[4] = '<span class="label label-info">' + appInfo.repoLink + '</span>';
+				applicationRow[5] = '<span class="label label-info">r' + appInfo.lastRevisionNo + '</span>';					
+				applicationRow[6] = '23 hours';
+				contentArray[counter++] = applicationRow;
+			}
+    	}
+    	
+    	outerArray.aaData = contentArray;
+
+ 		print(stringify(outerArray));
+    }catch(e){
+    	outerArray.aaData = contentArray;
+ 		print(stringify(outerArray));
+    }
+%>
+
+

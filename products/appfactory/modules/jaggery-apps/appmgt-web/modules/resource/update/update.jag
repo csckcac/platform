@@ -1,0 +1,14 @@
+<%
+include('../config_reader.jag');
+var log = new Log();
+
+var registry = new MetadataStore(getProperty(ADMIN_USERNAME), getProperty(ADMIN_PASSWORD));
+var putResource = function (path, resource) {
+    try {
+        registry.put(path, resource);
+    } catch (e) {
+        log.error("Error while storing registry resource \n" + e.message);
+        throw "Error while storing registry resource";
+    }
+};
+%>

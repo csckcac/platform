@@ -1,0 +1,27 @@
+<%
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
+include("/jagg/config_reader.jag");
+(function () {
+    var mod, obj, result,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json");
+
+    if (action == "deployToStage") {
+    	var applicationKey = request.getParameter("applicationKey");
+    	var revision = request.getParameter("revision");
+    	var version = request.getParameter("version");
+    	var stageName = request.getParameter("stageName");
+    	var build = request.getParameter("build");
+    	
+        var result =  invokeDeployToStage(applicationKey,revision,version,stageName,build);
+        var resultNS=new Namespace("http://wso2.org/carbon/appfactory/applicaiton/deployment");
+        return deployedArtifact=result.resultNS::["result"].text();
+    } else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+}());
+%>

@@ -1,0 +1,32 @@
+<script type="text/javascript" charset="utf-8">
+	$(document).ready(function() {
+		var oTable = $('#allversionevents').dataTable( {
+			"bProcessing": true,
+			"sAjaxSource": "jsonfeed/allapplicationeventsfeed.jag"
+		} );
+	} );
+</script>
+
+<div>
+<div id="dynamic" class="datatable">
+	<table cellpadding="0" cellspacing="0" border="0" class="display" id="allversionevents">
+		<thead>
+			<tr>
+				<th width="40%">Application Name</th>
+				<th width="30%">Event</th>
+				<th width="30%">Result</th>
+			</tr>
+		</thead>
+		<tbody>
+			
+		</tbody>
+		<tfoot>
+			<tr>
+				<th>Application Name</th>
+				<th>Event</th>
+				<th>Result</th>
+			</tr>
+		</tfoot>
+	</table>
+</div>
+</div>

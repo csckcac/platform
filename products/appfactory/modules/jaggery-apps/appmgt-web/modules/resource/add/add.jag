@@ -1,0 +1,29 @@
+<%
+include('../config_reader.jag');
+var log = new Log();
+
+var registry = new MetadataStore(getProperty(ADMIN_USERNAME), getProperty(ADMIN_PASSWORD));
+var createResource = function () {
+    try {
+        return registry.newResource();
+    } catch (e) {
+        log.error("Error while creating registry resource \n" + e.message);
+        throw "Error while creating registry resource";
+    }
+};
+
+// checks whether any resource exists in the given path
+var resourceExists = function (path) {
+    try {
+        if (registry.resourceExists(path)) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (e) {
+        log.error("Error while accessing registry resource \n" + e.message);
+        return false;
+    }
+}
+
+%>

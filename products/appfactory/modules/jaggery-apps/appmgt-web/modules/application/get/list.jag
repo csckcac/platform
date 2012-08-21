@@ -1,0 +1,67 @@
+<%
+ include('../config_reader.jag');
+ include('../constants.jag');
+
+// used for logging
+var log = new Log();
+var log = new Log();
+var getEventInfoOfApplications=function (userName, appIDs) {
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = [];
+    options.useSOAP = 1.2;
+    options.timeout = 1000000;
+    options.action = "urn:getEventsForApplications";
+    options["HTTPHeaders"] = [
+        { name : "Cookie", value :getAdminCookie() }
+    ];
+
+    var payload = '<ser:getEventsForApplications xmlns:ser="http://service.notification.events.appfactory.carbon.wso2.org">' +
+                  appIds +
+                  '<ser:userName>' + userName + '</ser:userName>' +
+                  '</ser:getEventsForApplications>';
+    log.info("*************************************************************" + payload);
+    var result;
+    try {
+        var endPoint = getProperty(WS_EVENTS_OF_APP);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseE4X;
+        log.info("Invoking service endpoint:" + endPoint + " returned result:" + result);
+    } catch (e) {
+        log.error("Error while retrieving event notifications \n" + e.message);
+        throw "Error while retrieving event notifications";
+    }
+    var resultXml = new XML(result);
+
+    return  (resultXml.*::["return"]);
+
+
+};
+var getAllApps = function (userName) {
+    var ws = require("ws");
+    var applicationMgtService = new ws.WSRequest();
+    var options = new Array();
+    options.useSOAP = 1.2;
+    options.action = "urn:getAllApplications";
+    options["HTTPHeaders"] = [
+        { name : "Cookie", value :getAdminCookie() }
+    ];
+    var payload = '<p:getAllApplications xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><p:userName>' + userName + '</p:userName></p:getAllApplications>';
+    var result;
+
+    try {
+        var endPoint = getProperty(WS_GET_ALL_APPS);
+        applicationMgtService.open(options, endPoint, false);
+        applicationMgtService.send(payload);
+        result = applicationMgtService.responseE4X;
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking service endpoint:" + endPoint + " returned result:" + result);
+        }
+        return result;
+    } catch (e) {
+        log.error("Error while getting application of user \n" + e.message);
+        throw "Error while getting application of user";
+    }
+};
+%>

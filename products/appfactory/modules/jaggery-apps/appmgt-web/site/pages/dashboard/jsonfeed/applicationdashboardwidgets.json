@@ -1,0 +1,28 @@
+{
+"result" :
+  {
+  "layout": "layout2",
+  "data" : [
+  	{
+      "title" : "Application Overview",
+      "column" : "first",
+      "id" : "applicationoverview",
+      "url" : "widgets/applicationchart.jag",
+      "open" : true
+    },
+	{
+      "title" : "Application Versions",
+      "column" : "first",
+      "id" : "applicationversions",
+      "url" : "widgets/applicationview.jag",
+      "open" : true
+    },{
+      "title" : "Application Events,
+      "column" : "first",
+      "id" : "allversionevents",
+      "url" : "widgets/allversionevents.jag",
+      "open" : true
+    }
+  ]
+  }
+}

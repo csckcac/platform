@@ -1,0 +1,64 @@
+<%
+include('../config_reader.jag');
+include('../constants.jag');
+
+// used for logging
+var log = new Log();
+// add the user to the application in LDAP
+var addUserToApplication = function addUserToApplication(applicationKey, requestersUsername, newUsername, newUserRole) {
+
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = new Array();
+    options.useSOAP = 1.1;
+    options.timeout = 1000000;
+    options.action = "urn:process";
+
+    var payload = '<p:AddUserToApplicationRequest xmlns:p="http://wso2.org"><applicationId xmlns="http://wso2.org">' + applicationKey + '</applicationId><userName xmlns="http://wso2.org">' + newUsername + '</userName><roles xmlns="http://wso2.org">' + newUserRole + '</roles></p:AddUserToApplicationRequest>';
+    var result;
+
+    try {
+        var endPoint = getProperty(WS_ADD_USER_TO_APP);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseE4X;
+        if(log.isDebugEnabled()){
+            log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+        }
+    } catch (e) {
+        log.error("Error while adding user to application \n"+e.message);
+        throw "Error while adding user to application";
+    }
+    return result;
+};
+
+var addUserToApplicationWS = function addUserToApplicationWS(applicationKey, requestersUsername, newUsername, newUserRole) {
+    var ws = require('ws');
+    var request = new ws.WSRequest();
+    var options = new Array();
+    options.useSOAP = 1.1;
+    options.timeout = 1000000;
+    options.action = "urn:addUserToApplication";
+    options["HTTPHeaders"] = [ { name : "Cookie", value :getAdminCookie("localhost") }];
+
+    var payload = '<p:addUserToApplication xmlns:p="http://service.mgt.application.appfactory.carbon.wso2.org"><applicationId xmlns="http://service.mgt.application.appfactory.carbon.wso2.org">' + applicationKey + '</applicationId><userName xmlns="http://service.mgt.application.appfactory.carbon.wso2.org">' + newUsername + '</userName>';
+    for(var i=0; i< newUserRole.length ; i++ ) {
+        payload = payload + '<roles xmlns="http://service.mgt.application.appfactory.carbon.wso2.org">' + newUserRole[i] + '</roles>';
+    }
+    payload = payload + '</p:addUserToApplication>';
+
+    try {
+        var endPoint = getProperty(WS_ADD_USER_WS);
+        request.open(options, endPoint, false);
+        request.send(payload);
+        result = request.responseE4X;
+        if(log.isDebugEnabled()){
+            log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+        }
+    } catch (e) {
+        log.error("Error while adding user to application \n"+e.message);
+        throw "Error while adding user to application";
+    }
+    return result;
+};
+%>

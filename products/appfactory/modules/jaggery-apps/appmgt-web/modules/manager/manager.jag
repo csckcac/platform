@@ -1,0 +1,72 @@
+<%
+  include('../config_reader.jag');
+  include('../constants.jag');
+
+  // used for logging
+  var log = new Log();
+
+var getAdminCookie = function () {
+    var xhr = new XMLHttpRequest();
+    var endPoint = getProperty(WS_GET_AUTH_COOKIE);
+    xhr.open("POST", endPoint);
+    var payload = '<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:aut="http://authentication.services.core.carbon.wso2.org"><soap:Header/><soap:Body><aut:login><aut:username>' + getProperty(ADMIN_USERNAME) + '</aut:username><aut:password>' + getProperty(ADMIN_PASSWORD) + '</aut:password><aut:remoteAddress>localhost</aut:remoteAddress></aut:login></soap:Body></soap:Envelope>';
+    xhr.send(payload);
+    var cookie = (xhr.getAllResponseHeaders());
+    return cookie.split(";")[0].split(":")[1];
+};
+
+var createDataSource = function (applicationId, stageName, name, url, driverClass, username,
+                                 password, description) {
+    var ws = require('ws');
+    var createDataSourcesService = new ws.WSRequest();
+    var options = [];
+    options.useSOAP = 1.1;
+    options.action = "urn:addDataSource";
+
+    var payload = '<xsd:addDataSource xmlns:xsd="http://org.apache.axis2/xsd"' +
+                  ' xmlns:xsd1="http://services.core.ndatasource.carbon.wso2.org/xsd"' +
+                  ' xmlns:xsd2="http://core.ndatasource.carbon.wso2.org/xsd">' +
+                  '<xsd:dsmInfo>' +
+                  '<xsd1:definition>' +
+                  '<xsd1:dsXMLConfiguration>' +
+                  ' <![CDATA[<configuration>' +
+                  '<url>' + url + '</url>' +
+                  '<username>' + username + '</username>' +
+                  '<password>' + password + '</password>' +
+                  '<driverClassName>' + driverClass + '</driverClassName>' +
+                  '<maxActive>50</maxActive>' +
+                  '<maxWait>60000</maxWait>' +
+                  '<testOnBorrow>true</testOnBorrow>' +
+                  '<validationQuery>SELECT 1</validationQuery>' +
+                  '<validationInterval>30000</validationInterval>' +
+                  '</configuration>]]>' +
+                  '</xsd1:dsXMLConfiguration>' +
+                  '<xsd1:type>RDBMS</xsd1:type>' +
+                  '</xsd1:definition>' +
+                  '<xsd1:description>' + description + '</xsd1:description>' +
+                  '<xsd1:jndiConfig>' +
+
+                  '<xsd2:name>' + 'jdbc/' + name + '</xsd2:name>' +
+                  '<xsd2:useDataSourceFactory>false</xsd2:useDataSourceFactory>' +
+                  '</xsd1:jndiConfig>' +
+                  '<xsd1:name>' + name + '</xsd1:name>' +
+                  '<xsd1:system>false</xsd1:system>' +
+                  '</xsd:dsmInfo>' +
+                  '</xsd:addDataSource>';
+
+    try {
+        var endPoint = getProperty('ApplicationDeployment.DeploymentStage.' + stageName + '.DeploymentServerURL') + 'NDataSourceAdmin';
+        createDataSourcesService.open(options, endPoint, false, getProperty(ADMIN_USERNAME) + '@' + applicationId, getProperty(ADMIN_PASSWORD));
+        createDataSourcesService.send(payload);
+
+
+        if (log.isDebugEnabled()) {
+            log.debug("Invoking service endpoint:" + endPoint);
+        }
+
+    } catch (e) {
+        log.error("Error while creating datasource " + stageName + "\n" + e.message);
+        throw "Error while creating datasource  " + stageName;
+    }
+};
+%>

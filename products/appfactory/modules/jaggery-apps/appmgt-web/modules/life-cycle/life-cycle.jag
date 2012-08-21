@@ -1,0 +1,100 @@
+<%
+ include('../config_reader.jag');
+ include('../constants.jag');
+
+ // used for logging
+ var log = new Log();
+
+var invokeDeployToStage = function invokeDeployToStage(applicationKey,revision,version,stageName,build){
+        var ws = require('ws');
+        var deployApplicationToStageProcess = new ws.WSRequest();
+        var options = new Array();
+        options.useSOAP = 1.1;
+        options.action = "urn:process";
+        var payload = '<p:DeployToStageRequest xmlns:p="http://wso2.org"><p:applicationId>'+applicationKey+'</p:applicationId><p:revision>'+revision+'</p:revision><p:version>'+version+'</p:version><p:stage>'+stageName+'</p:stage><p:build>'+build+'</p:build></p:DeployToStageRequest>';
+        var result;
+
+        try {
+            var endPoint =getProperty('ApplicationDeployment.DeploymentStage.'+stageName+'.ProcessEndPoint');
+            deployApplicationToStageProcess.open(options,endPoint, false);
+            deployApplicationToStageProcess.send(payload);
+            result = deployApplicationToStageProcess.responseE4X;
+
+            if(log.isDebugEnabled()){
+                log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+            }
+            return result;
+        } catch (e) {
+            log.error("Error while deploying to "+stageName + "\n"+e.message);
+            throw "Error while deploying to "+stageName;
+        }
+    };
+
+var addGenericArtifact = function addGenericArtifact(key,content,lifecycleAttribute){
+              var ws = require('ws');
+              var manageGenericArtifactService = new ws.WSRequest();
+              var options = new Array();
+              options.useSOAP = 1.1;
+              options.action = "urn:addArtifact";
+              var payload =       '<ser:addArtifact xmlns:ser="http://services.generic.governance.carbon.wso2.org">'+
+                                  	'<ser:key>'+key+'</ser:key>'+
+                                    '<ser:info>'+content+'</ser:info>'+
+                                    '<ser:lifecycleAttribute>'+lifecycleAttribute+'</ser:lifecycleAttribute>'+
+                                  '</ser:addArtifact>';
+              var result;
+
+              try {
+                  var endPoint =getProperty(WS_ADD_GENERIC_ARTIFACT);
+                  manageGenericArtifactService.open(options,endPoint, false,getProperty(ADMIN_USERNAME),getProperty(ADMIN_PASSWORD));
+                  manageGenericArtifactService.send(payload);
+                  result = manageGenericArtifactService.responseE4X;
+
+                  if(log.isDebugEnabled()){
+                      log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+                  }
+                  return result;
+              } catch (e) {
+                  log.error("Error in calling manage generic artifact service "+e.toString());
+                  throw "Error in calling manage generic artifact service "+e.toString();
+              }
+    };
+    
+function invokeAspectWithParameter(path,aspect,action,parameters){
+     var ws = require('ws');
+     var customCheckListAdminService = new ws.WSRequest();
+     var options = new Array();
+     options.useSOAP = 1.1;
+     options.action = "urn:invokeAspectWithParams";
+     var payload = '<ser:invokeAspectWithParams' +
+                                        ' xmlns:ser=\'http://services.checklist.lifecycles.custom.governance.carbon.wso2.org\'>' +
+                                        '<ser:path>'+path+'</ser:path>' +
+                                        '<ser:aspect>'+aspect+'</ser:aspect>' +
+                                        '<ser:action>'+action+'</ser:action>' +
+                                        '<ser:items></ser:items>';
+                                        if(parameters.length>=2){
+                                        for(var i=0;i<parameters.length;){
+                                           payload=payload+'<ser:parameters><ser:array>'+parameters[i]+'</ser:array>'+ '<ser:array>'+parameters[++i]+'</ser:array></ser:parameters>';
+                                           i++;
+                                        }
+                                        }
+                                        payload=payload+'</ser:invokeAspectWithParams>';
+     var result;
+
+     try {
+         var endPoint =getProperty(WS_INVOKE_ASPECT);
+         customCheckListAdminService.open(options,endPoint, true,getProperty(ADMIN_USERNAME),getProperty(ADMIN_PASSWORD));
+         customCheckListAdminService.send(payload);
+         result = customCheckListAdminService.responseE4X;
+
+
+
+             log.debug("Invoking service endpoint:"+endPoint+" returned result:"+result);
+
+         return result;
+     } catch (e) {
+         log.error("Error in calling CustomLifecyclesChecklistAdminService "+e.toString());
+         throw "Error in calling CustomLifecyclesChecklistAdminService "+e.toString();
+     }
+};
+ 
+%>

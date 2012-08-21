@@ -1,0 +1,62 @@
+<%
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
+include("/jagg/config_reader.jag");
+(function () {
+    var mod, obj, result,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json");
+
+    if (action == "createNewApplication") {
+        var applicationName = request.getParameter("applicationName");
+        var userName = request.getParameter("userName");
+        try {
+            result = createApplication(applicationName, userName);
+            if (result != null) {
+                return result;
+            } else {
+                throw "Error while creating the application";
+            }
+        } catch(e) {
+            throw "Error while creating the application";
+        }
+    } else if (action == "createApplicationRepository") {
+        var applicationKey = request.getParameter("applicationKey");
+        try {
+            result = createRepository(applicationKey);
+            if (result != null) {
+                var repoLink = null;
+                repoLink = result.split("<ns:return>")[1].split("</ns:return>")[0];
+                return repoLink;
+            } else {
+                throw "Error while creating repository";
+            }
+        } catch(e) {
+            throw "Error while creating repository";
+        }
+    } else if(action == "addApplicationToApp") {
+		try {
+	    	var key = 'application';
+	      	var content = '<![CDATA[<metadata xmlns="http://www.wso2.org/governance/metadata">'+
+	                        '<application>'+
+	                         	'<description>'+applicationDescription+'</description>'+
+	                         	'<name>'+applicationName+'</name>'+
+	                            '<key>'+applicationKey+'</key>'+
+	                        '</application>'+
+	                        '<serviceLifecycle><lifecycleName>'+LIFE_CYCLE_NAME+'</lifecycleName></serviceLifecycle>'+
+	                      '</metadata>]]>';
+	      	var lifecycleAttribute = 'serviceLifecycle_lifecycleName';
+	        addGenericArtifact(key,content,lifecycleAttribute);
+
+        } catch (e) {
+            log.error("Error while storing resource \n"+e.message);
+            throw new Error("Error while storing registry resource");
+        }
+    } else {
+        print({
+                  error:true,
+                  message:msg.error.invalidAction(action)
+              });
+    }
+}());
+%>

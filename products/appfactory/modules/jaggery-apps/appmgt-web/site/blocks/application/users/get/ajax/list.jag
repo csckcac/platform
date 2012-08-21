@@ -1,0 +1,328 @@
+<%
+include("/jagg/jagg.jag");
+include("/jagg/constants.jag");
+include("/jagg/config_reader.jag");
+
+(function () {
+    var mod, obj, result,
+            action = request.getParameter("action"),
+            site = require("/site/conf/site.json");
+            
+ 	if (action == "getRoles") {
+       var applicationKey=request.getParameter("applicationKey");
+        try {
+            result = getRoles(applicationKey, userName);
+            if( result != null) {
+                var roleArray = result.*::["return"].text();
+                return roleArray;
+            } else {
+                throw "Error while retrieving roles";
+            }
+        } catch(e) {
+            throw "Error while retrieving roles";
+        }
+    }else if (action == "getUsersOfApplication") {
+        var appKey=request.getParameter("applicationKey");
+        try {
+            result = getUsers(appKey);
+            if( result != null) {
+                return result.*::["return"].text();
+            } else {
+                throw "Error while retrieving users of application";
+            }
+        } catch(e) {
+            throw "Error while retrieving users of application";
+        }
+    }else if (action == "getUserInfo") {
+        var appliKey=request.getParameter("applicationKey");
+        try {
+            result = getUsersInfoOfApplication(appliKey);
+            if( result != null) {
+                return result;
+            } else {
+                throw "Error while retrieving user infomation";
+            }
+        } catch(e) {
+        throw "Error while retrieving users infomation";
+        }
+    }else if(action == 'isUserInApplication') {
+    	var roleArray = request.getParameter("roleArray");
+    	
+    	try {
+            if(roleArray.length() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch(e) {
+            throw "Error while checking user access to application";
+        }
+    }else if(action == 'isOwner') {
+    	var roleArray = request.getParameter("roleArray");
+    	try {
+            var isOwner = false;
+            for(var i =0; i < roleArray.length(); ++i) {
+                if(roleArray[i] == ROLE_APP_OWNER) {
+                    isOwner = true;
+                    break;
+                }
+            }
+            return isOwner;
+        } catch(e) {
+            throw "Error while checking ownership of application";
+        }
+    }else if(action == 'isDevOps') {
+    	var roleArray = request.getParameter("roleArray");
+    	try {
+            var isDevOps = false;
+            for(var i =0; i < roleArray.length(); ++i) {
+                if(roleArray[i] == ROLE_DEVOPS) {
+                	isDevOps = true;
+                    break;
+                }
+            }
+            return isDevOps;
+        } catch(e) {
+            throw "Error while checking ownership of application";
+        }
+    }else if(action == 'isAdmin') {
+    	var roleArray = request.getParameter("roleArray");
+    	try {
+            var isAdmin = false;
+            for(var i =0; i < roleArray.length(); ++i) {
+                if(roleArray[i] == ROLE_ADMIN) {
+                	isAdmin = true;
+                    break;
+                }
+            }
+            return isAdmin;
+        } catch(e) {
+            throw "Error while checking ownership of application";
+        }
+    }else if(action == 'getAllAppsOfUser') {
+    	var userName = request.getParameter("userName");
+    	try {
+            var result = getAllApps(userName);
+            var ns=new Namespace("http://service.mgt.application.appfactory.carbon.wso2.org");
+            return result.ns::["return"].text();
+        } catch(e) {
+            throw "Error while getting application of user";
+        }
+    }else if(action == 'getUserConfirmationObject') {
+    	var secreteKey = request.getParameter("secreteKey");
+    	
+    	try {
+            return getUserConfirmationObject(secreteKey);
+        } catch(e) {
+            throw "Error while getting application of user";
+        }
+    }else if(action == 'getApplicationsOfUser') {
+    	var userName = request.getParameter("userName");
+    	        
+    	log.debug("USER EXISTS " + resourceExists(USER_APPLICATIONS_MAPPING + userName));
+        var applicationList = [];
+
+        var result = resourceExists(USER_APPLICATIONS_MAPPING + userName);
+        log.debug("get user applications "+result);
+        if(result == "true") {
+            log.debug("get applications of user - resource exists "+ resourceExists(USER_APPLICATIONS_MAPPING + userName));
+            //get the comma separated application keys that the user can access
+            var mapResource = getResource(USER_APPLICATIONS_MAPPING + userName);
+
+            if (mapResource != null) {
+                var applicationArray = mapResource.getProperty(APPLICATION_LIST).split(",");
+                log.debug("getting user applications "+applicationArray);
+
+                // read the application details from applications/ collection and display link to application
+                for (var i = 0; i <= applicationArray.length - 1; ++i) {
+                    var resource = {};
+                    var key = applicationArray[i];
+                    var path = APPLICATIONS + key;
+
+                    //if (registry.resourceExists(path)) {
+                    if (resourceExists(path)) {
+                        var application = getResource(path);
+                        log.debug("resource exist for key "+key+" : "+application);
+                        resource.props = {};
+                        resource.props.applicationKey = key;
+                        resource.props.applicationName = application.getProperty(APPLICATION_NAME);
+                    }
+                    applicationList.push(resource)
+                }
+            }
+        }
+        return applicationList;
+    }else if(action == 'getRepositoryPath') {
+    	var applicationKey = request.getParameter("applicationKey");
+    	
+    	var path = APPLICATIONS + applicationKey;
+        if(resourceExists(path)) {
+            return getResource(path).getProperty(APPLICATION_REPO_LINK);
+        }
+    }else if(action == 'getAppInfo') {
+       var applicationKey = request.getParameter("applicationKey"); 
+       
+       var path = APPLICATIONS + applicationKey + APP_INFO;
+       if(resourceExists(path)) {
+
+           var resource = getResource(path);
+		   var resourceContent = resource.content;
+
+           if(resourceContent.*::application.*::key.text() != undefined) {
+           	   var application={};
+	           application.key = resourceContent.*::application.*::key.text()
+	           application.name = resourceContent.*::application.*::name.text();
+	           application.description = resourceContent.*::application.*::description.text();
+ 	           
+	           return application;
+           }
+       }
+       
+       return null;
+    }else if(action == 'getAllAppVersionsInStage') {
+    	var stageName = request.getParameter("stageName"); 
+    	var username = request.getParameter("username"); 
+    	var applicationKey = request.getParameter("applicationKey"); 
+    	
+    	var allAppVersionArray = new Array();
+		var applicationList = getAllAppsOfUser(username);
+		
+		for (var applicationName in applicationList) {
+	    	var applicationKey = applicationList[applicationName];
+	 
+	    	var appVersions = getAppVersionsInStage(stageName, applicationKey, userName);
+		    if(appVersions != null) {
+		    	allAppVersionArray = allAppVersionArray.concat(appVersions);
+		    } 
+			
+	    }
+
+		return allAppVersionArray;
+    }else if(action == 'getAppVersionsInStage') {
+    	var stageName = request.getParameter("stageName"); 
+    	var applicationKey = request.getParameter("applicationKey"); 
+    	var username = request.getParameter("username"); 
+    	
+    	var applicatoinPath = APPLICATIONS + applicationKey;
+	    var path = applicatoinPath+ "/" + stageName;
+
+	    if(resourceExists(path)) {
+			var appVersions = new Array();
+	    	var resource = getResource(path);
+	    	
+	    	var applicationInfo = getAppShortInfo(applicationKey, username);
+	    	
+	    	if(applicationInfo != null && applicationInfo != undefined) {
+	    		var arrVersions = new Array();	
+
+                var k = 0;
+
+		    	for(var i = 0; i < resource.childCount; i++) {
+
+                    var versionPath = resource.getChildren()[i];
+
+                    if(resourceExists(versionPath+ "/appinfo")) {
+
+					var versions = getResource(versionPath);
+					arrVersions[k]= versionPath.replace('/' + path + '/', '');
+
+                    k = k + 1;
+                    }
+				}
+				applicationInfo.stage = stageName + '';
+				applicationInfo.versions = arrVersions;
+				appVersions[0] = applicationInfo;	
+		    }
+		    
+		    return appVersions;
+		}
+		
+		return null;
+    }else if(action == 'getAllStages') {
+    	var stages = getProperties('ApplicationDeployment.DeploymentStage');
+		if(stages == null) {
+			return null;
+		}
+
+		var stageArray = new Array();
+		
+		var counter = 0;
+		while(stages[counter] != null) {
+			stageArray[counter] = stages[counter];
+			counter++;
+		}
+		
+		return stageArray;
+    }else if(action == 'getAllAppVersionsInStages') {
+    	var username = request.getParameter("username");  		
+    	var allAppVersionArray = new Array();
+		var applicationList = getAllAppsOfUser(username);
+		
+		for (var applicationName in applicationList) {
+	    	var applicationKey = applicationList[applicationName];
+	    
+	    	var allStages = getAllStages();
+		
+			for(var i = 0; i < allStages.length; i++) {				
+				var stage = allStages[i];
+				var appVersions = getAppVersionsInStage(stage, applicationKey, userName);
+			    if(appVersions != null) {
+			    	allAppVersionArray = allAppVersionArray.concat(appVersions);
+			    } 
+			}	
+	    }
+	    return allAppVersionArray;
+    }else if(action == 'getAppVersionsInStages') {
+    	var applicationKey = request.getParameter("applicationKey");
+    	
+    	var allAppVersionArray = new Array();
+		var allStages = getAllStages();
+		
+		for(var i = 0; i < allStages.length; i++) {				
+			var stage = allStages[i];
+			var appVersions = getAppVersionsInStage(stage, applicationKey, userName);
+		    if(appVersions != null) {
+		    	allAppVersionArray = allAppVersionArray.concat(appVersions);
+		    } 
+		}
+		
+		return allAppVersionArray;
+    }else if(action == 'getAppCountInStage') {
+    	var applicationKey = request.getParameter("applicationKey");
+    	var username = request.getParameter("username");
+    	
+    	var versionArray = new Array();
+		var allStages = getAllStages();
+		
+		for(var i = 0; i < allStages.length; i++) {				
+			var stageName = allStages[i];
+			var versionEntry = {};
+			versionEntry.stage = stageName;
+			var applicationList = getAllAppVersionsInStage(stageName, username);
+		
+			if(applicationList == null) {
+				continue;
+			}
+			
+			var versionCount = 0;
+			for (var j = 0; j < applicationList.length; j++) {
+		    	var applicationInfo = applicationList[j];
+		    	if(applicationInfo == undefined) {
+		    		continue;	
+		    	}
+		    	versionCount += applicationInfo.versions.length;
+	    	}
+			
+			versionEntry.count = versionCount;
+			versionArray[i] = versionEntry;
+		}
+		
+		return versionArray;
+    }else {
+	    print({
+	              error:true,
+	              message:msg.error.invalidAction(action)
+	          });
+    }
+}());
+%>

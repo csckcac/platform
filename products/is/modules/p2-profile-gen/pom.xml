@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-	<!--
-		~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved. ~ ~
-		Licensed under the Apache License, Version 2.0 (the "License"); ~ you
-		may not use this file except in compliance with the License. ~ You may
-		obtain a copy of the License at ~ ~
-		http://www.apache.org/licenses/LICENSE-2.0 ~ ~ Unless required by
-		applicable law or agreed to in writing, software ~ distributed under
-		the License is distributed on an "AS IS" BASIS, ~ WITHOUT WARRANTIES
-		OR CONDITIONS OF ANY KIND, either express or implied. ~ See the
-		License for the specific language governing permissions and ~
-		limitations under the License.
-	-->
+<!--
+~ Copyright (c) WSO2 Inc. (http://wso2.com) All Rights Reserved. ~ ~
+Licensed under the Apache License, Version 2.0 (the "License"); ~ you
+may not use this file except in compliance with the License. ~ You may
+obtain a copy of the License at ~ ~
+http://www.apache.org/licenses/LICENSE-2.0 ~ ~ Unless required by
+applicable law or agreed to in writing, software ~ distributed under
+the License is distributed on an "AS IS" BASIS, ~ WITHOUT WARRANTIES
+OR CONDITIONS OF ANY KIND, either express or implied. ~ See the
+License for the specific language governing permissions and ~
+limitations under the License.
+-->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<parent>
-    	<groupId>org.wso2.identity</groupId>
-    	<artifactId>identity-server-parent</artifactId>
-    	<version>4.0.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
-    </parent>
-
+		<groupId>org.wso2.identity</groupId>
+		<artifactId>identity-server-parent</artifactId>
+		<version>4.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
+	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>identity-profile-gen</artifactId>
 	<packaging>pom</packaging>
 	<name>WSO2 IS - IS Profile Generation</name>
 	<url>http://wso2.org</url>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -84,19 +82,18 @@
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.sts.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.xfer.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.mex.feature:${wso2carbon.version}</featureArtifactDef>
-
 								<!-- registry related features-->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.common.feature:${wso2carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.server.feature:${wso2carbon.version}</featureArtifactDef>
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.ui.feature:${wso2carbon.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.server.feature:${wso2carbon.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.core.ui.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.ui.menu.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.resource.properties.feature:${wso2carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.profiles.feature:${wso2carbon.version}</featureArtifactDef>
 				<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.registry.extensions.server.feature:${wso2carbon.version}</featureArtifactDef>
 
 								<!-- Directory server related features -->
-                                <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.directory.service.mgr.feature:${wso2carbon.version}</featureArtifactDef>
-						  	 	<!-- identity related features-->
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.directory.service.mgr.feature:${wso2carbon.version}</featureArtifactDef>
+								<!-- identity related features-->
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.core.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.provider.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.relying.party.feature:${wso2carbon.version}</featureArtifactDef>
@@ -106,13 +103,23 @@
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.claim.mgt.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.profile.mgt.feature:${wso2carbon.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.sso.saml.feature:${wso2carbon.version}</featureArtifactDef>
-
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.authenticator.token.feature:${wso2carbon.version}</featureArtifactDef>
-								
 								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.um.ws.service.feature:${wso2carbon.version}</featureArtifactDef>
-
 								<featureArtifactDef>org.wso2.identity:org.wso2.identity.styles.feature:${identity.version}</featureArtifactDef>
 								<featureArtifactDef>org.wso2.identity:org.wso2.identity.utils.feature:${identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.feature:${wso2carbon.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.sts.passive.feature:${wso2carbon.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.ldap.server.feature:${wso2carbon.version}</featureArtifactDef>
+								<!-- Features related to Cloud Identity -->
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.common.feature:${stratos.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.identity:org.wso2.identity.ui.feature:${identity.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.stratos.identity.saml2.sso.mgt.feature:${stratos.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.usage.agent.feature:${stratos.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.throttling.agent.feature:${stratos.version}</featureArtifactDef>
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.load.balance.agent.server.feature:${stratos.version}</featureArtifactDef>
+								<!-- GApp SSO features -->
+								<featureArtifactDef>org.wso2.carbon:org.wso2.carbon.stratos.gapp.feature:${stratos.version}</featureArtifactDef>
+								<!-- End GApp SSO features -->
 
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.oauth.feature:${wso2carbon.version}</featureArtifactDef>
                                 <featureArtifactDef>org.wso2.carbon:org.wso2.carbon.identity.sts.passive.feature:${wso2carbon.version}</featureArtifactDef>
@@ -159,30 +166,29 @@
                                     <version>${wso2carbon.version}</version>
                                 </feature>
 								<feature>
+									<id>org.wso2.carbon.ldap.server.feature.group</id>
+									<version>${wso2carbon.version}</version>
+								</feature>
+								<feature>
 									<id>org.wso2.carbon.system.statistics.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-
 								<feature>
 									<id>org.wso2.carbon.soaptracer.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.security.mgt.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.xkms.mgt.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.sts.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.xfer.feature.group</id>
 									<version>${wso2carbon.version}</version>
@@ -195,15 +201,14 @@
 									<id>org.wso2.carbon.registry.core.common.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-                                <feature>
-                                    <id>org.wso2.carbon.registry.core.server.feature.group</id>
-                                    <version>${wso2carbon.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.registry.core.ui.feature.group</id>
-                                    <version>${wso2carbon.version}</version>
-                                </feature>
-								
+								<feature>
+									<id>org.wso2.carbon.registry.core.server.feature.group</id>
+									<version>${wso2carbon.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.registry.core.ui.feature.group</id>
+									<version>${wso2carbon.version}</version>
+								</feature>
 								<feature>
 									<id>org.wso2.carbon.registry.ui.menu.feature.group</id>
 									<version>${wso2carbon.version}</version>
@@ -222,56 +227,49 @@
                                 </feature>
                                                                 
 								<feature>
+									<id>org.wso2.carbon.registry.profiles.feature.group</id>
+									<version>${wso2carbon.version}</version>
+								</feature>
+								<feature>
 									<id>org.wso2.carbon.identity.core.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-
 								<feature>
 									<id>org.wso2.carbon.identity.provider.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.identity.relying.party.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.identity.self.registration.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.identity.user.profile.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.identity.xacml.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.identity.sso.saml.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
-
 								<feature>
 									<id>org.wso2.carbon.claim.mgt.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.profile.mgt.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-																
 								<feature>
 									<id>org.wso2.carbon.identity.authenticator.token.feature.group</id>
 									<version>${wso2carbon.version}</version>
 								</feature>
-								
 								<feature>
 									<id>org.wso2.carbon.um.ws.service.feature.group</id>
 									<version>${wso2carbon.version}</version>
@@ -320,64 +318,60 @@
                                 </feature>
                                 <!--End GApp SSO features -->
 
-                                <feature>
-                                    <id>org.wso2.carbon.load.balance.agent.server.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-
+								<feature>
+									<id>org.wso2.carbon.load.balance.agent.server.feature.group</id>
+									<version>${stratos.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.stratos.usage.agent.feature.group</id>
+									<version>${stratos.version}</version>
+								</feature>
+								<feature>
+									<id>org.wso2.carbon.stratos.throttling.agent.feature.group</id>
+									<version>${stratos.version}</version>
+								</feature>
 							</features>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 			<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-antrun-plugin</artifactId>
-<version>1.1</version>
-<executions>
-    <execution>
-        <phase>package</phase>
-        <configuration>
-            <tasks>
-                <replace token="false" value="true"
-                         dir="target/wso2carbon-core-4.0.0-SNAPSHOT/repository/components/configuration/org.eclipse.equinox.simpleconfigurator">
-                    <include name="**/bundles.info"/>
-                </replace>
-		<replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
-                                        token="&lt;TenantManager"
-                                        value="&lt;!--TenantManager"/>
-
-                                <replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
-                                        token="&lt;/TenantManager&gt;"
-                                        value="&lt;/TenantManager--&gt;"/>
-
-                                <replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
-                                        token="&lt;!--ISTenantManager"
-                                        value="&lt;TenantManager"/>
-				
-                                <replace
-                                        file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
-                                        token="&lt;/ISTenantManager--&gt;"
-                                        value="&lt;/TenantManager&gt;"/>
-            </tasks>
-        </configuration>
-        <goals>
-            <goal>run</goal>
-        </goals>
-    </execution>
-</executions>
-</plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<version>1.1</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<configuration>
+							<tasks>
+								<replace token="false" value="true"
+								dir="target/wso2carbon-core-4.0.0-SNAPSHOT/repository/components/configuration/org.eclipse.equinox.simpleconfigurator">
+									<include name="**/bundles.info"/>
+								</replace>
+								<replace
+								file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
+								token="&lt;TenantManager"
+								value="&lt;!--TenantManager"/>
+								<replace
+								file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
+								token="&lt;/TenantManager&gt;"
+								value="&lt;/TenantManager--&gt;"/>
+								<replace
+								file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
+								token="&lt;!--ISTenantManager"
+								value="&lt;TenantManager"/>
+								<replace
+								file="target/wso2carbon-core-${wso2carbon.version}/repository/conf/multitenancy/tenant-mgt.xml"
+								token="&lt;/ISTenantManager--&gt;"
+								value="&lt;/TenantManager&gt;"/>
+							</tasks>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 </project>

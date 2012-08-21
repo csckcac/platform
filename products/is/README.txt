@@ -54,7 +54,7 @@ System Requirements
    have Maven 2.1.0 or later.
 
 For more details see
-    http://wso2.org/wiki/display/carbon/System+Requirements
+   http://docs.wso2.org/wiki/display/IS323/Identity+Server+Installation 
 
 
 Project Resources

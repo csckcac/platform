@@ -61,5 +61,5 @@ System Requirements
      level in Internet Explorer 6.x.
 
 For more details see
-http://wso2.org/wiki/display/carbon/System+Requirements
+http://docs.wso2.org/wiki/display/IS323/Identity+Server+Installation
 

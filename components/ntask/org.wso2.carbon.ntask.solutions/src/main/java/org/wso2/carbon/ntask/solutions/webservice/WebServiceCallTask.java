@@ -65,6 +65,7 @@ public class WebServiceCallTask extends AbstractTask {
 	public void init() {
 		try {
 		    this.serviceClient = new ServiceClient();
+		    this.serviceClient.getOptions().setCallTransportCleanup(true);
 		    Map<String, String> props = this.getProperties();
 		    String action = props.get(SERVICE_ACTION);
 		    if (action != null) {

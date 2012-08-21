@@ -92,7 +92,33 @@
     }
   </pre></code>
  
- The "lookupCredentials" method takes in the request user and should return the database username/password in a String array respectively.
+  <p>The following shows a sample implementation of a dynamic user authenticator class:</p>
+  <code><pre>
+    package samples;
+
+    import org.wso2.carbon.dataservices.core.DataServiceFault;
+    import org.wso2.carbon.dataservices.core.auth.DynamicUserAuthenticator;
+
+    public class MyDynAuthClass implements DynamicUserAuthenticator {
+
+        @Override
+        public String[] lookupCredentials(String user) throws DataServiceFault {
+                if ("admin".equals(user)) {
+                   return new String[] {"wso2ds", "wso2ds"};
+                } else if ("user1".equals(user)) {
+                   return new String[] {"dbuser1", "dbpass1"};
+                } else if ("user2".equals(user)) {
+                   return new String[] {"dbuser2", "dbpass2"};
+                } else {
+                   throw new DataServiceFault("The user '" + user + 
+                           "' not supported in invoking the target data service");
+                }
+        }
+
+    }
+  </pre></code>
+  
+  <p>The "lookupCredentials" method takes in the request user and should return the database username/password in a String array respectively.</p>
  
  The dbs file configuration format is as follows:
  

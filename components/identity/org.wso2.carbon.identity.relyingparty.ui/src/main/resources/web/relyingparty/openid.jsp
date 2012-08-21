@@ -15,6 +15,7 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
+<%@page import="org.wso2.carbon.ui.util.CharacterEncoder"%>
 <%@page import="org.wso2.carbon.identity.base.IdentityConstants"%>
 <%@page import="org.apache.axis2.context.ConfigurationContext" %>
 <%@page import="org.wso2.carbon.CarbonConstants" %>
@@ -59,7 +60,7 @@
     try {
         String dialect = null;
         
-        String openid = request.getParameter("openIdUrl");
+        String openid = CharacterEncoder.getSafeText(request.getParameter("openIdUrl")).trim();
         if(openid == null) {
             openid = request.getParameter("gAppDomainOpenId");
        		request.getSession().setAttribute("GAppDomain", openid);

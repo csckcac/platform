@@ -72,6 +72,7 @@
                             javax.servlet; version=2.4.0,
                             javax.servlet.http; version=2.4.0,
                             org.wso2.carbon.server.admin.privilegedaction.*,
+                            org.wso2.carbon.identity.scim.common.*,
                             org.wso2.charon.core.*,
                             org.apache.commons.logging.*,
                             org.apache.axiom.om.*,

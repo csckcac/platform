@@ -74,6 +74,7 @@ our <a href="mail-lists.html">mailing lists</a>.</p>
   <li><a href="dynamic_user_auth.html">Dynamic User Authentication</a></li>
   <li><a href="advanced_query_prop.html">Advanced Query Properties</a></li>
   <li><a href="export.html">Query Result Export</a></li>
+  <li><a href="nested_query.html">Nested Queries</a></li>
   <li><a href="complex_types.html">Complex Elements</a></li>
   <li><a href="generate_response.html">Generate Response</a></li>
 <li><a href="return_generated_keys.html">Return Generated Keys</a></li>

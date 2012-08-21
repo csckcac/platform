@@ -88,7 +88,7 @@
            <p>Parameters required to define a task that use custom java class</p>
 	   <ul>
             <li>DataService Task Class : Name of the java class which has implemented org.wso2.carbon.dataservices.task.DataTask interface. The definition of the aforementioned interface follows:
-            <code><pre>
+            <code><pre><![CDATA[
             package org.wso2.carbon.dataservices.task;
 
             /**
@@ -99,7 +99,34 @@
                 void execute(DataTaskContext ctx);
 
             }
-            </pre></code>
+            ]]></pre></code>
+            <p>The following code snippet shows a sample DataTask implemenation:</p>
+            <code><pre><![CDATA[
+            package samples;
+
+            import java.util.HashMap;
+            import java.util.Map;
+            import org.wso2.carbon.dataservices.core.DataServiceFault;
+            import org.wso2.carbon.dataservices.core.engine.ParamValue;
+            import org.wso2.carbon.dataservices.task.DataTask;
+            import org.wso2.carbon.dataservices.task.DataTaskContext;
+
+            public class SampleDataTask implements DataTask {
+
+                @Override
+                public void execute(DataTaskContext ctx) {
+                    Map<String, ParamValue> params = new HashMap<String, ParamValue>();
+                    params.put("increment", new ParamValue("1000"));
+                    params.put("employeeNumber", new ParamValue("1002"));
+                    try {
+                        ctx.invokeOperation("RDBMSSample", "incrementEmployeeSalary", params);
+                    } catch (DataServiceFault e) {
+                        // handle exception
+                    }
+                }
+
+            }  
+            ]]></pre></code>
             </li>
            </ul>
 

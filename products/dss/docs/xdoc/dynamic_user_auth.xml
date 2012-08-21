@@ -143,9 +143,14 @@
 
  <p>Figure 02 shows that the dynamic user auth class can be given in the shown field</p>
 
- <h3>The Dynamic User Lookup Order of Precedence</h3>
+ <h2>The Dynamic User Lookup Order of Precedence</h2>
  <p>
  In a single data source configuration, both the static mapping and the runtime configuration given by the Java class can be available. In that type of a situation, the higher precedence goes to the static mapping in initially looking up the credentials, and it will ignore the "*" request setting in the first pass. If it cannot find a request user / database credentials mapping, we will use the secondary runtime Java class implementation to look up the user, if that also fails, it will return again for the primary static mapping and process the "*" request mapping. If that also fails, the data service request will return an error.
+ </p>
+ 
+  <h2>The Use of External Data Sources</h2>
+ <p>
+ When using non-inline data sources, i.e. Carbon data sources, JNDI data sources etc.., the data sources must be created in a way that its connections can be created for specific users. Specifically, in Carbon data sources, the setting "alternateUsernameAllowed" must be enabled for dynamic user authentication to function. 
  </p>
  
  </p>

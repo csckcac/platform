@@ -24,21 +24,20 @@
                     href="release_notes.html">Release Note</a>]
         </p>
 <h1>Step-by-Step Guide on Creating Data Services Using Web Scraping</h1>
-<P><b>Introduction</b> 
-</P>
-<P>WSO2 Data Services Server supports to scrape web information and extract web information
+<p><b>Introduction</b> 
+</p>
+<p>WSO2 Data Services Server supports to scrape web information and extract web information
  as a service. This guide will use <a href="http://weather.yahoo.com/">Yahoo Weather Forecasts</a>  to extract weather information.
 
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/web.png"/>
-</P>
-<P>Figure 1: Weather Forcast</P>
-<P><b>Creating the Config</b> 
-</P><hr/>
-<P> Before we create the service, we need to create a configuration file which gives information regarding the web resource and the xslt file which will have information regarding the response.
-</P>
-<P><b> Sample Configuration File </b>
-</P>
+</p>
+<p><img alt="DS" src="images/ds-wizard/web/web.png"/></p>
+<p>Figure 1: Weather Forcast</p>
+<p><b>Creating the Config</b> 
+</p><hr/>
+<p> Before we create the service, we need to create a configuration file which gives information regarding the web resource and the xslt file which will have information regarding the response.
+</p>
+<p><b> Sample Configuration File </b>
+</p>
 <p><pre >&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
 &lt;config&gt;
  &lt;var-def name='weatherInfo'&gt;
@@ -56,9 +55,9 @@
 &lt;/config&gt;
 </pre ></p>
 
-<P> <b>Sample XSLT file</b>
-</P>
-<P><pre>
+<p> <b>Sample XSLT file</b>
+</p>
+<p><pre>
 &lt;xsl:stylesheet version=&quot;1.0&quot; xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot;&gt;
 &lt;xsl:output method=&quot;xml&quot; omit-xml-declaration=&quot;yes&quot; indent=&quot;yes&quot;/&gt;
 &lt;xsl:template match=&quot;/&quot;&gt;
@@ -73,96 +72,87 @@
 &lt;/xsl:template&gt;
 &lt;/xsl:stylesheet&gt;
 </pre>
-</P>
+</p>
 
-<P><b>Step 2: Start by giving a name</b> 
-</P><hr/>
-<P>Lets begin to create the data service by clicking on 
+<p><b>Step 2: Start by giving a name</b> 
+</p><hr/>
+<p>Lets begin to create the data service by clicking on 
 link in left menu under Services/Add/Data Service. It requires to
 enter a name to the Data service. Lets name it as WeatherInfoService
 and click on Next. 
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step1.png"/>
-</P>
-<P>Figure 2: Create Data Service</P>
-<P><b>Step 2: Enter details about your web data source</b> 
-</P><hr/>
-<P>Second step is to enter details about the data source which we are
+</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step1.png"/></p>
+<p>Figure 2: Create Data Service</p>
+<p><b>Step 2: Enter details about your web data source</b> 
+</p><hr/>
+<p>Second step is to enter details about the data source which we are
 using to create the service. There are two options where you can provide the configuration details. You can either save
 configuration into a configuration.xml and provide the file path, or can enter as a inline configuration. Give suitable
 DataSource name and select web data source as the data source type. For the following sample we will give the above
 configuration using a file path as shown below.
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step2.png"/>
-</P>
-<P>Figure 2: Configure Web Source, by giving the file path</P>
+</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step2.png"/></p>
+<p>Figure 3: Configure Web Source, by giving the file path</p>
 <p><img src="images/ds-wizard/web/step2a.png" alt="Inline Config"/></p>
-<p>Figure 2.1: Configure Web Source, by inline configuration</p>
+<p>Figure 3.1: Configure Web Source, by inline configuration</p>
 <br/>        
-<P><b>Step 3: Create Query</b> 
-</P><hr/>
-<P>To extract information you need to create a query along with the
+<p><b>Step 3: Create Query</b> 
+</p><hr/>
+<p>To extract information you need to create a query along with the
 structure of the response. 
-</P>
-<P>Give a name to the query, and select the data source name from the
+</p>
+<p>Give a name to the query, and select the data source name from the
 drop down, which is created in previous step. Scraper Variable should be given as same as the output name in the configuration,
 which actually returns the output from the configuration. Eg: It should be 'weatherInfo' which is the var-def name in the
 configuration.
-</P>
+</p>
 
-<P>Enter a name for Grouped By Element and Row Name. You can also
+<p>Enter a name for Grouped By Element and Row Name. You can also
 give a name space if you wish. Click on Add Output Mappings to map
 the response to output XML 
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step3.png"/>
-</P>
-<P>Figure 3: Create New Query</P>
-<P>Click on &quot;Add Output Mapping&quot; button to create how the
+</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step3.png"/></p>
+<p>Figure 4: Create New Query</p>
+<p>Click on &quot;Add Output Mapping&quot; button to create how the
 output should look like. Once you have entered the output mapping
 details click on &quot;Main Configuration&quot; and click on &quot;Save&quot;
 button. 
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step4.png"/>
-</P>
-<P>Figure 4: Add Output Mappings</P>
-<P>Created query will be listed as follows. Click on &quot;Next&quot;
-to create the operation.</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step5.png"/>
-</P>
-<P>Figure 5: Created Query</P>
-<P><b>Step 4: Create a web service operation</b> <hr/>
-</P>
-<P>Enter a name for the operation and select the query from the drop
+</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step4.png"/></p>
+<p>Figure 5: Add Output Mappings</p>
+<p>Created query will be listed as follows. Click on &quot;Next&quot;
+to create the operation.</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step5.png"/></p>
+<p>Figure 6: Created Query</p>
+<p><b>Step 4: Create a web service operation</b> <hr/>
+</p>
+<p>Enter a name for the operation and select the query from the drop
 down list. Click on &quot;Save&quot;. 
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step6.png"/>
-</P>
-<P>Figure 6: Add operation</P>
-<P>Once you click on &quot;Finish&quot; your data service will be
+</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step6.png"/></p>
+<p>Figure 7: Add operation</p>
+<p>Once you click on &quot;Finish&quot; your data service will be
 created and deployed. 
-</P>
-<P><b>Step 5: Service deployed</b> <hr/>
-</P>
-<P>You can see the deployed service by clicking on &quot;List&quot;
+</p>
+<p><b>Step 5: Service deployed</b> <hr/>
+</p>
+<p>You can see the deployed service by clicking on &quot;List&quot;
 under Manage/Services left menu. Deployed WeatherInfoService service
 will be list as follows. 
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step7.png"/>
-</P>
-<P>Figure 8: Deployed Services</P>
-<P>Click on the &quot;WeatherInfoService&quot;. It will direct to
+</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step7.png"/></p>
+<p>Figure 8: Deployed Services</p>
+<p>Click on the &quot;WeatherInfoService&quot;. It will direct to
 the Service Dashboard (WeatherInfoService). You can click on &quot;Edit
 Data Service (XML Edit)&quot; and view the created data service as a
 XML. 
-</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step8.png"/>
-</P>
-<P>Figure 9: Edit data service</P>
-<P><b>Step 6: Try your service</b> 
-</P><hr/>
-<P>Click on &quot;Try It&quot; link to invoke the service.</P>
-<P> <img alt="DS" src="images/ds-wizard/web/step9.png"/>
-</P>
-<P>Figure 10: Invoke service using Try-it</P>
+</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step8.png"/></p>
+<p>Figure 9: Edit data service</p>
+<p><b>Step 6: Try your service</b> 
+</p><hr/>
+<p>Click on &quot;Try It&quot; link to invoke the service.</p>
+<p> <img alt="DS" src="images/ds-wizard/web/step9.png"/></p>
+<p>Figure 10: Invoke service using Try-it</p>
     </body>
 </html>

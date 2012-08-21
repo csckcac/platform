@@ -17,13 +17,29 @@
  */
 package org.wso2.carbon.identity.provider;
 
+import java.security.MessageDigest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openid4java.message.*;
+import org.openid4java.message.AuthFailure;
+import org.openid4java.message.AuthRequest;
+import org.openid4java.message.AuthSuccess;
+import org.openid4java.message.DirectError;
+import org.openid4java.message.Message;
+import org.openid4java.message.MessageExtension;
+import org.openid4java.message.ParameterList;
 import org.openid4java.server.ServerManager;
 import org.wso2.carbon.identity.base.IdentityConstants;
 import org.wso2.carbon.identity.base.IdentityConstants.ServerConfig;
@@ -37,28 +53,25 @@ import org.wso2.carbon.identity.core.model.XMPPSettingsDO;
 import org.wso2.carbon.identity.core.persistence.IdentityPersistenceManager;
 import org.wso2.carbon.identity.core.util.IdentityTenantUtil;
 import org.wso2.carbon.identity.core.util.IdentityUtil;
-import org.wso2.carbon.identity.provider.dto.*;
+import org.wso2.carbon.identity.provider.dto.OpenIDAuthRequestDTO;
+import org.wso2.carbon.identity.provider.dto.OpenIDAuthResponseDTO;
+import org.wso2.carbon.identity.provider.dto.OpenIDClaimDTO;
+import org.wso2.carbon.identity.provider.dto.OpenIDParameterDTO;
+import org.wso2.carbon.identity.provider.dto.OpenIDProviderInfoDTO;
+import org.wso2.carbon.identity.provider.dto.OpenIDRememberMeDTO;
+import org.wso2.carbon.identity.provider.dto.OpenIDUserProfileDTO;
+import org.wso2.carbon.identity.provider.dto.OpenIDUserRPDTO;
 import org.wso2.carbon.identity.provider.openid.OpenIDProvider;
 import org.wso2.carbon.identity.provider.openid.OpenIDUtil;
 import org.wso2.carbon.identity.provider.openid.extensions.OpenIDExtension;
 import org.wso2.carbon.identity.provider.openid.handlers.OpenIDAuthenticationRequest;
 import org.wso2.carbon.identity.provider.openid.handlers.OpenIDExtensionFactory;
 import org.wso2.carbon.identity.provider.xmpp.MPAuthenticationProvider;
-import org.wso2.carbon.identity.relyingparty.RelyingPartyData;
-import org.wso2.carbon.identity.relyingparty.RelyingPartyException;
-import org.wso2.carbon.identity.relyingparty.TokenVerifierConstants;
-import org.wso2.carbon.identity.relyingparty.saml.SAMLTokenVerifier;
 import org.wso2.carbon.user.core.UserRealm;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
 import org.wso2.carbon.user.core.claim.Claim;
-import org.wso2.carbon.utils.TenantUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.security.MessageDigest;
-import java.util.*;
 
 public class OpenIDProviderService {
 
@@ -82,7 +95,7 @@ public class OpenIDProviderService {
 
 		IdentityPersistenceManager persistenceManager =
 		                                                IdentityPersistenceManager.getPersistanceManager();
-		domainName = TenantUtils.getDomainNameFromOpenId(openID);
+		domainName = MultitenantUtils.getDomainNameFromOpenId(openID);
 		tenantUser = MultitenantUtils.getTenantAwareUsername(userName);
 
 		XMPPSettingsDO xmppSettingsDO =
@@ -227,7 +240,7 @@ public class OpenIDProviderService {
 		providerInfo = new OpenIDProviderInfoDTO();
 
 		try {
-			domain = TenantUtils.getDomainNameFromOpenId(openid);
+			domain = MultitenantUtils.getDomainNameFromOpenId(openid);
 			realm = IdentityTenantUtil.getRealm(domain, userName);
 		} catch (Exception ignore) {
 			log.error(ignore);
@@ -425,58 +438,6 @@ public class OpenIDProviderService {
 	}
 
 	/**
-	 * @param verifier
-	 * @param data
-	 * @return
-	 * @throws RelyingPartyException
-	 */
-	private boolean validateIssuerInfoPolicy(SAMLTokenVerifier verifier, RelyingPartyData data)
-	                                                                                           throws RelyingPartyException {
-		boolean validated = false;
-		String issuerName = verifier.getIssuerName();
-		String issuerPolicy = data.getIssuerPolicy();
-
-		try {
-			if (IdentityConstants.SELF_ISSUED_ISSUER.equals(issuerName)) {
-				if (issuerPolicy == null || issuerPolicy.equals(TokenVerifierConstants.SELF_ONLY) ||
-				    issuerPolicy.equals(TokenVerifierConstants.SELF_AND_MANGED)) {
-					validated = true;
-				}
-			} else if (issuerPolicy.equals(TokenVerifierConstants.SELF_ONLY)) {
-				// not a self issued card when self only
-				validated = false;
-			} else {
-				validated = true;
-			}
-		} catch (Exception e) {
-			throw new RelyingPartyException("errorValidatingIssuerPolicy", e);
-		}
-
-		return validated;
-	}
-
-	/**
-	 * @param req
-	 * @param paramList
-	 */
-	private void setPAPEProperties(OpenIDAuthenticationRequest req, ParameterList paramList) {
-		List list = null;
-
-		list = paramList.getParameters();
-		for (Object object : list) {
-			Parameter param = (Parameter) object;
-			if (param.getValue()
-			         .contains("http://schemas.openid.net/pape/policies/2007/06/phishing-resistant")) {
-				req.setPhishingResistanceLogin(true);
-			}
-			if (param.getValue()
-			         .contains("http://schemas.openid.net/pape/policies/2007/06/multi-factor")) {
-				req.setMultifactorLogin(true);
-			}
-		}
-	}
-
-	/**
 	 * A new method to do XMPP based authentication for a given user
 	 * 
 	 * @param userId
@@ -528,7 +489,7 @@ public class OpenIDProviderService {
 			userName = OpenIDUtil.getUserName(openId);
 			tenatUser = MultitenantUtils.getTenantAwareUsername(userName);
 
-			domainName = TenantUtils.getDomainNameFromOpenId(openId);
+			domainName = MultitenantUtils.getDomainNameFromOpenId(openId);
 
 			realm = IdentityTenantUtil.getRealm(domainName, userName);
 			reader = realm.getUserStoreManager();
@@ -707,7 +668,7 @@ public class OpenIDProviderService {
 		UserRealm realm = null;
 
 		userName = OpenIDUtil.getUserName(openId);
-		domainName = TenantUtils.getDomainNameFromOpenId(openId);
+		domainName = MultitenantUtils.getDomainNameFromOpenId(openId);
 		tenatUser = MultitenantUtils.getTenantAwareUsername(userName);
 
 		realm = IdentityTenantUtil.getRealm(domainName, userName);

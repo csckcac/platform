@@ -37,6 +37,9 @@
 		<li>
                     <a href="#error-200-OK">Why is HTTP status code 200 OK returned for data service requests ?</a>
                 </li>
+		<li>
+                    <a href="#transport-session-scoped-services-performance">Why server getting slow down eventually when we invoking a service in transport scope ?</a>
+                </li>
             </ol>
 
 		<br/>
@@ -74,6 +77,12 @@
                    </h3>
 		        <p>
 			   This is observed for data service requests which have a result, which is because of the default streaming behavior. When streaming is enabled for a service, the actual data service request execution is happenning at the very edge of the execution path, so at this point, the HTTP headers would have written out. So to get a proper HTTP 500 code for SOAP faults, streaming must be disabled. Streaming property can be set in service level as well as the operation level. 
+		        </p>
+		   <h3 id="transport-session-scoped-services-performance">
+                    5. Why server getting slow down eventually when we invoking a service in transport scope ?
+                   </h3>
+		        <p>
+			   When we have transport session scoped services(when we enable boxcarring) and if we don't maintain the HTTP session, Axis2 server creates new context objects in the backend for each request. So these objects pile up and ultimately will run out of memory. Therefore when boxcarring is enabled, the user always have to retain the session (send back the session cookie) else server will eventually go out of memory and before that the server will become slow. If you are using Axis2 client to send request, you can set this by setting 'Options.setManagedSession(true)'.
 		        </p>
                 
     </body>

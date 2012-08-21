@@ -87,10 +87,23 @@
            </ul> 
            <p>Parameters required to define a task that use custom java class</p>
 	   <ul>
-            <li>DataService Task Class : Name of the java class which has implemented org.wso2.carbon.dataservices.task.DataTask interface.</li>
-           </ul>    
+            <li>DataService Task Class : Name of the java class which has implemented org.wso2.carbon.dataservices.task.DataTask interface. The definition of the aforementioned interface follows:
+            <code><pre>
+            package org.wso2.carbon.dataservices.task;
 
-	    <p>After configuring the task with appropriate values, Hit the &quot;Schedule&quot; button to schedule it.</p>
+            /**
+             * This interface represents a scheduled data task.
+             */
+            public interface DataTask {
+
+                void execute(DataTaskContext ctx);
+
+            }
+            </pre></code>
+            </li>
+           </ul>
+
+        <p>After configuring the task with appropriate values, Hit the &quot;Schedule&quot; button to schedule it.</p>
 
         <p><h3>Coordination Server Clustering</h3></p>
 

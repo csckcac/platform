@@ -2,7 +2,7 @@ This sample demonstrates how to use RemoteUserManagement web services API expose
 to handle user management functionality of WSO2 Identity Server externally.
 
 Steps to run the sample:
-1. Run Identity Server 3.2.0 from http://wso2.org/downloads/identity-server/
+1. Start the Identity Server using the startup script found in the bin folder. (Use wso2server.sh for Linux and wso2server.bat for Windows)
 2. Make sure you have installed Apache Ant.
 3. Run the command 'ant' at this directory level in command line.
 4. More information about the sample can be found in the Identity Server documentation.

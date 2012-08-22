@@ -1,30 +1,7 @@
 <% jagg.template("footer", function(inputs, outputs, jagg) { %>
 	
-</div>
-</div>
-<hr>
-
-    <footer>
-        <p>&copy; WSO2 2012</p>
-    </footer>
-
-</div>
-<!-- /container -->
-
-<!--Elements to display popups-->
-<div class="modal fade" id="messageModal"></div>
-<div id="confirmation-data" style="display:none;">
-    <div class="modal-header">
-        <button class="close" data-dismiss="modal">×</button>
-        <h3 class="modal-title">Modal header</h3>
-    </div>
-    <div class="modal-body">
-        <p>One fine body…</p>
-    </div>
-    <div class="modal-footer">
-        <a href="#" class="btn btn-primary">Save changes</a>
-        <a href="#" class="btn btn-other" data-dismiss="modal">Close</a>
-    </div>
-</div>
+<footer>
+    <p>&copy; WSO2 2012</p>
+</footer>
 
 <% }); %>

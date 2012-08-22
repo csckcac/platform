@@ -4,7 +4,7 @@
     var userName = session.get("LOGGED_IN_USER");
     
     var sessionId = request.getHeader("Cookie").split(";")[0].split("=")[1];
-    session.put("LOGGED_IN_USER",ssoRelyingParty.getLoggedInUser(sessionId));
+    //session.put("LOGGED_IN_USER",ssoRelyingParty.getLoggedInUser(sessionId));
     var userName = session.get("LOGGED_IN_USER");
 %>
 
@@ -14,54 +14,45 @@
     <meta name="description" content="">
     <meta name="author" content="">
     
-    <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
-    <script type="text/javascript" src="js/jquery-ui-1.8.16.custom.min.js"></script>
-    <script type="text/javascript" src="js/jquery.dashboard.min.js"></script>
-    <!--<script type="text/javascript" src="js/lib/themeroller.js"></script> -->
-	<link rel="stylesheet" type="text/css" href="css/appfactory.css" />
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/lib/jquery/jquery-1.7.2.min.js'))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/lib/jquery/jquery-ui-1.8.16.custom.min.js'))%>"></script>
+    <script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/lib/jquery/jquery.dashboard.min.js'))%>"></script>
+    <!--<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/themeroller.js'))%>"></script> -->
+	<link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/appfactory.css'))%>" />
 
-    <link rel="stylesheet" type="text/css" href="themes/default/dashboardui.css" />
-    <link rel="stylesheet" type="text/css" href="themes/default/jquery-ui-1.8.2.custom.css" />
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/dashboardui.css'))%>" />
+    <link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/jquery-ui-1.8.2.custom.css'))%>" />
 
 	<!-- Flotr2 -->
-	<link rel="stylesheet" type="text/css" href="css/editor.css" />
-	<link rel="stylesheet" type="text/css" href="css/flotr.css" />
-	<link rel="stylesheet" type="text/css" href="css/codemirror.css" />
-	<link rel="stylesheet" type="text/css" href="css/demo_page.css" />
-	<link rel="stylesheet" type="text/css" href="css/demo_table.css" />
+	<link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/editor.css'))%>" />
+	<link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/flotr.css'))%>" />
+	<link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/codemirror.css'))%>" />
+	<link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/demo_page.css'))%>" />
+	<link rel="stylesheet" type="text/css" href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/demo_table.css'))%>" />
 	
-	<script type="text/javascript" src="js/flotr2.min.js"></script>
-	<script type="text/javascript" src="js/codemirror.js"></script>
-	<script type="text/javascript" src="js/javascript.js"></script>
-	<script type="text/javascript" src="js/beautify.js"></script>
-	<script type="text/javascript" src="js/randomseed.js"></script>
-	<script type="text/javascript" src="js/jquery.ba-hashchange.min.js"></script>
-	<script type="text/javascript" src="js/yepnope.js"></script>
-	<script type="text/javascript" src="js/includes.min.js"></script>
-	
-	<script type="text/javascript" src="js/jquery.dataTables.js"></script>
-	
-    <!-- Le styles -->
-    <link href="lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/flotr2.min.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/codemirror.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/javascript.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/beautify.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/randomseed.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/lib/jquery/jquery.ba-hashchange.min.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/yepnope.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/includes.min.js'))%>"></script>
+	<script type="text/javascript" src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/lib/jquery/jquery.dataTables.js'))%>"></script>
+
+    <link href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/lib/bootstrap/css/bootstrap.css'))%>" rel="stylesheet">
     <style type="text/css">
         body {
             padding-top: 60px;
             padding-bottom: 40px;
         }
     </style>
-    <link href="lib/bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
-    <link href="css/localstyles.css" rel="stylesheet">
+    <link href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('js/lib/bootstrap/css/bootstrap-responsive.css'))%>" rel="stylesheet">
+    <link href="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('css/localstyles.css'))%>" rel="stylesheet">
 
     <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
-    <script src="lib/html5/html5.js"></script>
+    <script src="<%=jagg.getAbsoluteUrl(jagg.getThemeFile('lib/html5/html5.js'))%>"></script>
     <![endif]-->
-
-    <!-- Le fav and touch icons -->
-    <!-- <link rel="shortcut icon" href="../assets/ico/favicon.ico">
-    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
-    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">-->
 	
 <% }); %>

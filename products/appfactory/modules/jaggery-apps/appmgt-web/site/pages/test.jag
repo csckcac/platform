@@ -1,0 +1,36 @@
+<%
+include("/jagg/jagg.jag");
+var site = require("/site/conf/site.json");
+
+(function () {
+    var apis, site, tag, query, result, mod, user = jagg.getUser();
+    if (!user) {
+        response.sendRedirect(jagg.getAbsoluteUrl("/"));
+        return;
+    }
+
+    jagg.render({
+        "name":"page/base",
+        "inputs":{
+            "title":"Test",
+            "pagePath":"/site/pages/test.jag",
+            "body":[
+                {
+                    "name":"layout/base",
+                    "inputs":{
+                        "title":"test",
+                        "middle":[
+                            {
+                                "name":"test/test-add",
+                                "inputs":{
+                                    "apis":apis
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    });
+}());
+%>

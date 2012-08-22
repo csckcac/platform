@@ -1,0 +1,12 @@
+<% jagg.template("page/base", function(inputs, outputs, jagg) {%>
+<!DOCTYPE html>
+<html>
+<head>
+
+</head>
+<body>
+TEST
+
+</body>
+</html>
+<% }); %>

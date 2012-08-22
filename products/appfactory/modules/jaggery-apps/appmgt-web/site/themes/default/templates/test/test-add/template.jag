@@ -1,0 +1,5 @@
+<% jagg.template("test/test-add", function(inputs, outputs, jagg) { %>
+ 
+ <p>TEST</p>
+ 
+<% }); %>

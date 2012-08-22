@@ -1,0 +1,5 @@
+<%
+var addApplication = function () {
+    return "TEST >>>>>>>>>>>>>>>>>>>>..";
+};
+%>

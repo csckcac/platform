@@ -1,0 +1,11 @@
+<%
+jagg.block("layout/add", {
+    initialize:function (data) {
+
+    }
+
+
+
+
+});
+%>

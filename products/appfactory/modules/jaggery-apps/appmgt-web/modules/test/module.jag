@@ -1,0 +1,9 @@
+<%
+jagg.module("test", {
+
+    addApplication:function () {
+        return jagg.require(jagg.getModulesDir() + "test/add.jag").addApplication.apply(this, arguments);
+    },
+
+});
+%>

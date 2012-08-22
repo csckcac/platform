@@ -487,6 +487,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             serviceTypeParam = axisService.getParameter(ServerConstants.SERVICE_TYPE);
             if (serviceTypeParam != null) {
                 serviceType = (String) serviceTypeParam.getValue();
+                serviceTypes.add(serviceType);
             }
             // Filter out client side services
             if (axisService.isClientSide()) {

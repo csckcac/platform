@@ -110,6 +110,7 @@ public class ServiceGroupAdmin extends AbstractAdmin {
                         .getParameter(ServerConstants.SERVICE_TYPE);
                 if (serviceTypeParam != null) {
                     serviceType = (String) serviceTypeParam.getValue();
+                    serviceTypes.add(serviceType);
                 }
             }
             if (!serviceTypeFilter.equals("ALL")) {

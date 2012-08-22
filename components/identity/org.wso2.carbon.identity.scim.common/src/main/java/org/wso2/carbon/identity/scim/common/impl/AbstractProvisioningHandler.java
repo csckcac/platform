@@ -55,65 +55,66 @@ public abstract class AbstractProvisioningHandler {
                 //get endpoint url according to the scim object to be provisioned
                 String endpointUrl = getSCIMEndpointURL(scimObject, scimProviderEntry.getValue());
 
-                //get user name & password for the provider registered for the consumer 
-                String userName = scimProviderEntry.getValue().getProperty(
-                        SCIMConfigConstants.ELEMENT_NAME_USERNAME);
-                String password = scimProviderEntry.getValue().getProperty(
-                        SCIMConfigConstants.ELEMENT_NAME_PASSWORD);
+                if (endpointUrl != null) {
+                    //get user name & password for the provider registered for the consumer
+                    String userName = scimProviderEntry.getValue().getProperty(
+                            SCIMConfigConstants.ELEMENT_NAME_USERNAME);
+                    String password = scimProviderEntry.getValue().getProperty(
+                            SCIMConfigConstants.ELEMENT_NAME_PASSWORD);
 
-                //get the content type defined for the relevant provider
-                String contentType = scimProviderEntry.getValue().getProperty(SCIMConstants.CONTENT_TYPE_HEADER);
-                if (contentType == null) {
-                    contentType = SCIMConstants.APPLICATION_JSON;
-                }
-                //identify http method & invoke provisioning operation accordingly
+                    //get the content type defined for the relevant provider
+                    String contentType = scimProviderEntry.getValue().getProperty(SCIMConstants.CONTENT_TYPE_HEADER);
+                    if (contentType == null) {
+                        contentType = SCIMConstants.APPLICATION_JSON;
+                    }
+                    //identify http method & invoke provisioning operation accordingly
 
-                //create relevant http method
-                switch (httpMethodInt) {
-                    case SCIMConstants.DELETE:
-                        //delete the object at the scim endpoint
+                    //create relevant http method
+                    switch (httpMethodInt) {
+                        case SCIMConstants.DELETE:
+                            //delete the object at the scim endpoint
 
-                    case SCIMConstants.POST:
-                        //create the object at the scim endpoint
-                        PostMethod postMethod = new PostMethod(endpointUrl);
-                        //add basic auth header
-                        postMethod.addRequestHeader(SCIMConstants.AUTHORIZATION_HEADER,
-                                                    BasicAuthUtil.getBase64EncodedBasicAuthHeader(userName, password));
+                        case SCIMConstants.POST:
+                            //create the object at the scim endpoint
+                            PostMethod postMethod = new PostMethod(endpointUrl);
+                            //add basic auth header
+                            postMethod.addRequestHeader(SCIMConstants.AUTHORIZATION_HEADER,
+                                                        BasicAuthUtil.getBase64EncodedBasicAuthHeader(userName, password));
 
-                        RequestEntity requestEntity = new StringRequestEntity(encodedSCIMObject,
-                                                                              contentType, null);
-                        postMethod.setRequestEntity(requestEntity);
+                            RequestEntity requestEntity = new StringRequestEntity(encodedSCIMObject,
+                                                                                  contentType, null);
+                            postMethod.setRequestEntity(requestEntity);
 
-                        int responseStatus = client.executeMethod(postMethod);
-                        logger.info("SCIM - addUser returned with response code: " + responseStatus);
+                            int responseStatus = client.executeMethod(postMethod);
+                            logger.info("SCIM - addUser returned with response code: " + responseStatus);
 
-                        String response = postMethod.getResponseBodyAsString();
-                        logger.info(response);
-                        if (scimClient.evaluateResponseStatus(responseStatus)) {
-                            scimClient.decodeSCIMResponse(response, SCIMConstants.JSON,
-                                                          SCIMConstants.USER_INT);
-                        } else {
-                            scimClient.decodeSCIMException(response, SCIMConstants.JSON);
-                        }
+                            String response = postMethod.getResponseBodyAsString();
+                            logger.info(response);
+                            if (scimClient.evaluateResponseStatus(responseStatus)) {
+                                scimClient.decodeSCIMResponse(response, SCIMConstants.JSON,
+                                                              SCIMConstants.USER_INT);
+                            } else {
+                                scimClient.decodeSCIMException(response, SCIMConstants.JSON);
+                            }
 
-                    case SCIMConstants.PUT:
-                        //update the object at the scim endpoint
+                        case SCIMConstants.PUT:
+                            //update the object at the scim endpoint
 
+                    }
                 }
             }
-        }
-        catch (IdentitySCIMException e) {
-            e.printStackTrace();
+        } catch (IdentitySCIMException e) {
+            logger.error(e.getMessage());
         } catch (BadRequestException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (HttpException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         } catch (CharonException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 

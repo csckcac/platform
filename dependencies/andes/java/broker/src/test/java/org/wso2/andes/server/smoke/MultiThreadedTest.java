@@ -12,6 +12,7 @@ public class MultiThreadedTest {
     private static final AtomicInteger sentCount = new AtomicInteger(); 
     private static final AtomicInteger receivedCount = new AtomicInteger(); 
     int messageCountPerThread = 1000;
+    private boolean closeSesionPerMessage = true; 
 
     
     protected TextMessage createMessage(int threadIndex, int i, Session session, int globalMsgIndex) throws JMSException{
@@ -35,18 +36,38 @@ public class MultiThreadedTest {
         public void run() {
             int count = 0;
             MessageProducer producer = null; 
-            try {
-                producer = session.createProducer(destination);
-                long start = System.currentTimeMillis();
-                for (int i = 0; i < messageCountPerThread; i++) {
-                    int globalMsgIndex = sentCount.incrementAndGet();
+            long start = System.currentTimeMillis();
 
-                    TextMessage textMessage = createMessage(threadIndex, i, session, globalMsgIndex); 
-                    producer.send(textMessage);
-                    if(count%10 == 0){
-                        System.out.println("Thread : " + threadIndex + "   sending message = " + i);
+            try {
+                if(closeSesionPerMessage){
+                    session.close();
+                    for (int i = 0; i < messageCountPerThread; i++) {
+                        session = con.createSession(false, Session.AUTO_ACKNOWLEDGE);
+                        producer = session.createProducer(destination);
+                        int globalMsgIndex = sentCount.incrementAndGet();
+                        TextMessage textMessage = createMessage(threadIndex, i, session, globalMsgIndex); 
+                        producer.send(textMessage);
+                        if(count%10 == 0){
+                            System.out.println("Thread : " + threadIndex + "   sending message = " + i);
+                        }
+                        count++;
+                        producer.close();
+                        session.close();
                     }
-                    count++;
+                }else{
+                    producer = session.createProducer(destination);
+                    for (int i = 0; i < messageCountPerThread; i++) {
+                        int globalMsgIndex = sentCount.incrementAndGet();
+
+                        TextMessage textMessage = createMessage(threadIndex, i, session, globalMsgIndex); 
+                        producer.send(textMessage);
+                        if(count%10 == 0){
+                            System.out.println("Thread : " + threadIndex + "   sending message = " + i);
+                        }
+                        count++;
+                    }
+                    producer.close();
+                    session.close();
                 }
                 double throughput = messageCountPerThread * 1000d / (System.currentTimeMillis() - start);
                 System.out.println("Thread : " + threadIndex + " Successfully finished, thoughput=" + throughput);
@@ -57,8 +78,6 @@ public class MultiThreadedTest {
             } finally {
                 try {
                     con.close();
-                    session.close();
-                    producer.close();
                 } catch (JMSException e) {
                     e.printStackTrace(); // To change body of catch
                                          // statement use File | Settings |

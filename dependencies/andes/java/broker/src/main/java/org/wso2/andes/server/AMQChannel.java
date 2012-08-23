@@ -302,7 +302,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
             mmd.set_clientIP(_session.toString().substring(0,_session.toString().indexOf(":")));
             final StoredMessage<MessageMetaData> handle = _messageStore.addMessage(mmd);
             if( handle instanceof CassandraMessageStore.StoredCassandraMessage){
-                ((CassandraMessageStore.StoredCassandraMessage) handle).setChannelID(this.getChannelId());
+                ((CassandraMessageStore.StoredCassandraMessage) handle).setChannelID(this.getId().toString());
             }
             _currentMessage.setStoredMessage(handle);
 
@@ -408,7 +408,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                             }
                         }
                     }
-                }, this.getChannelId());
+                }, getId().toString());
             }
             finally
             {
@@ -599,7 +599,7 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
         getConfigStore().removeConfiguredObject(this);
         
         //here we will wait for  all jobs from this channel to end
-        AndesExecuter.wait4JobsfromThisChannel2End(this.getChannelId());
+        AndesExecuter.wait4JobsfromThisChannel2End(this.getId().toString());
     }
 
     private void unsubscribeAllConsumers() throws AMQException

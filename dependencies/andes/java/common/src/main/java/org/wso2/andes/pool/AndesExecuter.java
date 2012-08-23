@@ -15,7 +15,7 @@ import org.apache.commons.logging.LogFactory;
 public class AndesExecuter {
 
     private static Log log = LogFactory.getLog(AndesExecuter.class);
-    private static Map<Integer, PendingJob> pendingJobsTracker = new ConcurrentHashMap<Integer, PendingJob>();
+    private static Map<String, PendingJob> pendingJobsTracker = new ConcurrentHashMap<String, PendingJob>();
     private static ExecutorService executorService = Executors.newFixedThreadPool(8);
     static {
         new Thread(new Runnable() {
@@ -36,21 +36,23 @@ public class AndesExecuter {
         }).start();
     }
 
-    public static Future<?> submit(Runnable job, int channelId) {
-        synchronized (pendingJobsTracker) {
-            PendingJob pendingJob = pendingJobsTracker.get(channelId);
-            if(pendingJob == null){
-                pendingJob = new PendingJob(); 
-                pendingJobsTracker.put(channelId, pendingJob);
+    public static Future<?> submit(Runnable job, String channelId) {
+        if(channelId != null){
+            synchronized (pendingJobsTracker) {
+                PendingJob pendingJob = pendingJobsTracker.get(channelId);
+                if(pendingJob == null){
+                    pendingJob = new PendingJob(); 
+                    pendingJobsTracker.put(channelId, pendingJob);
+                }
+                pendingJob.submittedJobs = pendingJob.submittedJobs + 1;
             }
-            pendingJob.submittedJobs = pendingJob.submittedJobs + 1;
         }
         return executorService.submit(new RunnableWrapper(job, channelId));
     }
 
     public static class RunnableWrapper implements Runnable {
         Runnable runnable;
-        long channelID;
+        String channelID;
         @Override
         public void run() {
             try {
@@ -61,7 +63,7 @@ public class AndesExecuter {
                             .append(" ").append(System.currentTimeMillis() - start));
                 }
             } finally{
-                if(channelID >= 0){
+                if(channelID != null){
                     synchronized (pendingJobsTracker) {
                         pendingJobsTracker.get(channelID).semaphore.release();
                     }
@@ -69,7 +71,7 @@ public class AndesExecuter {
             }
         }
 
-        public RunnableWrapper(Runnable runnable, long channelID) {
+        public RunnableWrapper(Runnable runnable, String channelID) {
             this.runnable = runnable;
             this.channelID = channelID;
         }
@@ -81,7 +83,7 @@ public class AndesExecuter {
     }
     
     
-    public static void wait4JobsfromThisChannel2End(int channelId){
+    public static void wait4JobsfromThisChannel2End(String channelId){
         PendingJob pendingJobs; 
         synchronized (pendingJobsTracker) {
             pendingJobs = pendingJobsTracker.get(channelId);

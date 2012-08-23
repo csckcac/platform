@@ -1980,7 +1980,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
 
         private final long _messageId;
         private StorableMessageMetaData metaData; 
-        private int channelID; 
+        private String channelID; 
         
         private StoredCassandraMessage(long messageId, StorableMessageMetaData metaData) {
             this._messageId = messageId;
@@ -2039,11 +2039,11 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
             return IMMEDIATE_FUTURE;
         }
 
-        public int getChannelID() {
+        public String getChannelID() {
             return channelID;
         }
 
-        public void setChannelID(int channelID) {
+        public void setChannelID(String channelID) {
             this.channelID = channelID;
         }
 
@@ -2099,7 +2099,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                         }
 
                     }
-                }, -1);
+                }, null);
             } catch (Throwable e) {
 
                 log.error("Error adding Queue Entry ", e);
@@ -2120,7 +2120,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                              log.error("Error deleting Queue Entry", e);
                         }
                     }
-                }, -1);
+                }, null);
             } catch (Throwable e) {
                 log.error("Error deleting Queue Entry", e);
                 throw new AMQStoreException("Error deleting Queue Entry :"
@@ -2536,7 +2536,7 @@ public void addMessageBatchToUserQueues(CassandraQueueMessage[] messages) throws
                                             e.printStackTrace();
                                         }
                                     }
-                               }, -1);
+                               }, null);
 
             } catch (InterruptedException e) {
                 throw new RuntimeException("Error while adding Incomming message", e);

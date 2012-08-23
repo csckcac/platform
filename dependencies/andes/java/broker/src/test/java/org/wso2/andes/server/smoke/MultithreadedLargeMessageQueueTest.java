@@ -7,8 +7,8 @@ import javax.jms.Session;
 import javax.jms.TextMessage;
 
 public class MultithreadedLargeMessageQueueTest extends MultiThreadedTest{
-    //private int messageSize = 164*1024; ;
-    private int messageSize = 1024*1024; ;
+    private int messageSize = 164*1024; ;
+    //private int messageSize = 10*1024*1024; ;
     Random random = new Random();
     
     
@@ -22,7 +22,7 @@ public class MultithreadedLargeMessageQueueTest extends MultiThreadedTest{
         }
         
         message = new String(buf); 
-        messageCountPerThread = 10;
+        messageCountPerThread = 100;
     }
     @Override
     protected TextMessage createMessage(int threadIndex, int i, Session session, int globalMsgIndex)

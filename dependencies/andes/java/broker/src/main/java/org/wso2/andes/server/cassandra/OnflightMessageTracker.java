@@ -82,6 +82,19 @@ public class OnflightMessageTracker {
         }
     }
     
+    /** 
+     * This cleanup the current message ID form tracking. Useful for undo changes in case of a failure
+     * @param deliveryTag
+     * @param messageId
+     * @param channelID
+     */
+    public void removeMessage(long deliveryTag, long messageId, int channelID){
+        Long messageIDStored = deliveryTag2MsgID.remove(deliveryTag);
+        if(messageIDStored != null && messageIDStored.longValue() == messageId){
+            throw new RuntimeException("Delivery Tag reused, this should not happen");
+        }
+        msgId2MsgData.remove(messageId);
+    }
     
     public synchronized boolean testAndAddMessage(long deliveryTag, long messageId, String queue, int channelID){
         String deliveryID = new StringBuffer(String.valueOf(channelID)).append(deliveryTag).toString(); 

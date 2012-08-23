@@ -30,6 +30,7 @@ import org.wso2.andes.framing.AMQShortString;
 import org.wso2.andes.framing.FieldTable;
 import org.wso2.andes.server.AMQChannel;
 import org.wso2.andes.server.ClusterResourceHolder;
+import org.wso2.andes.server.cassandra.OnflightMessageTracker;
 import org.wso2.andes.server.cassandra.QueueSubscriptionAcknowledgementHandler;
 import org.wso2.andes.server.configuration.*;
 import org.wso2.andes.server.filter.FilterManager;
@@ -294,20 +295,45 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                         }
 
                     }
+                    int retryCount = 3;
+                    long waitTime = 1000;
+                    //If there is a failure, it is unlikely that any follow calls up will work. So we will try 3 times waiting
+                    // for 1 second before giving up. After giving up, messages may be delivered out of order
+                    //this often happens becouse message ID is written before all the content is written. 
+                    for (int i = 0; i < retryCount; i++) {
+                        try {
+                            String queue = entry.getQueue().getResourceName() + "_"
+                                    + ClusterResourceHolder.getInstance().getClusterManager().getNodeId();
+                            if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(), queue,
+                                    getChannel().getChannelId())) {
 
-                    String queue = entry.getQueue().getResourceName() + "_" + ClusterResourceHolder.getInstance().getClusterManager().getNodeId(); 
-                    if (ackHandler.checkAndRegisterSent(deliveryTag, entry.getMessage().getMessageNumber(),
-                            queue, getChannel().getChannelId())) {
-                        
-                        ByteBuffer buf = ByteBuffer.allocate(100); 
-                        int readCount = entry.getMessage().getContent(buf, 0);
-                        log.debug("sent1("+ entry.getMessage().getMessageNumber() + ")" + new String(buf.array(),0, readCount)); 
-                        sendToClient(entry, deliveryTag);
-                    } else {
-                        if (log.isDebugEnabled()) {
-                            log.info("Sent stopped for "+ entry.getMessage().getMessageNumber());
+                                ByteBuffer buf = ByteBuffer.allocate(100);
+                                int readCount = entry.getMessage().getContent(buf, 0);
+                                log.debug("sent1(" + entry.getMessage().getMessageNumber() + ")"
+                                        + new String(buf.array(), 0, readCount));
+                                sendToClient(entry, deliveryTag);
+                                break;
+                            } else {
+                                if (log.isDebugEnabled()) {
+                                    log.debug("Sent stopped for " + entry.getMessage().getMessageNumber());
+                                }
+                                break;
+                            }
+                        } catch (Throwable e) {
+                            //undo any changes in the message tracker
+                            OnflightMessageTracker.getInstance().removeMessage(deliveryTag, entry.getMessage().getMessageNumber(), 
+                                    getChannel().getChannelId());
+                            if(i < retryCount -1){
+                                //will try again
+                                Thread.sleep(waitTime);
+                            }else{
+                                //we are done with all retries, so giving up. This will be picked up by Cassandra message
+                                //publisher and get delivered, but then it will be done out of order
+                                throw new AMQException("Error sending message ID"+ entry.getMessage().getMessageNumber() + " "+ e.getMessage(), e);
+                            }
                         }
                     }
+                    
                 }
             } catch (Exception e) {
                 throw new AMQException(e.toString());

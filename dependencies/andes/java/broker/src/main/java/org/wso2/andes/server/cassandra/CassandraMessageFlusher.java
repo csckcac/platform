@@ -11,7 +11,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.andes.AMQException;
 import org.wso2.andes.server.ClusterResourceHolder;
 import org.wso2.andes.server.configuration.ClusterConfiguration;
 import org.wso2.andes.server.message.AMQMessage;
@@ -39,13 +38,9 @@ public class CassandraMessageFlusher extends Thread{
 
     private static Log log = LogFactory.getLog(CassandraMessageFlusher.class);
 
-    private ExecutorService executor =  null;
-
-
     private int messageCountToRead = 20;
 
 
-    private int ackTime;
 
 
     private long lastProcessedId = 0;
@@ -70,13 +65,7 @@ public class CassandraMessageFlusher extends Thread{
         this.messageCountToRead = clusterConfiguration.
                 getMessageBatchSizeForSubscribers();
 
-        this.executor = Executors.newFixedThreadPool(clusterConfiguration.getFlusherPoolSize());
-
-        this.ackTime = ClusterResourceHolder.getInstance().getClusterConfiguration().getMaxAckWaitTime();
-        
         //Following senders sends messages to end users, we submit all messages to same subscriber to one sender
-        
-        
         senderQueues = new ArrayList<ExecutorService>();
         for(int i =0;i< clusterConfiguration.getFlusherPoolSize(); i++ ){
             senderQueues.add(Executors.newFixedThreadPool(1)); 
@@ -232,18 +221,13 @@ public class CassandraMessageFlusher extends Thread{
             Runnable r = new Runnable() {
                 @Override
                 public void run() {
-                    String oldName = Thread.currentThread().getName();
-                    Thread.currentThread().setName("MessageFlusher-AsyncDelivery-Thread : " + oldName);
                     try {
                         if (subscription instanceof SubscriptionImpl.AckSubscription) {
                             subscription.send(message);
-
                         } else {
                             log.error("Unexpected Subscription Implementation : " +
                                     subscription !=null?subscription.getClass().getName():null);
                         }
-                    } catch (AMQException e) {
-                        log.error("Error while delivering message " ,e);
                     } catch (Throwable e) {
                          log.error("Error while delivering message " ,e);
                     }

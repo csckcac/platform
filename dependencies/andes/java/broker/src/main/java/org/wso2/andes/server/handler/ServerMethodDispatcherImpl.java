@@ -142,7 +142,7 @@ public class ServerMethodDispatcherImpl implements MethodDispatcher
                     e.printStackTrace();
                 }
             }
-        }, -1);
+        }, null);
         return true;
     }
 

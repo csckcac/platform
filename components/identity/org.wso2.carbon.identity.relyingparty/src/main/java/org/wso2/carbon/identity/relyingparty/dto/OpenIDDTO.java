@@ -30,7 +30,7 @@ public class OpenIDDTO {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.userName = userName.trim();
     }
 
     public String getPassword() {
@@ -38,7 +38,7 @@ public class OpenIDDTO {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.password = password.trim();
     }
 
     private ClaimDTO[] claims;
@@ -47,7 +47,7 @@ public class OpenIDDTO {
 		return openID;
 	}
 	public void setOpenID(String openID) {
-		this.openID = openID;
+		this.openID = openID.trim();
 	}
 	public ClaimDTO[] getClaims() {
 		return Arrays.copyOf(claims, claims.length);

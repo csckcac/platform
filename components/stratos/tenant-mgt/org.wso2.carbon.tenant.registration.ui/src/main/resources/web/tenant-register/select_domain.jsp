@@ -339,7 +339,7 @@
                                 </tr>
                                 <tr>
                                     <td><input type="checkbox" name="activateButton" id="activateButton"
-                                               onchange="activateSubmit(form.activateButton.checked)"/>
+                                               onclick="activateSubmit(form.activateButton.checked)"/>
                                         <label for="activateButton"><fmt:message key="accept.eula"/></label></td>
                                 </tr>
                                 <%

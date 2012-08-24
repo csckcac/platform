@@ -23,4 +23,8 @@ public class SCIMConsumerConstants {
     public static final String USER_NAME_ELEMENT_NAME = "userName";
     public static final String PASSWORD_ELEMENT_NAME = "password";
     public static final String TENANT_DOMAIN_ELEMENT_NAME = "tenantDomain";
+
+    //constants used to extract info from create role soap envelope
+    public static final String ROLE_NAME_ELEMENT_NAME = "roleName";
+    public static final String USER_LIST_ELEMENT_NAME = "userList";
 }

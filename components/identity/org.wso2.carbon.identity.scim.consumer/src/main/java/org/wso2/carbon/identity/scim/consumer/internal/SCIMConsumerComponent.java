@@ -34,22 +34,26 @@ public class SCIMConsumerComponent {
 
     protected void activate(ComponentContext cxt) throws IdentitySCIMException {
 
-        AddUserExtension addUserExtension = new AddUserExtension();
-        //register add user extension
-        cxt.getBundleContext().registerService(PrivilegedAction.class.getName(), addUserExtension, null);
-        if (logger.isDebugEnabled()) {
-            logger.debug("SCIM AddUser Extension was registered successfully.");
-        }
+        try {
+            AddUserExtension addUserExtension = new AddUserExtension();
+            //register add user extension
+            cxt.getBundleContext().registerService(PrivilegedAction.class.getName(), addUserExtension, null);
+            if (logger.isDebugEnabled()) {
+                logger.debug("SCIM AddUser Extension was registered successfully.");
+            }
 
-        AddGroupExtension addGroupExtension = new AddGroupExtension();
-        //register add group extension
-        cxt.getBundleContext().registerService(PrivilegedAction.class.getName(), addGroupExtension, null);
-        if (logger.isDebugEnabled()) {
-            logger.debug("SCIM AddGroup Extension was registered successfully.");
-        }
+            AddGroupExtension addGroupExtension = new AddGroupExtension();
+            //register add group extension
+            cxt.getBundleContext().registerService(PrivilegedAction.class.getName(), addGroupExtension, null);
+            if (logger.isDebugEnabled()) {
+                logger.debug("SCIM AddGroup Extension was registered successfully.");
+            }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("SCIMConsumerComponent activated successfully.");
+            if (logger.isDebugEnabled()) {
+                logger.debug("SCIMConsumerComponent activated successfully.");
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();  
         }
     }
 

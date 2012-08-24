@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.identity.scim.common.utils.IdentitySCIMException;
 import org.wso2.carbon.identity.scim.consumer.utils.SCIMConsumerConstants;
 import org.wso2.carbon.server.admin.privilegedaction.PrivilegedAction;
 import org.wso2.carbon.server.admin.privilegedaction.PrivilegedActionException;
@@ -33,13 +34,6 @@ import javax.xml.namespace.QName;
 
 public class AddUserExtension extends AbstractPrivilegedActionExtension
         implements PrivilegedAction {
-
-    /**
-     * for the moment, have some hard coded urls and credentials..
-     */
-    public static String USER_ENDPOINT = "http://localhost:9763/wso2/scim/Users";
-    public static String USER_NAME = "admin";
-    public static String PASSWORD = "admin";
 
     private static Log logger = LogFactory.getLog(AddUserExtension.class.getName());
     private final String EXTENSION_NAME = "addUserExtension";
@@ -62,12 +56,15 @@ public class AddUserExtension extends AbstractPrivilegedActionExtension
             logger.debug("AddUser SCIM Extension was invoked...");
         }
         try {
+            //TODO:hand it over to a separate thread
             //get the tenant domain from message context
             String tenantDomain = (String) inMessageContext.getProperty(
                     SCIMConsumerConstants.TENANT_DOMAIN_ELEMENT_NAME);
 
             if (isSCIMConsumerEnabled(tenantDomain)) {
-
+                if (logger.isDebugEnabled()) {
+                    logger.debug("AddUser SCIM Extension is being executed for tenant : " + tenantDomain);
+                }
                 //extract info from SOAP envelope
                 String userName = null;
                 String password = null;
@@ -95,6 +92,8 @@ public class AddUserExtension extends AbstractPrivilegedActionExtension
             }
         } catch (CharonException e) {
             logger.error("Error in creating SCIM User..", e);
+        } catch (IdentitySCIMException e) {
+            logger.error(e.getMessage());
         }
     }
 
@@ -121,19 +120,19 @@ public class AddUserExtension extends AbstractPrivilegedActionExtension
     }
 
     public boolean isDisabled() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     public String getExtensionName() {
-        return EXTENSION_NAME;  //To change body of implemented methods use File | Settings | File Templates.
+        return EXTENSION_NAME;
     }
 
     public boolean skipServiceInvocation() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     public boolean skipLowerPriorityExtensions() {
-        return false;  //To change body of implemented methods use File | Settings | File Templates.
+        return false;
     }
 
     public boolean isAfterServiceCall() {

@@ -5,8 +5,6 @@ package org.wso2.carbon.hosting.mgt.service;
 
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.hosting.mgt.internal.Store;
-import org.wso2.carbon.hosting.mgt.openstack.db.OpenstackDAO;
 import org.wso2.carbon.hosting.mgt.utils.CartridgeConstants;
 import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
 import org.apache.commons.logging.Log;
@@ -16,6 +14,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.utils.AppsWrapper;
@@ -29,6 +29,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 public class ApplicationManagementService extends AbstractAdmin{
 
     private static final Log log = LogFactory.getLog(ApplicationManagementService.class);
+
 
     /**
          * Upload apps passed to method. Will be uploaded to the directory relevant to tenant
@@ -50,6 +51,7 @@ public class ApplicationManagementService extends AbstractAdmin{
             try {
                 fos = new FileOutputStream(destFile);
                 uploadData.getDataHandler().writeTo(fos);
+                log.info("Files are successfully uploaded !" );
             } catch (IOException e) {
                 handleException("Error occurred while uploading the application " + fileName, e);
             } finally {
@@ -63,7 +65,6 @@ public class ApplicationManagementService extends AbstractAdmin{
                 }
             }
         }
-        log.info("Files are successfully uploaded !" );
         return true;
     }
 
@@ -115,35 +116,8 @@ public class ApplicationManagementService extends AbstractAdmin{
          AppsWrapper appsWrapper = new AppsWrapper();
         String[] apps= listApplications(cartridge);
         appsWrapper.setApps(apps);
-        appsWrapper.setEndPoints(getEndPoints(apps));
         appsWrapper.setNumberOfPages(1);
         return appsWrapper;
-    }
-
-    /**
-     * End points relevant to different applications according to the instance, or if instance is
-     * not there an error mesage
-     * @param apps
-     * @return
-     */
-    private String[] getEndPoints(String[] apps) {
-        String[] endPoints;
-        if(apps != null){
-            endPoints = new String[apps.length];
-            int tenantId = MultitenantUtils.getTenantId(getConfigContext());
-            String tenantIdentityForUrl = "";
-            if(tenantId != -1234) {
-               tenantIdentityForUrl = "/t/" + tenantId ;
-            }
-            for(int i = 0; i < endPoints.length; i++){
-                    String publicIp = Store.tenantToPublicIpMap.get(tenantId);
-                    endPoints[i] = "http://" + publicIp + tenantIdentityForUrl + "/" + apps[i]
-                                   + "/" + apps[i] + ".php";
-            }
-        }   else {
-            endPoints = null;
-        }
-        return endPoints;
     }
 
 
@@ -169,5 +143,7 @@ public class ApplicationManagementService extends AbstractAdmin{
         cartridgeTitles = imageIdsString.split(",");
         return cartridgeTitles;
     }
+
+         
 
 }

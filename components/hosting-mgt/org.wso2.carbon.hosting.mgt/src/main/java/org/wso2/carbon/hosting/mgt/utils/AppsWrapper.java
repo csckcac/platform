@@ -24,7 +24,6 @@ import java.util.List;
  */
 public final class AppsWrapper implements Pageable {
     private String[] apps;
-    private String[] endPoints;
     private int numberOfApps;
     private int numberOfPages;
     private String appsDir;
@@ -74,12 +73,5 @@ public final class AppsWrapper implements Pageable {
         this.apps = Apps;
     }
 
-    public String[] getEndPoints() {
-        return endPoints;
-    }
-
-    public void setEndPoints(String[] endPoints) {
-        this.endPoints = endPoints;
-    }
 }
 

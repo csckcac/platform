@@ -50,6 +50,7 @@ div#header-div div.middle-ad {
 	margin-top: 18px;
 	height: 55px;
 	width: 35%;
+	display:none;
 }
 
 div#header-div div.right-logo {

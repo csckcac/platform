@@ -9,7 +9,7 @@ table#main-table td#menu-panel {
 	background-image: url(theme-menu-panel-l-bg.gif);
 	background-position: left top;
 	background-repeat: no-repeat;
-	padding-left: 13px;
+	padding-left: 0;
 	background-color: #F4F4F4;
 }
 
@@ -28,7 +28,7 @@ table#main-table td#menu-panel table#menu-table tbody tr td img {
 /* ---------------- header styles ------------------ */
 div#header-div {
     background-image: url( theme-header-bg.gif);
-    height: 115px;
+    height: 103px;
 }
 
 div#header-div div.left-logo {
@@ -44,6 +44,7 @@ div#header-div div.middle-ad {
 	margin-top: 18px;
 	height: 55px;
 	width: 35%;
+	display:none;
 }
 
 div#header-div div.right-logo {
@@ -61,7 +62,7 @@ div#header-div div.right-logo {
     	width:500px;
 }
 div#header-div div.header-links {
-	margin-top:0px;
+	margin-top:-10px;
 }
 div#header-div div.header-links div.right-links {
 	margin-right: 0px;

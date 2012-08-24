@@ -19,6 +19,7 @@ package org.wso2.carbon.identity.scim.provider.impl;
 
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.scim.common.impl.AbstractProvisioningHandler;
+import org.wso2.carbon.identity.scim.common.utils.IdentitySCIMException;
 import org.wso2.carbon.user.api.Claim;
 import org.wso2.carbon.user.api.ClaimManager;
 import org.wso2.carbon.user.api.UserStoreException;
@@ -54,7 +55,6 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
     }
 
     public User createUser(User user) throws CharonException {
-        log.info("User: " + user.getUserName() + " is created.");
         //get user attributes map: <String(scimAttributeName),Attribute-(simple,multivalue,complex)>
 
         //if attribute == simple, new attribute map: <String(attributeName),value>
@@ -74,7 +74,9 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
         //String[] roles = (String[]) user.getGroups().toArray();
 
         try {
+            //TODO:add id value to user attributes since it is used to query users
             carbonUM.addUser(user.getUserName(), user.getPassword(), null, claims, null);
+            log.info("User: " + user.getUserName() + " is created through SCIM.");
             //if a consumer is registered for this SCIM operation, provision as appropriate
             if (isSCIMConsumerEnabled(consumerName)) {
                 this.provision(consumerName, user, SCIMConstants.POST);
@@ -82,10 +84,11 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
         } catch (UserStoreException e) {
             throw new CharonException("Error in adding the user: " + user.getUserName() +
                                       " to the user store..");
+        } catch (IdentitySCIMException e) {
+            throw new CharonException(e.getMessage());
         }
         //carbonUM.
         // when user claims are returned convert them to SCIM claims and construct SCIM attributes.
-
         return user;
     }
 
@@ -159,7 +162,34 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
     }
 
     public Group createGroup(Group group) throws CharonException {
-        return null;
+        try {
+            /*if members are sent when creating the group, check whether users already exist in the
+            user store*/
+            List<String> members = group.getMembersWithDisplayName();
+            if (members != null && !members.isEmpty()) {
+                for (String member : members) {
+                    if (!carbonUM.isExistingUser(member)) {
+                        String error = "User: " + member + " doesn't exist in the user store. " +
+                                       "Hence, can not add the group: " + group.getDisplayName();
+                        throw new IdentitySCIMException(error);
+                    }
+                }
+                carbonUM.addRole(group.getDisplayName(), members.toArray(new String[members.size()]), null);
+                log.info("group: " + group.getDisplayName() + " is created through SCIM.");
+            } else {
+                carbonUM.addRole(group.getDisplayName(), null, null);
+                log.info("group: " + group.getDisplayName() + " is created through SCIM.");
+            }
+            if (isSCIMConsumerEnabled(consumerName)) {
+                this.provision(consumerName, group, SCIMConstants.POST);
+            }
+        } catch (UserStoreException e) {
+            throw new CharonException(e.getMessage());
+        } catch (IdentitySCIMException e) {
+            throw new CharonException(e.getMessage());
+        }
+        //TODO:after the group is added, read it from user store and return
+        return group;
     }
 
     public Group getGroup(String s) throws CharonException {

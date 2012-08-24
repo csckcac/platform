@@ -35,9 +35,10 @@ public class BasicAuthHandler implements AuthenticationHandler{
         //TODO:do what ever authentication
         //for the moment do not do any authentication at this level since transport
         // level auth will be enforced.
+        
         //set only user name in basic auth info which might be retrieved externally.
         basicAuthInfo.setPassword(null);
-        return true;  //To change body of implemented methods use File | Settings | File Templates.
+        return true;  
     }
 
     public AuthenticationInfo getAuthenticationToken(AuthenticationInfo authenticationInfo) {

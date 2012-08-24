@@ -173,8 +173,8 @@ public class IdentitySCIMManager implements CharonManager {
                     SuperTenantCarbonContext.getCurrentContext().getOSGiService(RealmService.class);
             if (realmService != null) {
                 int tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
-                //UserRealm userRealm = realmService.getTenantUserRealm(MultitenantConstants.SUPER_TENANT_ID);
                 UserRealm userRealm = realmService.getTenantUserRealm(tenantId);
+
                 if (userRealm != null) {
                     //check whether the user who is trying to obtain the realm is authorized
                     boolean isUserAuthorized = userRealm.getAuthorizationManager().isUserAuthorized(
@@ -188,7 +188,6 @@ public class IdentitySCIMManager implements CharonManager {
                 }
             } else {
                 String error = "Can not obtain carbon realm service..";
-                log.error(error);
                 throw new CharonException(error);
             }
             //get user store manager
@@ -196,7 +195,6 @@ public class IdentitySCIMManager implements CharonManager {
             String error = "Error obtaining tenant id for the user: " + userName;
             throw new CharonException(error);
         }
-        //return commonExtension;
         return scimUserManager;
     }
 

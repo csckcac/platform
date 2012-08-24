@@ -17,10 +17,11 @@
 */
 package org.wso2.carbon.identity.scim.provider.resources;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.scim.provider.impl.IdentitySCIMManager;
 import org.wso2.carbon.identity.scim.provider.util.JAXRSResponseBuilder;
 import org.wso2.charon.core.encoder.Encoder;
-import org.wso2.charon.core.exceptions.BadRequestException;
 import org.wso2.charon.core.exceptions.CharonException;
 import org.wso2.charon.core.exceptions.FormatNotSupportedException;
 import org.wso2.charon.core.exceptions.UnauthorizedException;
@@ -29,36 +30,33 @@ import org.wso2.charon.core.extensions.UserManager;
 import org.wso2.charon.core.protocol.ResponseCodeConstants;
 import org.wso2.charon.core.protocol.SCIMResponse;
 import org.wso2.charon.core.protocol.endpoints.AbstractResourceEndpoint;
+import org.wso2.charon.core.protocol.endpoints.GroupResourceEndpoint;
 import org.wso2.charon.core.protocol.endpoints.UserResourceEndpoint;
 import org.wso2.charon.core.schema.SCIMConstants;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
 
 @Path("/")
-public class UserResource extends AbstractResource {
-    private static Log logger = LogFactory.getLog(UserResource.class);
+public class GroupResource extends AbstractResource {
+
+    private static Log logger = LogFactory.getLog(GroupResource.class);
 
     @GET
     @Path("{id}")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getUser(@PathParam(SCIMConstants.CommonSchemaConstants.ID) String id,
-                            @HeaderParam(SCIMConstants.ACCEPT_HEADER) String format,
-                            @HeaderParam(SCIMConstants.AUTHENTICATION_TYPE_HEADER) String authMechanism,
-                            @HeaderParam(SCIMConstants.AUTHORIZATION_HEADER) String authorization) {
+    public Response getGroup(@PathParam(SCIMConstants.CommonSchemaConstants.ID) String id,
+                             @HeaderParam(SCIMConstants.ACCEPT_HEADER) String format,
+                             @HeaderParam(SCIMConstants.AUTHENTICATION_TYPE_HEADER) String authMechanism,
+                             @HeaderParam(SCIMConstants.AUTHORIZATION_HEADER) String authorization) {
 
         Encoder encoder = null;
         try {
@@ -79,10 +77,10 @@ public class UserResource extends AbstractResource {
             UserManager userManager = IdentitySCIMManager.getInstance().getUserManager(
                     authInfo.getUserName());
 
-            //create charon-SCIM user endpoint and hand-over the request.
-            UserResourceEndpoint userResourceEndpoint = new UserResourceEndpoint();
+            //create charon-SCIM group endpoint and hand-over the request.
+            GroupResourceEndpoint groupResourceEndpoint = new GroupResourceEndpoint();
 
-            SCIMResponse scimResponse = userResourceEndpoint.get(id, format, userManager);
+            SCIMResponse scimResponse = groupResourceEndpoint.get(id, format, userManager);
             //needs to check the code of the response and return 200 0k or other error codes
             // appropriately.
             return new JAXRSResponseBuilder().buildResponse(scimResponse);
@@ -104,7 +102,7 @@ public class UserResource extends AbstractResource {
     }
 
     @POST
-    public Response createUser(@HeaderParam(SCIMConstants.CONTENT_TYPE_HEADER) String inputFormat,
+    public Response createGroup(@HeaderParam(SCIMConstants.CONTENT_TYPE_HEADER) String inputFormat,
                                @HeaderParam(SCIMConstants.ACCEPT_HEADER) String outputFormat,
                                @HeaderParam(SCIMConstants.AUTHORIZATION_HEADER) String authorization,
                                String resourceString) {
@@ -135,9 +133,9 @@ public class UserResource extends AbstractResource {
                     authInfo.getUserName());
 
             //create charon-SCIM user endpoint and hand-over the request.
-            UserResourceEndpoint userResourceEndpoint = new UserResourceEndpoint();
+            GroupResourceEndpoint groupResourceEndpoint = new GroupResourceEndpoint();
 
-            SCIMResponse response = userResourceEndpoint.create(resourceString, inputFormat,
+            SCIMResponse response = groupResourceEndpoint.create(resourceString, inputFormat,
                                                                 outputFormat, userManager);
 
             return new JAXRSResponseBuilder().buildResponse(response);
@@ -349,6 +347,5 @@ public class UserResource extends AbstractResource {
         return null;
 
     }*/
-
 
 }

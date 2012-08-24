@@ -4,6 +4,9 @@
 <%@ page import="org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSOReqValidationResponseDTO" %>
 <%@ page import="org.wso2.carbon.identity.sso.saml.stub.types.SAMLSSORespDTO" %>
 <%@ page import="java.net.URLDecoder" %>
+<%@page import="org.wso2.carbon.utils.multitenancy.MultitenantConstants"%>
+<%@page import="org.wso2.carbon.utils.multitenancy.MultitenantUtils"%>
+
 <html>
 <head>
     <title>WSO2 Stratos Identity</title>
@@ -67,7 +70,12 @@
     String assertionConsumerURL = (String) request.getAttribute(SAMLSSOProviderConstants.ASSRTN_CONSUMER_URL);
     String assertion = (String) request.getAttribute(SAMLSSOProviderConstants.ASSERTION_STR);
     String relayState = (String) request.getAttribute(SAMLSSOProviderConstants.RELAY_STATE);
-
+    String subject = (String) request.getAttribute(SAMLSSOProviderConstants.SUBJECT);
+    
+    String domain = null;
+    if(subject != null && MultitenantUtils.getTenantDomain(subject) != null){
+           domain = MultitenantUtils.getTenantDomain(subject);
+    }
 
     String postURL = "the service";
     if(assertionConsumerURL != null){
@@ -130,6 +138,7 @@
 <form method="post" action="<%=assertionConsumerURL%>" class="redirectForm">
 	<input type="hidden" name="SAMLResponse" value="<%=assertion%>"/>
 	<input type="hidden" name="RelayState" value="<%=relayState%>"/>
+	<input type="hidden" name="<%=MultitenantConstants.TENANT_DOMAIN%>" value="<%=domain%>"/>
 </form>
 
 <script type="text/javascript">

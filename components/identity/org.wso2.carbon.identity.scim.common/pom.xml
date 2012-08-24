@@ -69,7 +69,7 @@
                             org.wso2.carbon.identity.scim.common.*,
                         </Export-Package>
                         <Import-Package>
-                            org.wso2.carbon.server.admin.privilegedaction.*,
+                            org.wso2.carbon.server.admin.privilegedaction.*;version="0.0.0",
                             org.wso2.charon.core.*,
                             org.apache.commons.logging.*,
                             org.apache.commons.httpclient.*,

@@ -36,7 +36,8 @@ public abstract class AbstractProvisioningHandler {
 
     public abstract boolean isSCIMConsumerEnabled(String paramString);
 
-    public void provision(String consumerName, SCIMObject scimObject, int httpMethodInt) {
+    public void provision(String consumerName, SCIMObject scimObject, int httpMethodInt)
+            throws IdentitySCIMException {
         try {
             //create scim client and encode scim object
             SCIMClient scimClient = new SCIMClient();
@@ -86,13 +87,13 @@ public abstract class AbstractProvisioningHandler {
                             postMethod.setRequestEntity(requestEntity);
 
                             int responseStatus = client.executeMethod(postMethod);
-                            logger.info("SCIM - addUser returned with response code: " + responseStatus);
+                            logger.info("SCIM - operation returned with response code: " + responseStatus);
 
                             String response = postMethod.getResponseBodyAsString();
                             logger.info(response);
                             if (scimClient.evaluateResponseStatus(responseStatus)) {
                                 scimClient.decodeSCIMResponse(response, SCIMConstants.JSON,
-                                                              SCIMConstants.USER_INT);
+                                                              SCIMConstants.GROUP_INT);
                             } else {
                                 scimClient.decodeSCIMException(response, SCIMConstants.JSON);
                             }
@@ -103,18 +104,18 @@ public abstract class AbstractProvisioningHandler {
                     }
                 }
             }
-        } catch (IdentitySCIMException e) {
-            logger.error(e.getMessage());
-        } catch (BadRequestException e) {
-            logger.error(e.getMessage());
+        } /*catch (IdentitySCIMException e) {
+            throw e;
+        } */catch (BadRequestException e) {
+            throw new IdentitySCIMException(e.getMessage());
         } catch (HttpException e) {
-            logger.error(e.getMessage());
+            throw new IdentitySCIMException(e.getMessage());
         } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage());
+            throw new IdentitySCIMException(e.getMessage());
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            throw new IdentitySCIMException(e.getMessage());
         } catch (CharonException e) {
-            logger.error(e.getMessage());
+            throw new IdentitySCIMException(e.getDescription());
         }
     }
 

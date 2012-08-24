@@ -48,6 +48,7 @@
 
     <modules>
         <module>org.wso2.carbon.hosting.mgt</module>
+        <module>org.wso2.carbon.hosting.mgt.cli</module>
         <module>org.wso2.carbon.hosting.mgt.ui</module>
     </modules>
 

@@ -116,7 +116,7 @@ public class GSpreadDataReader extends DataReader {
                 break;
             }
             headers.put(cell.getTextContent().getContent().getPlainText(),
-                    TDriverUtil.getColumnIndex(cell.getId()));
+                    TDriverUtil.getColumnIndex(cell.getId()) - 1);
         }
         return headers;
     }

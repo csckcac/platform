@@ -70,13 +70,15 @@ public class TDriver implements Driver {
         return false;
     }
 
-    private Properties getProperties(String url, Properties info) throws SQLException {
+    @SuppressWarnings("unchecked")
+	private Properties getProperties(String url, Properties info) throws SQLException {
         if (url == null) {
             throw new SQLException("JDBC URL cannot be NULL");
         }
         Properties props = new Properties();
-        for (Enumeration e = info.propertyNames(); e.hasMoreElements();) {
-            String key = (String) e.nextElement();
+        for (Enumeration<String> e = (Enumeration<String>) info.propertyNames(); 
+                    e.hasMoreElements();) {
+            String key = e.nextElement();
             String value = info.getProperty(key);
             if (value != null) {
                 props.setProperty(key.toUpperCase(), value);

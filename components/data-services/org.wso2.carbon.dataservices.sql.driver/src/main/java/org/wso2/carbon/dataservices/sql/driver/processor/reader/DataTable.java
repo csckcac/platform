@@ -29,16 +29,16 @@ public interface DataTable {
 	
 	Map<String, Integer> getHeaders();
 	
-	int getNoOfColumns();
-	
-	void setNoOfColumns(int noOfColumns);
-	
 	Map<Integer, DataRow> getRows();
 	
 	void setData(Map<Integer, DataRow> rows);
 	
 	void addRow(DataRow dataRow);
 	
-	DataTable applyCondition(String column, String value, String operator);
+	void updateRow(DataRow... dataRows);
+	
+	void deleteRow(int... rowIds);
+	
+	Map<Integer, DataRow> applyCondition(String column, String value, String operator);
 	
 }

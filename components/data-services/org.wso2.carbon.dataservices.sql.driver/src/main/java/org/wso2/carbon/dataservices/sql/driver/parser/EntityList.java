@@ -22,7 +22,9 @@ import java.util.ArrayList;
 
 public class EntityList<E> extends ArrayList<String> {
 
-    @Override
+	private static final long serialVersionUID = 5438856280684424524L;
+
+	@Override
     public boolean contains(Object o) {
         String tmp = (String)o;
         for (String s : this) {

@@ -32,6 +32,8 @@ public class TConnectionFactory {
             return new TExcelConnection(props);
         } else if (Constants.GSPREAD.equals(type)) {
             return new TGSpreadConnection(props);
+        } else if (Constants.CUSTOM.equals(type)) {
+            return new TCustomConnection(props);
         } else {
             throw new SQLException("Unsupported datasource type");
         }

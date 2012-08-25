@@ -18,6 +18,9 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.parser;
 
+import java.util.Map;
+
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow;
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.FixedDataTable;
 
@@ -40,17 +43,15 @@ public class Condition {
      * @param dataTable Input data
      * @return          Filtered out data after evaluating the input against the provided conditions
      */
-    public DataTable process(DataTable dataTable) {
+    public Map<Integer, DataRow> process(DataTable dataTable) {
         if (this.getLhs() != null && this.getRhs() == null) {
         	return this.getLhs().process(dataTable);
         } else if (this.getLhs() == null) {
             return this.applyCondition(dataTable);
         }
-        DataTable result = new FixedDataTable(dataTable.getTableName(), dataTable.getHeaders());
-        result.setData(ParserUtil.mergeRows(this.getOperator(), 
-        		this.getLhs().process(dataTable).getRows(),
-                this.getRhs().process(dataTable).getRows()));
-        return result;
+        return ParserUtil.mergeRows(this.getOperator(), 
+        		this.getLhs().process(dataTable),
+                this.getRhs().process(dataTable));
     }
 
     /**
@@ -61,7 +62,7 @@ public class Condition {
      * @param dataTable Input data
      * @return          Filtered out data after evaluating the input against the provided conditions
      */
-    private DataTable applyCondition(DataTable dataTable) {
+    private Map<Integer, DataRow> applyCondition(DataTable dataTable) {
         return dataTable.applyCondition(this.getColumn(), this.getValue(), 
         		this.getOperator());
     }

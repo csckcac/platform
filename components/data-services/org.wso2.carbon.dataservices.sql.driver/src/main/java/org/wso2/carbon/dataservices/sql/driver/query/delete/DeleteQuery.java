@@ -89,7 +89,7 @@ public abstract class DeleteQuery extends ConditionalQuery {
         if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
             result = getTargetTable().getRows();
         } else {
-            result = getCondition().process(getTargetTable()).getRows();
+            result = getCondition().process(getTargetTable());
         }
         return result;
     }

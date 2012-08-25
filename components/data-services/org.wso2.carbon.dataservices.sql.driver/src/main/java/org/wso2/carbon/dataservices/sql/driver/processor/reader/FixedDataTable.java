@@ -26,8 +26,6 @@ import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 
 public class FixedDataTable implements DataTable {
 
-    private int noOfColumns;
-
     private Map<Integer, DataRow> rows;
 
     private String tableName;
@@ -38,7 +36,6 @@ public class FixedDataTable implements DataTable {
         this.tableName = tableName;
         this.headers = headers;
         this.rows = new HashMap<Integer, DataRow>();
-        this.noOfColumns = this.getHeaders().size();
     }
 
     @Override
@@ -49,16 +46,6 @@ public class FixedDataTable implements DataTable {
     @Override
     public Map<String, Integer> getHeaders() {
         return headers;
-    }
-
-    @Override
-    public int getNoOfColumns() {
-        return noOfColumns;
-    }
-
-    @Override
-    public void setNoOfColumns(int noOfColumns) {
-        this.noOfColumns = noOfColumns;
     }
 
     @Override
@@ -74,11 +61,6 @@ public class FixedDataTable implements DataTable {
     @Override
     public void addRow(DataRow dataRow) {
         getRows().put(dataRow.getRowId(), dataRow);
-    }
-
-    private DataTable cloneDataTableWithoutData() {
-    	DataTable dt = new FixedDataTable(this.getTableName(), this.getHeaders());
-    	return dt;
     }
     
     private void handleEqualCondition(Map<Integer, DataRow> dataRows, int cellId, String value, 
@@ -163,9 +145,8 @@ public class FixedDataTable implements DataTable {
     }
     
 	@Override
-	public DataTable applyCondition(String column,
+	public Map<Integer, DataRow> applyCondition(String column,
 			String value, String operator) {
-		DataTable result = this.cloneDataTableWithoutData();
 		Map<Integer, DataRow> dataRows = new HashMap<Integer, DataRow>(this.getRows());
 		int cellId = this.getHeaders().get(column);
 		if (Constants.EQUAL.equals(operator)) {
@@ -177,8 +158,21 @@ public class FixedDataTable implements DataTable {
 		} else {
 			throw new RuntimeException("Unsupported operator: " + operator);
 		}
-		result.setData(dataRows);
-		return result;
+		return dataRows;
+	}
+
+	@Override
+	public void updateRow(DataRow... dataRows) {
+		for (DataRow dataRow : dataRows) {
+			this.getRows().put(dataRow.getRowId(), dataRow);
+		}
+	}
+
+	@Override
+	public void deleteRow(int... rowIds) {
+		for (int rowId : rowIds) {
+			this.getRows().remove(rowId);
+		}
 	}
 
 }

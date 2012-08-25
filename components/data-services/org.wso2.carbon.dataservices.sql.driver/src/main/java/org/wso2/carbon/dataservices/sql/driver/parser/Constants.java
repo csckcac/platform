@@ -118,6 +118,7 @@ public class Constants {
 
     public static final String EXCEL = "EXCEL";
     public static final String GSPREAD = "GSPREAD";
+    public static final String CUSTOM = "CUSTOM";
 
     public static final String VALUE = "VALUE";
     public static final String PARAM_VALUE = "PARAM_VALUE";

@@ -66,7 +66,7 @@ public abstract class SelectQuery extends ConditionalQuery {
         if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
             result = getTargetTable().getRows();
         } else {
-            result = getCondition().process(getTargetTable()).getRows();
+            result = getCondition().process(getTargetTable());
         }
         table.setData(result);
         return new TResultSet(getStatement(), table, getTargetColumns());

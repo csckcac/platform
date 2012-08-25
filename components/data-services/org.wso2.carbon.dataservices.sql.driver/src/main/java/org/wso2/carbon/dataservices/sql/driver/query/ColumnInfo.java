@@ -26,12 +26,21 @@ public class ColumnInfo {
 
     private int sqlType;
 
-    private int index;
+    private int id;
+
+    private Object value;
 
     public ColumnInfo(String name, String tableName, int sqlType) {
         this.name = name;
         this.tableName = tableName;
         this.sqlType = sqlType;
+    }
+
+    public ColumnInfo(String name, String tableName, int sqlType, Object value) {
+        this.name = name;
+        this.tableName = tableName;
+        this.sqlType = sqlType;
+        this.value = value;
     }
 
     public ColumnInfo(String name) {
@@ -58,12 +67,20 @@ public class ColumnInfo {
         return sqlType;
     }
 
-    public int getIndex() {
-        return index;
+    public int getId() {
+        return id;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setId(int id) {
+        this.id = id;
     }
-    
+
+    public Object getValue() {
+        return value;
+    }
+
+    public void setValue(Object value) {
+        this.value = value;
+    }
+
 }

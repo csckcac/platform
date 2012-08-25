@@ -40,12 +40,12 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getURL() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getUserName() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -75,22 +75,22 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getDatabaseProductName() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getDatabaseProductVersion() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getDriverName() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getDriverVersion() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -155,172 +155,172 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getIdentifierQuoteString() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getSQLKeywords() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getNumericFunctions() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public String getStringFunctions() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public String getSystemFunctions() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public String getTimeDateFunctions() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public String getSearchStringEscape() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public String getExtraNameCharacters() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public boolean supportsAlterTableWithAddColumn() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public boolean supportsAlterTableWithDropColumn() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public boolean supportsColumnAliasing() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public boolean nullPlusNonNullIsNull() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public boolean supportsConvert() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");
     }
 
     @Override
     public boolean supportsConvert(int i, int i1) throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsTableCorrelationNames() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsDifferentTableCorrelationNames() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsExpressionsInOrderBy() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsOrderByUnrelated() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsGroupBy() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsGroupByUnrelated() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsGroupByBeyondSelect() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsLikeEscapeClause() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsMultipleResultSets() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsMultipleTransactions() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsNonNullableColumns() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsMinimumSQLGrammar() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsCoreSQLGrammar() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsExtendedSQLGrammar() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsANSI92EntryLevelSQL() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsANSI92IntermediateSQL() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsANSI92FullSQL() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsIntegrityEnhancementFacility() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsOuterJoins() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public boolean supportsFullOuterJoins() throws SQLException {
-        return false;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -330,17 +330,17 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getSchemaTerm() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getProcedureTerm() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public String getCatalogTerm() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -350,7 +350,7 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public String getCatalogSeparator() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -620,87 +620,90 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getProcedures(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
-    public ResultSet getProcedureColumns(String s, String s1, String s2, String s3) throws SQLException {
-        return null;  
+    public ResultSet getProcedureColumns(String s, String s1, String s2,
+                                         String s3) throws SQLException {
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
-    public ResultSet getTables(String s, String s1, String s2, String[] strings) throws SQLException {
-        return null;  
+    public ResultSet getTables(String s, String s1, String s2,
+                               String[] strings) throws SQLException {
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getSchemas() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getCatalogs() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getTableTypes() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getColumns(String s, String s1, String s2, String s3) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getColumnPrivileges(String s, String s1, String s2, String s3) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getTablePrivileges(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
-    public ResultSet getBestRowIdentifier(String s, String s1, String s2, int i, boolean b) throws SQLException {
-        return null;  
+    public ResultSet getBestRowIdentifier(String s, String s1, String s2, int i,
+                                          boolean b) throws SQLException {
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getVersionColumns(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getPrimaryKeys(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getImportedKeys(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getExportedKeys(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getCrossReference(String s, String s1, String s2, String s3, String s4, String s5) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getTypeInfo() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getIndexInfo(String s, String s1, String s2, boolean b, boolean b1) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -765,7 +768,7 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getUDTs(String s, String s1, String s2, int[] ints) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -795,17 +798,17 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getSuperTypes(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getSuperTables(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getAttributes(String s, String s1, String s2, String s3) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -855,12 +858,12 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public RowIdLifetime getRowIdLifetime() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getSchemas(String s, String s1) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
@@ -875,22 +878,22 @@ public class TDatabaseMetaData implements DatabaseMetaData {
 
     @Override
     public ResultSet getClientInfoProperties() throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getFunctions(String s, String s1, String s2) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public ResultSet getFunctionColumns(String s, String s1, String s2, String s3) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override
     public <T> T unwrap(Class<T> tClass) throws SQLException {
-        return null;  
+        throw new SQLFeatureNotSupportedException("Functionality is not supported");  
     }
 
     @Override

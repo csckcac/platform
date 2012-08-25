@@ -101,6 +101,9 @@ public class Constants {
     public static final String JOIN = "JOIN";
     public static final String INNER = "INNER";
     public static final String SUM = "SUM";
+    public static final String CREATE = "CREATE";
+    public static final String SHEET = "SHEET";
+    public static final String DROP = "DROP";
 
     public static final String COLUMN = "COLUMN";
     public static final String TABLE = "TABLE";
@@ -112,17 +115,14 @@ public class Constants {
     public static final String START_OF_LBRACKET = "START_OF_LBRACKET";
     public static final String START_OF_RBRACKET = "START_OF_RBRACKET";
     public static final String AS_COLUMN = "ASCOLUMN";
-    public static final String COLUMNS="COLUMNS";
 
     public static final String EXCEL = "EXCEL";
     public static final String GSPREAD = "GSPREAD";
-    public static final String CSV = "CSV";
 
     public static final String VALUE = "VALUE";
     public static final String PARAM_VALUE = "PARAM_VALUE";
 
-    public static final String BASE_WORKSHEET_URL = "http://spreadsheets.google.com/feeds/worksheets/";
-    public static final String SPREADSHEET_FEED = "https://spreadsheets.google.com/feeds/spreadsheets/private/full";
+    public static final String SPREADSHEET_FEED_BASE_URL = "https://spreadsheets.google.com/feeds/spreadsheets/";
     public static final String SPREADSHEET_SERVICE_NAME = "WSO2SQLDriver";
 
     public static final String JDBC_PREFIX = "jdbc";
@@ -135,7 +135,8 @@ public class Constants {
     public static final String USER = "USER";
     public static final String PASSWORD = "PASSWORD";
     public static final String VISIBILITY = "visibility";
+    public static final String SHEET_NAME = "sheetName";
 
     public static final String OUTER = "OUTER";
-    
+
 }

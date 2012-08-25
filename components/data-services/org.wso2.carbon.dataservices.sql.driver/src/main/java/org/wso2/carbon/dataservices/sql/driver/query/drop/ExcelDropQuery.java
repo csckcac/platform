@@ -16,9 +16,10 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.delete;
+package org.wso2.carbon.dataservices.sql.driver.query.drop;
 
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.wso2.carbon.dataservices.sql.driver.TDriverUtil;
 import org.wso2.carbon.dataservices.sql.driver.TExcelConnection;
 
@@ -26,9 +27,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ExcelDeleteQuery extends DeleteQuery {
+public class ExcelDropQuery extends DropQuery {
 
-    public ExcelDeleteQuery(Statement stmt) throws SQLException {
+    public ExcelDropQuery(Statement stmt) throws SQLException {
         super(stmt);
     }
 
@@ -40,22 +41,32 @@ public class ExcelDeleteQuery extends DeleteQuery {
 
     @Override
     public int executeUpdate() throws SQLException {
-        return this.executeSQL();
+        this.executeSQL();
+        return 0;
     }
 
     @Override
     public boolean execute() throws SQLException {
-        return (this.executeSQL() > 0);
+        this.executeSQL();
+        return false;
     }
 
-    private int executeSQL() throws SQLException {
-        TExcelConnection excelCon = (TExcelConnection)getConnection();
-        Sheet currentWorkSheet = excelCon.getWorkbook().getSheet(getTargetTableName());
-        for (Integer rowId : this.getResultantRows().keySet()) {
-            currentWorkSheet.removeRow(currentWorkSheet.getRow(rowId));
+    private synchronized void executeSQL() throws SQLException {
+        Workbook workbook = ((TExcelConnection)this.getConnection()).getWorkbook();
+
+        if (!isSheetExists(workbook)) {
+            throw new SQLException("EXCEL sheet named '" + this.getTableName() +
+                    "' does not exist");
         }
-        TDriverUtil.writeRecords(excelCon.getWorkbook(), excelCon.getPath());
-        return this.getResultantRows().size();
+
+        int sheetIndex = workbook.getSheetIndex(this.getTableName());
+        workbook.removeSheetAt(sheetIndex);
+        TDriverUtil.writeRecords(workbook, ((TExcelConnection)this.getConnection()).getPath());
+    }
+
+    private boolean isSheetExists(Workbook workbook) {
+        Sheet sheet = workbook.getSheet(this.getTableName());
+        return (sheet != null);
     }
 
 }

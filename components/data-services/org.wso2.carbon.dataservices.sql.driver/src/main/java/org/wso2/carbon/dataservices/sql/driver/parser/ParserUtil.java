@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.parser;
 
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow;
 import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 
 import java.util.*;
@@ -27,11 +28,9 @@ public class ParserUtil {
     private static List<String> keyWords = new EntityList<String>();
     private static List<String> operators = new EntityList<String>();
     private static List<String> delimiters = new EntityList<String>();
-    private static List<String> specialFunctions = new EntityList<String>();
     private static List<String> stringFunctions = new EntityList<String>();
     private static List<String> aggregateFunctions = new EntityList<String>();
     private static List<String> dmlTypes = new EntityList<String>();
-
 
     static {
         keyWords.add(Constants.COUNT);
@@ -89,6 +88,10 @@ public class ParserUtil {
         keyWords.add(Constants.INNER);
         keyWords.add(Constants.SUM);
         keyWords.add(Constants.VALUE);
+        keyWords.add(Constants.DELETE);
+        keyWords.add(Constants.CREATE);
+        keyWords.add(Constants.SHEET);
+        keyWords.add(Constants.DROP);
 
         operators.add(Constants.EQUAL);
         operators.add(Constants.MINUS);
@@ -124,20 +127,12 @@ public class ParserUtil {
         stringFunctions.add(Constants.SUBSTR);
         stringFunctions.add(Constants.CONCAT);
 
-        specialFunctions.add(Constants.OR);
-        specialFunctions.add(Constants.AND);
-        specialFunctions.add(Constants.IS);
-        specialFunctions.add(Constants.LIKE);
-        specialFunctions.add(Constants.NOT);
-        specialFunctions.add(Constants.NULL);
-        specialFunctions.add(Constants.IN);
-
         dmlTypes.add(Constants.INSERT);
         dmlTypes.add(Constants.UPDATE);
         dmlTypes.add(Constants.DELETE);
 
     }
-    
+
     public static List<String> getKeyWordList() {
         return keyWords;
     }
@@ -160,18 +155,6 @@ public class ParserUtil {
 
     public static List<String> getStringFunctionList() {
         return stringFunctions;
-    }
-
-    public static List<String> getSpecialFunctionList() {
-        return specialFunctions;
-    }
-
-    public static boolean isJoinFunction(String token) {
-        return (token.equals(Constants.INNER) || token.equals(Constants.JOIN));
-    }
-
-    public static boolean isSpecialFunction(String token) {
-        return ParserUtil.getSpecialFunctionList().contains(token);
     }
 
     public static boolean isDelimiter(String token) {
@@ -227,10 +210,6 @@ public class ParserUtil {
         return tokenQueue;
     }
 
-    public static boolean isSpecialFunctionInsideBrackets(String token) {
-        return (Constants.OR.equals(token) || Constants.AND.equals(token));
-    }
-
     public static boolean isDMLStatement(String type) {
         return ParserUtil.getDMLTypeList().contains(type.toUpperCase());
     }
@@ -269,6 +248,65 @@ public class ParserUtil {
         return (ParserUtil.isKeyword(token)) ? token : null;
     }
 
+    public static ParamInfo getParameter(int orinal, ParamInfo[] parameters) {
+        ParamInfo result = null;
+        for (ParamInfo paramInfo : parameters) {
+            if (paramInfo.getOrdinal() == orinal) {
+                result = paramInfo;
+            }
+        }
+        return result;
+    }
+
+    public static ParamInfo getParameter(String column, ParamInfo[] parameters) {
+        ParamInfo result = null;
+        for (ParamInfo paramInfo : parameters) {
+            if (paramInfo.getName().equals(column)) {
+                result = paramInfo;
+            }
+        }
+        return result;
+    }
+
+    public static Map<Integer, DataRow> mergeRows(String operation, Map<Integer, DataRow> rows1,
+                                                  Map<Integer, DataRow> rows2) {
+        Map<Integer, DataRow> result = new HashMap<Integer, DataRow>();
+        if (operation == null) {
+            if (rows1 != null) {
+                result = rows1;
+            } else if (rows2 != null) {
+                result = rows2;
+            }
+        } else if (Constants.OR.equals(operation)) {
+            result = processORCondition(rows1, rows2);
+        } else if (Constants.AND.equals(operation)) {
+            result = processANDCondition(rows1, rows2);
+        }
+        return result;
+    }
+
+    public static Map<Integer, DataRow> processORCondition(Map<Integer, DataRow> rows1,
+                                                           Map<Integer, DataRow> rows2) {
+        Map<Integer, DataRow> result = new HashMap<Integer, DataRow>();
+        for (Map.Entry<Integer, DataRow> row : rows1.entrySet()) {
+            result.put(row.getKey(), row.getValue());
+        }
+        for (Map.Entry<Integer, DataRow> row : rows2.entrySet()) {
+            result.put(row.getKey(), row.getValue());
+        }
+        return result;
+    }
+
+    public static Map<Integer, DataRow> processANDCondition(Map<Integer, DataRow> rows1,
+                                                            Map<Integer, DataRow> rows2) {
+        Map<Integer, DataRow> result = new HashMap<Integer, DataRow>();
+        for (Map.Entry<Integer, DataRow> row : rows1.entrySet()) {
+            if (rows2.containsKey(row.getKey())) {
+                result.put(row.getKey(), row.getValue());
+            }
+        }
+        return result;
+    }
 
 
 }

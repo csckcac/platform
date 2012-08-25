@@ -18,8 +18,10 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query.insert;
 
+import org.wso2.carbon.dataservices.sql.driver.TDriverUtil;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 import org.wso2.carbon.dataservices.sql.driver.parser.ParserUtil;
+import org.wso2.carbon.dataservices.sql.driver.query.ColumnInfo;
 import org.wso2.carbon.dataservices.sql.driver.query.Query;
 
 import java.sql.SQLException;
@@ -30,28 +32,24 @@ import java.util.Queue;
 
 public abstract class InsertQuery extends Query {
 
-    private String targetTable;
+    private String targetTableName;
 
     private Map<Integer, String> columns;
 
     private Map<Integer, Object> columnValues;
 
-    private boolean isAll = false;
-
     public InsertQuery(Statement stmt) throws SQLException {
         super(stmt);
-        this.columns = new HashMap<Integer, String>();
-        this.columnValues = new HashMap<Integer, Object>();
-
-        preprocessTokens(getProcessedTokens());
-
+        this.targetTableName = this.extractTargetTableName(getProcessedTokens());
+        this.columns = this.extractTargetColumns(getProcessedTokens());
+        this.columnValues = this.extractTargetColumnValues(getProcessedTokens());
         if (this.getColumns().size() != this.getColumnValues().size()) {
             throw new SQLException("Parameter index is out of range. The column count does not " +
                     "match the value count");
         }
     }
 
-    private void preprocessTokens(Queue<String> tokens) throws SQLException {
+    private String extractTargetTableName(Queue<String> tokens) throws SQLException {
         if (tokens == null || tokens.isEmpty()) {
             throw new SQLException("Unable to populate attributes");
         }
@@ -61,21 +59,36 @@ public abstract class InsertQuery extends Query {
             throw new SQLException("Table name is missing");
         }
         tokens.poll();
-        if (!Constants.COLUMN.equalsIgnoreCase(tokens.peek()) &&
-                ParserUtil.isStringLiteral(tokens.peek())) {
-            this.targetTable = tokens.poll();
-        } else {
-            this.isAll = true;
+        if (!ParserUtil.isStringLiteral(tokens.peek())) {
+            throw new SQLException("Table name is missing");
         }
-        processColumnNames(tokens, 0);
-        if (!(Constants.VALUES.equalsIgnoreCase(tokens.peek()) || Constants.VALUE.equalsIgnoreCase(tokens.peek()))) {
-             throw new SQLException("Syntax Error : 'VALUE'/'VALUES' is expected");
-        }
-        tokens.poll();
-        processColumnValues(tokens, 0, false, false, true);
+        return tokens.poll();
     }
 
-    private void processColumnNames(Queue<String> tokens, int colCount) throws SQLException {
+    private Map<Integer, String> extractTargetColumns(Queue<String> tokens) throws SQLException {
+        Map<Integer, String> targetColumns = new HashMap<Integer, String>();
+        if (Constants.COLUMN.equals(tokens.peek())) {
+            this.processColumnNames(tokens, targetColumns, 0);
+        } else {
+            targetColumns = this.getColumnMap();
+        }
+        return targetColumns;
+    }
+
+    private Map<Integer, Object> extractTargetColumnValues(Queue<String> tokens) throws
+            SQLException {
+        Map<Integer, Object> targetColumnValues = new HashMap<Integer, Object>();
+        if (!(Constants.VALUES.equalsIgnoreCase(tokens.peek()) ||
+                Constants.VALUE.equalsIgnoreCase(tokens.peek()))) {
+            throw new SQLException("VALUE/VALUES keyword is missing");
+        }
+        tokens.poll();
+        processColumnValues(tokens, targetColumnValues, 0, false, false, true);
+        return targetColumnValues;
+    }
+
+    private void processColumnNames(Queue<String> tokens, Map<Integer, String> targetColumns,
+                                    int colCount) throws SQLException {
         if (!Constants.COLUMN.equalsIgnoreCase(tokens.peek())) {
             return;
         }
@@ -83,16 +96,15 @@ public abstract class InsertQuery extends Query {
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal expected");
         }
-        this.getColumns().put(colCount, tokens.poll());
+        targetColumns.put(colCount, tokens.poll());
         if (Constants.COLUMN.equalsIgnoreCase(tokens.peek())) {
-            processColumnNames(tokens, colCount + 1);
+            processColumnNames(tokens, targetColumns, colCount + 1);
         }
     }
 
-    private void processColumnValues(Queue<String> tokens,
-                                              int valCount,
-                                              boolean isParameterized,
-                                              boolean isEnd, boolean isInit) throws SQLException {
+    private void processColumnValues(Queue<String> tokens, Map<Integer, Object> targetColumnValues,
+                                     int valCount, boolean isParameterized, boolean isEnd,
+                                     boolean isInit) throws SQLException {
         if (!isEnd) {
             if (!Constants.PARAM_VALUE.equalsIgnoreCase(tokens.peek())) {
                 throw new SQLException("Syntax Error : 'PARAM_VALUE' is expected");
@@ -111,7 +123,7 @@ public abstract class InsertQuery extends Query {
                             "allowed to exist together");
                 }
                 isParameterized = true;
-                this.getColumnValues().put(valCount, tokens.poll());
+                targetColumnValues.put(valCount, tokens.poll());
             } else if (Constants.SINGLE_QUOTATION.equalsIgnoreCase(tokens.peek())) {
                 if (isInit) {
                     isInit = false;
@@ -123,10 +135,11 @@ public abstract class InsertQuery extends Query {
                 }
                 tokens.poll();
                 StringBuilder b = new StringBuilder();
-                while (Constants.SINGLE_QUOTATION.equalsIgnoreCase(tokens.peek()) || tokens.isEmpty()) {
+                while (Constants.SINGLE_QUOTATION.equalsIgnoreCase(tokens.peek()) ||
+                        tokens.isEmpty()) {
                     b.append(tokens.poll());
                 }
-                this.getColumnValues().put(valCount, b.toString());
+                targetColumnValues.put(valCount, b.toString());
                 tokens.poll();
             } else if (ParserUtil.isStringLiteral(tokens.peek())) {
                 if (isInit) {
@@ -137,17 +150,18 @@ public abstract class InsertQuery extends Query {
                     throw new SQLException("Both parameters and inline parameter values are not " +
                             "allowed to exist together");
                 }
-                this.getColumnValues().put(valCount, tokens.poll());
+                targetColumnValues.put(valCount, tokens.poll());
             }
             if (!Constants.PARAM_VALUE.equalsIgnoreCase(tokens.peek())) {
                 isEnd = true;
-            } 
-            processColumnValues(tokens, valCount + 1, isParameterized, isEnd, isInit);
+            }
+            processColumnValues(tokens, targetColumnValues, valCount + 1, isParameterized, isEnd,
+                    isInit);
         }
     }
 
-    public String getTargetTable() {
-        return targetTable;
+    public String getTargetTableName() {
+        return targetTableName;
     }
 
     public Map<Integer, String> getColumns() {
@@ -158,9 +172,14 @@ public abstract class InsertQuery extends Query {
         return columnValues;
     }
 
-    public boolean isAll() {
-        return isAll;
-        //TODO: has to retrieve the header and compare the column count vs value count
+    private Map<Integer, String> getColumnMap() throws SQLException {
+        ColumnInfo[] headers =
+                TDriverUtil.getHeaders(this.getConnection(), this.getTargetTableName());
+        Map<Integer, String> columns = new HashMap<Integer, String>();
+        for (ColumnInfo column : headers) {
+            columns.put(column.getId(), column.getName());
+        }
+        return columns;
     }
 
 }

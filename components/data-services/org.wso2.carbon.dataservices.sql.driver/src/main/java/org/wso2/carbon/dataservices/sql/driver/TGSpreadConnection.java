@@ -19,49 +19,53 @@
 package org.wso2.carbon.dataservices.sql.driver;
 
 import com.google.gdata.client.GoogleAuthTokenFactory;
+import com.google.gdata.client.spreadsheet.SpreadsheetQuery;
 import com.google.gdata.client.spreadsheet.SpreadsheetService;
+import com.google.gdata.client.spreadsheet.WorksheetQuery;
+import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
+import com.google.gdata.data.spreadsheet.SpreadsheetFeed;
 import com.google.gdata.data.spreadsheet.WorksheetFeed;
 import com.google.gdata.util.AuthenticationException;
-import com.google.gdata.util.ServiceException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.*;
 import java.util.Properties;
 
 public class TGSpreadConnection extends TConnection {
 
-    private static final Log log = LogFactory.getLog(TExcelConnection.class);
-
-    private WorksheetFeed worksheetFeed;
-
     private String visibility = "private";
 
     private SpreadsheetService service;
 
+    private String spreadSheetName;
+
+    private SpreadsheetFeed spreadSheetFeed;
+
+    private WorksheetFeed worksheetFeed;
+
     public TGSpreadConnection(Properties props) throws SQLException {
         super(props);
-        visibility = props.getProperty(Constants.VISIBILITY);
-        visibility = (visibility != null) ? visibility : "private";
-        service = new SpreadsheetService(Constants.SPREADSHEET_SERVICE_NAME);
-        service.setCookieManager(null);
+        this.spreadSheetName = props.getProperty(Constants.SHEET_NAME);
+        if (spreadSheetName == null) {
+            throw new SQLException("Spread Sheet name is not provided");
+        }
+        this.visibility = props.getProperty(Constants.VISIBILITY);
+        this.visibility = (visibility != null) ? visibility : "private";
+        this.service = new SpreadsheetService(Constants.SPREADSHEET_SERVICE_NAME);
+        this.service.setCookieManager(null);
         try {
-            service.setUserCredentials(this.getUsername(), this.getPassword());
-            service.setUserToken(((GoogleAuthTokenFactory.UserToken)
+            this.service.setUserCredentials(this.getUsername(), this.getPassword());
+            this.service.setUserToken(((GoogleAuthTokenFactory.UserToken)
                     service.getAuthTokenFactory().
                     getAuthToken()).getValue());
         } catch (AuthenticationException e) {
-            throw new SQLException("Error occurred while authenicating user to access the " +
-                    "spread sheet");
+            throw new SQLException("Error occurred while authenticating user to access the " +
+                    "spread sheet", e);
         }
-        String key = extractKey(this.getPath());
-        worksheetFeed = generateWorksheetFeedURL(key);
+        this.spreadSheetFeed = this.extractSpreadSheetFeed();
+        this.worksheetFeed = this.extractWorkSheetFeed();
     }
 
     public SpreadsheetService getSpreadSheetService() {
@@ -72,8 +76,16 @@ public class TGSpreadConnection extends TConnection {
         return visibility;
     }
 
-    public WorksheetFeed getWorkSheetFeed() {
+    public String getSpreadSheetName() {
+        return spreadSheetName;
+    }
+
+    public WorksheetFeed getWorksheetFeed() {
         return worksheetFeed;
+    }
+
+    public SpreadsheetFeed getSpreadSheetFeed() {
+        return spreadSheetFeed;
     }
 
     @Override
@@ -130,45 +142,37 @@ public class TGSpreadConnection extends TConnection {
     }
 
     @Override
-    public PreparedStatement prepareStatement(String sql, String[] columnNames) throws SQLException {
+    public PreparedStatement prepareStatement(String sql, String[] columnNames) throws
+            SQLException {
         return new TPreparedStatement(this, sql);
     }
 
-    private static String extractKey(String documentURL) throws SQLException {
-        URI documentURI;
-        try {
-            documentURI = new URI(documentURL);
-        } catch (URISyntaxException e) {
-            String msg = "Document URL Syntax error:" + documentURL;
-            log.warn(msg, e);
-            throw new SQLException(msg, e);
+    private WorksheetFeed extractWorkSheetFeed() throws SQLException {
+        if (this.getSpreadSheetFeed() == null) {
+            throw new SQLException("Spread Sheet Feed is null");
         }
-        String extractedQuery = documentURI.getQuery();
-        int i1 = extractedQuery.lastIndexOf("key=");
-        int i2 = extractedQuery.indexOf("&", i1);
-        if (i2 < 0) {
-            return extractedQuery.substring(i1 + 4);
-        } else {
-            return extractedQuery.substring(i1 + 4, i2);
-        }
+        SpreadsheetEntry spreadsheetEntry = this.getSpreadSheetFeed().getEntries().get(0);
+        WorksheetQuery worksheetQuery =
+                TDriverUtil.createWorkSheetQuery(spreadsheetEntry.getWorksheetFeedUrl());
+
+        return TDriverUtil.getFeed(this.getSpreadSheetService(), worksheetQuery,
+                WorksheetFeed.class);
     }
 
-    private WorksheetFeed generateWorksheetFeedURL(String key) throws SQLException {
-        WorksheetFeed worksheetFeed;
-        try {
-            URL worksheetFeedUrl = new URL(Constants.BASE_WORKSHEET_URL + key + "/" +
-                    this.getVisibility() + "/basic");
-            worksheetFeed =
-                    this.getSpreadSheetService().getFeed(worksheetFeedUrl, WorksheetFeed.class);
+    private SpreadsheetFeed extractSpreadSheetFeed() throws SQLException {
+        URL spreadSheetFeedUrl;
+         try {
+            spreadSheetFeedUrl =
+                    new URL(Constants.SPREADSHEET_FEED_BASE_URL + getVisibility() + "/full");
         } catch (MalformedURLException e) {
-            throw new SQLException("Error occurred while generating the worksheet feed URL", e);
-        } catch (ServiceException e) {
-            throw new SQLException("Error occurred while retrieving the worksheet feed", e);
-        } catch (IOException e) {
-            throw new SQLException("Error occurred while retrieving the worksheet feed", e);
+            throw new SQLException("Error occurred while constructing the Spread Sheet Feed URL");
         }
-        return worksheetFeed;
+        SpreadsheetQuery spreadSheetQuery =
+                TDriverUtil.createSpreadSheetQuery(this.getSpreadSheetName(), spreadSheetFeedUrl);
+
+        return TDriverUtil.getFeed(getSpreadSheetService(), spreadSheetQuery,
+                SpreadsheetFeed.class);
+
     }
-
-
+    
 }

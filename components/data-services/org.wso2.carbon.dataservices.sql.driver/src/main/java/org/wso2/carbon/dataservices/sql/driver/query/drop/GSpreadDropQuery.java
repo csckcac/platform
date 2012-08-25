@@ -16,21 +16,20 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.create;
+package org.wso2.carbon.dataservices.sql.driver.query.drop;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+import com.google.gdata.data.spreadsheet.WorksheetEntry;
+import com.google.gdata.util.ServiceException;
 import org.wso2.carbon.dataservices.sql.driver.TDriverUtil;
-import org.wso2.carbon.dataservices.sql.driver.TExcelConnection;
 
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class ExcelCreateQuery extends CreateQuery {
+public class GSpreadDropQuery extends DropQuery {
 
-    public ExcelCreateQuery(Statement stmt) throws SQLException {
+    public GSpreadDropQuery(Statement stmt) throws SQLException {
         super(stmt);
     }
 
@@ -53,18 +52,22 @@ public class ExcelCreateQuery extends CreateQuery {
     }
 
     private synchronized void executeSQL() throws SQLException {
-        TExcelConnection excelCon = (TExcelConnection)getConnection();
-        if (excelCon.getWorkbook() == null) {
-            throw new SQLException("Connection to EXCEL data source has not been established " +
-                    "properly");
+        WorksheetEntry currentWorkSheet =
+                TDriverUtil.getCurrentWorkSheetEntry(this.getConnection(), this.getTableName());
+
+        if (currentWorkSheet == null) {
+            throw new SQLException("WorkSheet named '" + this.getTableName() + "' does not exist");
         }
-        Sheet sheet = excelCon.getWorkbook().createSheet(this.getTableName());
-        Row headerRow = sheet.createRow(0);
-        for (int i = 0; i < this.getColumns().size(); i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(this.getColumns().get(i).getName());
+
+        try {
+            currentWorkSheet.delete();
+        } catch (IOException e) {
+            throw new SQLException("Error occurred while deleting the work sheet entry '" +
+                    this.getTableName() + "'", e);
+        } catch (ServiceException e) {
+            throw new SQLException("Error occurred while deleting the work sheet entry '" +
+                    this.getTableName() + "'", e);
         }
-        TDriverUtil.writeRecords(excelCon.getWorkbook(), excelCon.getPath());
     }
-    
+
 }

@@ -19,6 +19,12 @@ package org.wso2.carbon.dataservices.sql.driver.query;
 
 import org.wso2.carbon.dataservices.sql.driver.TConnection;
 import org.wso2.carbon.dataservices.sql.driver.TPreparedStatement;
+import org.wso2.carbon.dataservices.sql.driver.query.create.ExcelCreateQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.create.GSpreadCreateQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.delete.ExcelDeleteQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.delete.GSpreadDeleteQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.drop.ExcelDropQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.drop.GSpreadDropQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.insert.ExcelInsertQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.insert.GSpreadInsertQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.select.ExcelSelectQuery;
@@ -32,7 +38,7 @@ import java.sql.Statement;
 public class QueryFactory {
 
     public enum QueryFactoryTypes {
-        SELECT, INSERT, UPDATE, DELETE, CREATE
+        SELECT, INSERT, UPDATE, DELETE, CREATE, DROP
     }
 
     public enum QueryTypes {
@@ -40,9 +46,9 @@ public class QueryFactory {
     }
 
     public static Query createQuery(Statement stmt) throws SQLException {
-        String queryType = ((TPreparedStatement)stmt).getQueryType();
+        String queryType = ((TPreparedStatement) stmt).getQueryType();
         QueryFactoryTypes types = QueryFactoryTypes.valueOf(queryType);
-        switch (types)  {
+        switch (types) {
             case SELECT:
                 return createSelectQuery(stmt);
             case INSERT:
@@ -50,18 +56,61 @@ public class QueryFactory {
             case UPDATE:
                 return createUpdateQuery(stmt);
             case DELETE:
-                break;
+                return createDeleteQuery(stmt);
             case CREATE:
-                break;
+                return createCreateQuery(stmt);
+            case DROP:
+                return createDropQuery(stmt);
             default:
-                break;
+                throw new SQLException("Unsupport query type");
         }
-        return null;
+    }
+
+    private static Query createDropQuery(Statement stmt) throws SQLException {
+        String connectionType =
+                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+        QueryTypes types = QueryTypes.valueOf(connectionType);
+        switch (types) {
+            case EXCEL:
+                return new ExcelDropQuery(stmt);
+            case GSPREAD:
+                return new GSpreadDropQuery(stmt);
+            default:
+                throw new SQLException("Unsupported type");
+        }
+    }
+
+    private static Query createCreateQuery(Statement stmt) throws SQLException {
+        String connectionType =
+                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+        QueryTypes types = QueryTypes.valueOf(connectionType);
+        switch (types) {
+            case EXCEL:
+                return new ExcelCreateQuery(stmt);
+            case GSPREAD:
+                return new GSpreadCreateQuery(stmt);
+            default:
+                throw new SQLException("Unsupported type");
+        }
+    }
+
+    private static Query createDeleteQuery(Statement stmt) throws SQLException {
+        String connectionType =
+                ((TConnection) (((TPreparedStatement) stmt).getConnection())).getType();
+        QueryTypes types = QueryTypes.valueOf(connectionType);
+        switch (types) {
+            case EXCEL:
+                return new ExcelDeleteQuery(stmt);
+            case GSPREAD:
+                return new GSpreadDeleteQuery(stmt);
+            default:
+                throw new SQLException("Unsupported type");
+        }
     }
 
     public static Query createInsertQuery(Statement stmt) throws SQLException {
         String connectionType =
-                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+                ((TConnection) (((TPreparedStatement) stmt).getConnection())).getType();
         QueryTypes types = QueryTypes.valueOf(connectionType);
         switch (types) {
             case EXCEL:
@@ -75,7 +124,7 @@ public class QueryFactory {
 
     private static Query createSelectQuery(Statement stmt) throws SQLException {
         String connectionType =
-                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+                ((TConnection) (((TPreparedStatement) stmt).getConnection())).getType();
         QueryTypes types = QueryTypes.valueOf(connectionType);
         switch (types) {
             case EXCEL:
@@ -89,7 +138,7 @@ public class QueryFactory {
 
     private static Query createUpdateQuery(Statement stmt) throws SQLException {
         String connectionType =
-                ((TConnection)(((TPreparedStatement)stmt).getConnection())).getType();
+                ((TConnection) (((TPreparedStatement) stmt).getConnection())).getType();
         QueryTypes types = QueryTypes.valueOf(connectionType);
         switch (types) {
             case EXCEL:

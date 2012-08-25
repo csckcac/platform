@@ -18,33 +18,37 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query.update;
 
+import org.wso2.carbon.dataservices.sql.driver.TDriverUtil;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 import org.wso2.carbon.dataservices.sql.driver.parser.ParserUtil;
-import org.wso2.carbon.dataservices.sql.driver.query.Query;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataReaderFactory;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
+import org.wso2.carbon.dataservices.sql.driver.query.ColumnInfo;
+import org.wso2.carbon.dataservices.sql.driver.query.ConditionalQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Queue;
 
-public abstract class UpdateQuery extends Query {
+public abstract class UpdateQuery extends ConditionalQuery {
 
-    private String targetTable;
+    private String targetTableName;
 
-    private Map<Integer, String> targetColumns;
+    private DataTable targetTable;
 
-    private Map<Integer, Object> targetColumnValues;
+    private ParamInfo[] targetColumns;
 
-    private Map<String, Object> conditions;
+    private ColumnInfo[] columns;
 
     public UpdateQuery(Statement stmt) throws SQLException {
         super(stmt);
-        this.targetColumns = new HashMap<Integer, String>();
-        this.targetColumnValues = new HashMap<Integer, Object>();
-        this.conditions = conditions;
-
+        this.targetColumns = new ParamInfo[getParameters().length];
         preprocessTokens(getProcessedTokens());
+        this.targetTable = 
+                DataReaderFactory.createDataReader(getConnection()).getData().get(
+                        getTargetTableName());
+        this.columns = TDriverUtil.getHeaders(stmt.getConnection(), getTargetTableName());
     }
 
     private void preprocessTokens(Queue<String> tokens) throws SQLException {
@@ -57,7 +61,7 @@ public abstract class UpdateQuery extends Query {
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal is expected");
         }
-        this.targetTable = tokens.poll();
+        this.targetTableName = tokens.poll();
         //Dropping SET token
         tokens.poll();
         processUpdatedColumns(tokens, 0);
@@ -67,16 +71,14 @@ public abstract class UpdateQuery extends Query {
         processUpdatedColumns(tokens, 0);
     }
 
-    private void processUpdatedColumns(Queue<String> tokens, int targetColCount) throws SQLException {
+    private void processUpdatedColumns(Queue<String> tokens,
+                                       int targetColCount) throws SQLException {
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal is expected");
         }
-        getTargetColumns().put(targetColCount, tokens.poll());
+        this.targetColumns[targetColCount] = new ParamInfo(targetColCount, tokens.poll());
+        //getTargetColumns().put(targetColCount, tokens.poll());
         processColumnValues(tokens, 0, false, false, true);
-    }
-
-    private void processConditions(Queue<String> tokens, int targetCount) {
-        
     }
 
     private void processColumnValues(Queue<String> tokens,
@@ -101,7 +103,8 @@ public abstract class UpdateQuery extends Query {
                             "allowed to exist together");
                 }
                 isParameterized = true;
-                this.getTargetColumnValues().put(valCount, tokens.poll());
+                //this.findParam(valCount).setValue(tokens.poll());
+                this.findTargetParam(valCount).setValue(tokens.poll());
             } else if (Constants.SINGLE_QUOTATION.equals(tokens.peek())) {
                 if (isInit) {
                     isInit = false;
@@ -116,7 +119,8 @@ public abstract class UpdateQuery extends Query {
                 while (Constants.SINGLE_QUOTATION.equals(tokens.peek()) || tokens.isEmpty()) {
                     b.append(tokens.poll());
                 }
-                this.getTargetColumnValues().put(valCount, b.toString());
+                this.findTargetParam(valCount).setValue(tokens.poll());
+                //this.findParam(valCount).setValue(tokens.poll());
                 tokens.poll();
             } else if (ParserUtil.isStringLiteral(tokens.peek())) {
                 if (isInit) {
@@ -127,7 +131,8 @@ public abstract class UpdateQuery extends Query {
                     throw new SQLException("Both parameters and inline parameter values are not " +
                             "allowed to exist together");
                 }
-                this.getTargetColumnValues().put(valCount, tokens.poll());
+                this.findTargetParam(valCount).setValue(tokens.poll());
+                //this.findParam(valCount).setValue(tokens.poll());
             }
             if (!Constants.PARAM_VALUE.equals(tokens.peek())) {
                 isEnd = true;
@@ -137,17 +142,42 @@ public abstract class UpdateQuery extends Query {
             processColumnValues(tokens, valCount + 1, isParameterized, isEnd, isInit);
         }
     }
-
-    public String getTargetTable() {
+    
+    public DataTable getTargetTable() {
         return targetTable;
     }
 
-    public Map<Integer, String> getTargetColumns() {
+    public String getTargetTableName() {
+        return targetTableName;
+    }
+
+    public ParamInfo[] getTargetColumns() {
         return targetColumns;
     }
 
-    public Map<Integer, Object> getTargetColumnValues() {
-        return targetColumnValues;
+    public ColumnInfo[] getColumns() {
+        return columns;
+    }
+
+    public ParamInfo findTargetParam(int index) {
+        ParamInfo param = null;
+        for (ParamInfo paramInfo : getTargetColumns()) {
+            if (paramInfo.getOrdinal() == index) {
+                param = paramInfo;
+                break;
+            }
+        }
+        return param;
+    }
+
+    public int extractColumnId(String column) {
+        int columnId = -1;
+        for (ColumnInfo columnInfo : getColumns()) {
+            if (columnInfo.getName().equals(column)) {
+                columnId = columnInfo.getId();
+            }
+        }
+        return columnId;
     }
 
 }

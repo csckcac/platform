@@ -18,15 +18,8 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query.update;
 
-import org.apache.poi.ss.usermodel.Workbook;
-import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataReader;
-import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataReaderFactory;
-import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow;
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -55,29 +48,8 @@ public class ExcelUpdateQuery extends UpdateQuery {
 
     private int executeSQL() throws SQLException {
         int rowCount = 0;
-
-        DataReader reader = DataReaderFactory.createDataReader(getConnection());
-        DataTable table = reader.getData().get(getTargetTable());
-        for (DataRow row : table.getRows().values()) {
-            for (String columnName : getTargetColumns().values()) {}
-            //row.getCells().get(findColumn(table, columnName)).setCellValue();
-        }
-
         //writeRecord(workbook, ((TExcelConnection) getConnection()).getPath());
         return rowCount;
-    }
-
-    private synchronized void writeRecord(Workbook workbook, String filePath) throws SQLException {
-        try {
-            FileOutputStream out = new FileOutputStream(filePath);
-            workbook.write(out);
-            out.close();
-        } catch (FileNotFoundException e) {
-            throw new SQLException("Error occurred while locating the EXCEL datasource", e);
-        } catch (IOException e) {
-            throw new SQLException("Error occurred while writing the records to the EXCEL " +
-                    "datasource", e);
-        }
     }
 
     private int findColumn(DataTable table, String columnName) {

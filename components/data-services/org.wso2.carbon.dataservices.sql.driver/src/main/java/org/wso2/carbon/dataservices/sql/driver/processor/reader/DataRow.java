@@ -23,26 +23,21 @@ import java.util.List;
 
 public class DataRow {
 
-    private int rowID;
+    private int rowId;
 
     private List<DataCell> cells;
 
-    public DataRow(int rowID, List<DataCell> cells) {
-        this.rowID = rowID;
-        this.cells = cells;
-    }
-
-    public DataRow(int rowID) {
-        this.rowID = rowID;
+    public DataRow(int rowId) {
+        this.rowId = rowId;
         this.cells = new ArrayList<DataCell>();
     }
 
-    public int getRowID() {
-        return rowID;
+    public int getRowId() {
+        return rowId;
     }
 
-    public void setRowID(int rowID) {
-        this.rowID = rowID;
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
     }
 
     public List<DataCell> getCells() {
@@ -55,6 +50,10 @@ public class DataRow {
 
     public void addCell(DataCell cell) {
         this.getCells().add(cell);
+    }
+
+    public DataCell getCell(int id) {
+        return getCells().get(id);
     }
 
 }

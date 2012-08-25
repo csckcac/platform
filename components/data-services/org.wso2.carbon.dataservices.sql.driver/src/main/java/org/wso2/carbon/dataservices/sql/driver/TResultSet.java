@@ -29,8 +29,8 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.*;
-import java.util.Calendar;
-import java.util.Map;
+import java.sql.Date;
+import java.util.*;
 
 public class TResultSet implements ResultSet {
 
@@ -44,10 +44,14 @@ public class TResultSet implements ResultSet {
 
     private ColumnInfo[] columns;
 
+    private List<DataRow> rows;
+
     public TResultSet(Statement stmt, DataTable data, ColumnInfo[] columns) throws SQLException {
         this.stmt = stmt;
         this.data = data;
         this.columns = columns;
+        Collection<DataRow> tmp = getData().getRows().values();
+        this.rows = new ArrayList<DataRow>(tmp);
     }
 
     public boolean next() throws SQLException {
@@ -56,7 +60,7 @@ public class TResultSet implements ResultSet {
             currentRowPosition = 0;
         }
         currentRowPosition++;
-        return (getCurrentRowPosition() < getData().getRows().size());
+        return (getCurrentRowPosition() - 1 < getRows().size());
     }
 
     public void close() throws SQLException {
@@ -72,12 +76,13 @@ public class TResultSet implements ResultSet {
 
     public String getString(int columnIndex) throws SQLException {
         determineResultSetState();
-        return getValue(columnIndex - 1).toString();
+        Object value = getValue(columnIndex );
+        return (value != null) ? value.toString() : null;
     }
 
     public boolean getBoolean(int columnIndex) throws SQLException {
         determineResultSetState();
-        return Boolean.parseBoolean(getValue(columnIndex - 1).toString());
+        return Boolean.parseBoolean(getValue(columnIndex ).toString());
     }
 
     public byte getByte(int columnIndex) throws SQLException {
@@ -87,34 +92,34 @@ public class TResultSet implements ResultSet {
 
     public short getShort(int columnIndex) throws SQLException {
         determineResultSetState();
-        String value = getValue(columnIndex - 1).toString();
+        String value = getValue(columnIndex ).toString();
         return Short.parseShort(value.substring(0, value.indexOf(".")));
     }
 
     public int getInt(int columnIndex) throws SQLException {
         determineResultSetState();
-        String value = getValue(columnIndex - 1).toString();
+        String value = getValue(columnIndex ).toString();
         return Integer.parseInt(value.substring(0, value.indexOf(".")));
     }
 
     public long getLong(int columnIndex) throws SQLException {
         determineResultSetState();
-        return Long.parseLong(getValue(columnIndex - 1).toString());
+        return Long.parseLong(getValue(columnIndex ).toString());
     }
 
     public float getFloat(int columnIndex) throws SQLException {
         determineResultSetState();
-        return Float.parseFloat(getValue(columnIndex - 1).toString());
+        return Float.parseFloat(getValue(columnIndex ).toString());
     }
 
     public double getDouble(int columnIndex) throws SQLException {
         determineResultSetState();
-        return Double.parseDouble(getValue(columnIndex - 1).toString());
+        return Double.parseDouble(getValue(columnIndex ).toString());
     }
 
     public BigDecimal getBigDecimal(int columnIndex, int scale) throws SQLException {
         determineResultSetState();
-        return BigDecimal.valueOf(Long.parseLong(getValue(columnIndex - 1).toString()));
+        return BigDecimal.valueOf(Long.parseLong(getValue(columnIndex ).toString()));
     }
 
     public byte[] getBytes(int columnIndex) throws SQLException {
@@ -154,12 +159,13 @@ public class TResultSet implements ResultSet {
 
     public String getString(String columnLabel) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        return getValue(columnIndex).toString();
+        Object value = getValue(columnIndex );
+        return (value != null) ? value.toString() : null;
     }
 
     public boolean getBoolean(String columnLabel) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        return Boolean.parseBoolean(getValue(columnIndex).toString());
+        return Boolean.parseBoolean(getValue(columnIndex ).toString());
     }
 
     public byte getByte(String columnLabel) throws SQLException {
@@ -169,34 +175,38 @@ public class TResultSet implements ResultSet {
 
     public short getShort(String columnLabel) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        String value = getValue(columnIndex).toString();
+        String value = getValue(columnIndex ).toString();
         return Short.parseShort(value.substring(0, value.indexOf(".")));
     }
 
     public int getInt(String columnLabel) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        String value = getValue(columnIndex).toString();
-        return Integer.parseInt(value.substring(0, value.indexOf(".")));
+        String value = getValue(columnIndex ).toString();
+        int tmp = value.indexOf(".");
+        if (tmp == -1) {
+            throw new SQLException("Invalid value to be returned as an integer");
+        }
+        return Integer.parseInt(value.substring(0, tmp));
     }
 
     public long getLong(String columnLabel) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        return Long.parseLong(getValue(columnIndex).toString());
+        return Long.parseLong(getValue(columnIndex ).toString());
     }
 
     public float getFloat(String columnLabel) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        return Float.parseFloat(getValue(columnIndex).toString());
+        return Float.parseFloat(getValue(columnIndex ).toString());
     }
 
     public double getDouble(String columnLabel) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        return Double.parseDouble(getValue(columnIndex).toString());
+        return Double.parseDouble(getValue(columnIndex ).toString());
     }
 
     public BigDecimal getBigDecimal(String columnLabel, int scale) throws SQLException {
         int columnIndex = findColumn(columnLabel);
-        DataCell cell = getCurrentRow().getCells().get(columnIndex);
+        DataCell cell = getCurrentRow().getCells().get(columnIndex );
         if (cell == null) {
             throw new SQLException("Error occurred while extracting the value");
         }
@@ -263,7 +273,7 @@ public class TResultSet implements ResultSet {
 
     public Object getObject(int columnIndex) throws SQLException {
         determineResultSetState();
-        DataCell cell = getCurrentRow().getCells().get(columnIndex - 1);
+        DataCell cell = getCurrentRow().getCells().get(columnIndex );
         if (cell == null) {
             throw new SQLException("Error occurred while extracting the value");
         }
@@ -343,7 +353,7 @@ public class TResultSet implements ResultSet {
 
     public boolean last() throws SQLException {
         determineResultSetState();
-        return (getCurrentRowPosition() == getData().getRows().size() - 1);
+        return (getCurrentRowPosition() == getRows().size() - 1);
     }
 
     public int getRow() throws SQLException {
@@ -1023,7 +1033,11 @@ public class TResultSet implements ResultSet {
     }
 
     private DataRow getCurrentRow() {
-        return getData().getRows().get(getCurrentRowPosition());
+        return getRows().get(getCurrentRowPosition() - 1);
+    }
+
+    private List<DataRow> getRows() {
+        return rows;
     }
 
     private void determineResultSetState() throws SQLException {

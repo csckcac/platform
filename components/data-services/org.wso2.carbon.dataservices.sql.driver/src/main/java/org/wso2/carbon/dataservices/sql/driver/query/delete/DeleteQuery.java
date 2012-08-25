@@ -18,15 +18,80 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query.delete;
 
-import org.wso2.carbon.dataservices.sql.driver.query.Query;
+import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
+import org.wso2.carbon.dataservices.sql.driver.parser.ParserUtil;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataReaderFactory;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
+import org.wso2.carbon.dataservices.sql.driver.query.ConditionalQuery;
 
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
+import java.util.Queue;
 
-public abstract class DeleteQuery extends Query {
+public abstract class DeleteQuery extends ConditionalQuery {
+
+    private String targetTableName;
+
+    private DataTable targetTable;
 
     public DeleteQuery(Statement stmt) throws SQLException {
         super(stmt);
+        this.targetTableName = this.extractTargetTableName(getProcessedTokens());
+        this.targetTable =
+                DataReaderFactory.createDataReader(getConnection()).getData().get(
+                        getTargetTableName());
+        this.populateConditions(getProcessedTokens());
+    }
+
+    private String extractTargetTableName(Queue<String> tokens) throws SQLException {
+        //Dropping DELETE keyword
+        if (!Constants.DELETE.equalsIgnoreCase(tokens.peek())) {
+            throw new SQLException("Syntax Error : 'DELETE' keyword is missing");
+        }
+        tokens.poll();
+        //Dropping FROM keyword
+        if (!Constants.FROM.equalsIgnoreCase(tokens.peek())) {
+            throw new SQLException("Syntax Error : 'FROM' keyword is missing");
+        }
+        tokens.poll();
+        //Dropping TABLE identifier
+        tokens.poll();
+        if (!ParserUtil.isStringLiteral(tokens.peek())) {
+            throw new SQLException("Syntax Error : String literal is expected");
+        }
+        return tokens.poll();
+    }
+
+    private void populateConditions(Queue<String> tokens) throws SQLException {
+        if (tokens.isEmpty()) {
+            return;
+        }
+        if (!Constants.WHERE.equalsIgnoreCase(tokens.peek())) {
+            throw new SQLException("Syntax Error : 'WHERE' keyword is missing");
+        }
+        //Dropping WHERE keyword
+        tokens.poll();
+        this.processConditions(tokens, getCondition());
+    }
+
+    public DataTable getTargetTable() {
+        return targetTable;
+    }
+
+    public String getTargetTableName() {
+        return targetTableName;
+    }
+
+    public Map<Integer, DataRow> getResultantRows() {
+        Map<Integer, DataRow> result;
+        if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
+            result = getTargetTable().getRows();
+        } else {
+            result = getCondition().process(getTargetTable()).getRows();
+        }
+        return result;
     }
 
 }

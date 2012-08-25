@@ -22,51 +22,36 @@ import org.wso2.carbon.dataservices.sql.driver.TDriverUtil;
 import org.wso2.carbon.dataservices.sql.driver.TResultSet;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 import org.wso2.carbon.dataservices.sql.driver.parser.ParserUtil;
-import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataReader;
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataReaderFactory;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow;
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.FixedDataTable;
 import org.wso2.carbon.dataservices.sql.driver.query.ColumnInfo;
-import org.wso2.carbon.dataservices.sql.driver.query.Query;
+import org.wso2.carbon.dataservices.sql.driver.query.ConditionalQuery;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
-public abstract class SelectQuery extends Query {
+public abstract class SelectQuery extends ConditionalQuery {
 
     private List<ColumnInfo> targetColumns;
 
-    private String targetTable;
+    private String targetTableName;
+
+    private DataTable targetTable;
 
     private ColumnInfo[] columns;
 
     public SelectQuery(Statement stmt) throws SQLException {
         super(stmt);
-        targetColumns = new ArrayList<ColumnInfo>();
-        preprocessTokens(getProcessedTokens());
-        columns = TDriverUtil.getHeaders(stmt.getConnection(), getTargetTable());
-        preProcessColumns(getColumns(), getTargetColumns());
-    }
-
-    private ColumnInfo[] getColumns() {
-        return columns;
-    }
-
-    private void preProcessColumns(ColumnInfo[] columns, ColumnInfo[] targetColumns) {
-        int idx = 0;
-        for (ColumnInfo column : columns) {
-            if (idx < getTargetColumns().length) {
-                for (ColumnInfo targetColumn : targetColumns) {
-                    if (column.getName().equals(targetColumn.getName())) {
-                        targetColumn.setSqlType(column.getSqlType());
-                        idx++;
-                    }
-                }
-            }
-        }
+        this.targetColumns = new ArrayList<ColumnInfo>();
+        this.preProcessTokens(getProcessedTokens());
+        this.targetTable = DataReaderFactory.createDataReader(getConnection()).getData().get(
+                getTargetTableName());
+        this.columns = TDriverUtil.getHeaders(stmt.getConnection(), getTargetTableName());
+        this.preProcessColumns(getColumns(), getTargetColumns());
     }
 
     @Override
@@ -75,10 +60,40 @@ public abstract class SelectQuery extends Query {
                 "such as INSERT, UPDATE and DELETE");
     }
 
-    private void preprocessTokens(Queue<String> tokens) throws SQLException {
+    public synchronized ResultSet executeSQL() throws SQLException {
+        Map<Integer, DataRow> result;
+        DataTable table = new FixedDataTable(getTargetTableName(), getTargetTable().getHeaders());
+        if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
+            result = getTargetTable().getRows();
+        } else {
+            result = getCondition().process(getTargetTable()).getRows();
+        }
+        table.setData(result);
+        return new TResultSet(getStatement(), table, getTargetColumns());
+    }
+
+    private void preProcessColumns(ColumnInfo[] columns, ColumnInfo[] targetColumns) {
+        int columnIndex = 0;
+        for (ColumnInfo column : columns) {
+            if (columnIndex < getTargetColumns().length) {
+                for (ColumnInfo targetColumn : targetColumns) {
+                    if (column.getName().equals(targetColumn.getName())) {
+                        targetColumn.setSqlType(column.getSqlType());
+                        columnIndex++;
+                    }
+                }
+            }
+        }
+    }
+
+    private void preProcessTokens(Queue<String> tokens) throws SQLException {
         //Drops SELECT keyword
         tokens.poll();
-        processTargetColumns(tokens, 0);
+        if (Constants.ASTERISK.equalsIgnoreCase(tokens.peek())) {
+            this.targetColumns = Arrays.asList(getColumns()); 
+        } else {
+            processTargetColumns(tokens, 0);
+        }
         //Drops FROM keyword
         tokens.poll();
         if (!Constants.TABLE.equals(tokens.peek())) {
@@ -88,7 +103,16 @@ public abstract class SelectQuery extends Query {
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal is expected");
         }
-        this.targetTable = tokens.poll();
+        targetTableName = tokens.poll();
+        if (tokens.isEmpty()) {
+            return;
+        }
+        if (!Constants.WHERE.equalsIgnoreCase(tokens.peek())) {
+            throw new SQLException("Syntax Error : 'WHERE' keyword is expected");
+        }
+        //Removing WHERE keyword
+        tokens.poll();
+        this.processConditions(tokens, getCondition());
     }
 
     private void processTargetColumns(Queue<String> tokens, int paramCount) throws SQLException {
@@ -105,27 +129,20 @@ public abstract class SelectQuery extends Query {
         }
     }
 
-    private void processConditions(Queue<String> tokens) throws SQLException {
-        if (!Constants.WHERE.equalsIgnoreCase(tokens.peek())) {
-            throw new SQLException("Syntax Error : 'WHERE' keyword is expected");
-        }
-    }
-
-    public synchronized ResultSet executeSQL() throws SQLException {
-        DataReader reader = DataReaderFactory.createDataReader(getConnection());
-        DataTable table = reader.getData().get(getTargetTable());
-        if (table == null) {
-            throw new SQLException("Sheet '" + getTargetTable() + "' does not exist");
-        }
-        return new TResultSet(getStatement(), table, getTargetColumns());
-    }
-
     public ColumnInfo[] getTargetColumns() {
         return targetColumns.toArray(new ColumnInfo[targetColumns.size()]);
     }
 
-    public String getTargetTable() {
+    public DataTable getTargetTable() {
         return targetTable;
+    }
+
+    public String getTargetTableName() {
+        return targetTableName;
+    }
+
+    private ColumnInfo[] getColumns() {
+        return columns;
     }
 
 }

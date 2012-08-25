@@ -37,28 +37,31 @@ public class ExcelDataReader extends DataReader {
     }
 
     public void populateData() throws SQLException {
-        Workbook workbook = ((TExcelConnection)getConnection()).getWorkbook();
+        Workbook workbook = ((TExcelConnection) getConnection()).getWorkbook();
         int noOfSheets = workbook.getNumberOfSheets();
         for (int i = 0; i < noOfSheets; i++) {
             Sheet sheet = workbook.getSheetAt(i);
 
             String sheetName = sheet.getSheetName();
             Map<String, Integer> headers = this.extractColumnHeaders(sheet);
-            DataTable dataTable = new DataTable(sheetName, headers);
+            DataTable dataTable = new FixedDataTable(sheetName, headers);
 
             Iterator<Row> rowItr = sheet.rowIterator();
             while (rowItr.hasNext()) {
                 Row row = rowItr.next();
-                DataRow dataRow = new DataRow(row.getRowNum());
-                Iterator<Cell> cellItr = row.cellIterator();
-                while (cellItr.hasNext()) {
-                    Cell cell = cellItr.next();
-                    DataCell dataCell =
-                            new DataCell(cell.getColumnIndex(), cell.getCellType(),
-                                    this.extractCellValue(cell));
-                    dataRow.addCell(dataCell);
+                if (row.getRowNum() != 0) {
+                    DataRow dataRow = new DataRow(row.getRowNum() - 1);
+                    Iterator<Cell> cellItr = row.cellIterator();
+                    int cellIndex = 0;
+                    while (cellItr.hasNext()) {
+                        Cell cell = cellItr.next();
+                        DataCell dataCell =
+                                new DataCell(cellIndex, cell.getCellType(), extractCellValue(cell));
+                        dataRow.addCell(dataCell);
+                        cellIndex++;
+                    }
+                    dataTable.addRow(dataRow);
                 }
-                dataTable.addRow(dataRow);
             }
             addTable(dataTable);
         }
@@ -67,8 +70,8 @@ public class ExcelDataReader extends DataReader {
     /**
      * Extracts the value of a particular cell depending on its type
      *
-     * @param cell  A populated Cell instance
-     * @return      Value of the cell
+     * @param cell A populated Cell instance
+     * @return Value of the cell
      */
     private Object extractCellValue(Cell cell) {
         switch (cell.getCellType()) {
@@ -102,7 +105,7 @@ public class ExcelDataReader extends DataReader {
                 Cell cell = itr.next();
                 if (cell != null) {
                     int cellType = cell.getCellType();
-                    switch(cellType) {
+                    switch (cellType) {
                         case Cell.CELL_TYPE_STRING:
                             headers.put(cell.getStringCellValue(), cell.getColumnIndex());
                             break;
@@ -110,7 +113,7 @@ public class ExcelDataReader extends DataReader {
                             headers.put(String.valueOf(cell.getNumericCellValue()),
                                     cell.getColumnIndex());
                             break;
-                        default :
+                        default:
                             throw new SQLException("Invalid column type");
                     }
                 }

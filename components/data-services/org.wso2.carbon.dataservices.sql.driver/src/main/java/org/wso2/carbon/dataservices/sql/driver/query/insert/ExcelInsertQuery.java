@@ -22,12 +22,10 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.wso2.carbon.dataservices.sql.driver.TDriverUtil;
 import org.wso2.carbon.dataservices.sql.driver.TExcelConnection;
 import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,9 +60,9 @@ public class ExcelInsertQuery extends InsertQuery {
             throw new SQLException("Connection does not refer to a Excel connection");
         }
         Workbook workbook = ((TExcelConnection) getConnection()).getWorkbook();
-        Sheet sheet = workbook.getSheet(getTargetTable());
+        Sheet sheet = workbook.getSheet(getTargetTableName());
         if (sheet == null) {
-            throw new SQLException("Excel sheet named '" + this.getTargetTable() +
+            throw new SQLException("Excel sheet named '" + this.getTargetTableName() +
                     "' does not exist");
         }
         int lastRowNo = sheet.getLastRowNum();
@@ -96,22 +94,8 @@ public class ExcelInsertQuery extends InsertQuery {
             }
             rowCount++;
         }
-        writeRecord(workbook, ((TExcelConnection) getConnection()).getPath());
+        TDriverUtil.writeRecords(workbook, ((TExcelConnection) getConnection()).getPath());
         return rowCount;
     }
-
-    private synchronized void writeRecord(Workbook workbook, String filePath) throws SQLException {
-        try {
-            FileOutputStream out = new FileOutputStream(filePath);
-            workbook.write(out);
-            out.close();
-        } catch (FileNotFoundException e) {
-            throw new SQLException("Error occurred while locating the EXCEL datasource", e);
-        } catch (IOException e) {
-            throw new SQLException("Error occurred while writing the records to the EXCEL " +
-                    "datasource", e);
-        }
-    }
-
 
 }

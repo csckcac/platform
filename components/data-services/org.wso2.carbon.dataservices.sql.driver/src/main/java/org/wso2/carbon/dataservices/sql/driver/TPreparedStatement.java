@@ -50,7 +50,6 @@ public class TPreparedStatement extends TStatement implements PreparedStatement 
         super(connection);
         this.sql = sql;
         this.parameters = ParserUtil.extractParameters(getSql());
-
         this.queryType = ParserUtil.extractFirstKeyword(getSql());
         if (getQueryType() != null) {
             this.queryType = getQueryType().toUpperCase();

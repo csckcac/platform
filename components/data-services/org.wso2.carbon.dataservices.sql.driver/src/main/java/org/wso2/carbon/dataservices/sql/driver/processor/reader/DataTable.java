@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *  Copyright (c) 2005-2011, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *  WSO2 Inc. licenses this file to you under the Apache License,
  *  Version 2.0 (the "License"); you may not use this file except
@@ -18,52 +18,27 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
-import java.util.HashMap;
 import java.util.Map;
 
-public class DataTable {
+/**
+ * This interface represents a data table the parser will work on.
+ */
+public interface DataTable {
 
-    private int noOfColumns;
-
-    private Map<Integer, DataRow> rows;
-
-    private String tableName;
-
-    private Map<String, Integer> headers;
-
-    public DataTable(String tableName, Map<String, Integer> headers) {
-        this.tableName = tableName;
-        this.headers = headers;
-        this.rows = new HashMap<Integer, DataRow>();
-        this.noOfColumns = this.getHeaders().size();
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public Map<String, Integer> getHeaders() {
-        return headers;
-    }
-
-    public int getNoOfColumns() {
-        return noOfColumns;
-    }
-
-    public void setNoOfColumns(int noOfColumns) {
-        this.noOfColumns = noOfColumns;
-    }
-
-    public Map<Integer, DataRow> getRows() {
-        return rows;
-    }
-
-    public void setData(Map<Integer, DataRow> rows) {
-        this.rows = rows;
-    }
-
-    public void addRow(DataRow dataRow) {
-        getRows().put(dataRow.getRowID(), dataRow);
-    }
-
+	String getTableName();
+	
+	Map<String, Integer> getHeaders();
+	
+	int getNoOfColumns();
+	
+	void setNoOfColumns(int noOfColumns);
+	
+	Map<Integer, DataRow> getRows();
+	
+	void setData(Map<Integer, DataRow> rows);
+	
+	void addRow(DataRow dataRow);
+	
+	DataTable applyCondition(String column, String value, String operator);
+	
 }

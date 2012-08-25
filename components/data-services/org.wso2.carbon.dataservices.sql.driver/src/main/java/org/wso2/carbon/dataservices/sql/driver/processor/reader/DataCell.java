@@ -20,9 +20,9 @@ package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
 public class DataCell {
 
-    private int rowID;
+    private int rowId;
 
-    private int columnID;
+    private int columnId;
 
     private String columnName;
 
@@ -30,31 +30,26 @@ public class DataCell {
 
     private Object cellValue;
 
-    public DataCell(int columnID, String columnName) {
-        this.columnID = columnID;
-        this.columnName = columnName;
-    }
-
-    public DataCell(int columnID, int cellType, Object cellValue) {
-        this.columnID = columnID;
+    public DataCell(int columnId, int cellType, Object cellValue) {
+        this.columnId = columnId;
         this.cellType = cellType;
         this.cellValue = cellValue;
     }
 
-    public int getRowID() {
-        return rowID;
+    public int getRowId() {
+        return rowId;
     }
 
-    public void setRowID(int rowID) {
-        this.rowID = rowID;
+    public void setRowId(int rowId) {
+        this.rowId = rowId;
     }
 
-    public int getColumnID() {
-        return columnID;
+    public int getColumnId() {
+        return columnId;
     }
 
-    public void setColumnID(int columnID) {
-        this.columnID = columnID;
+    public void setColumnId(int columnId) {
+        this.columnId = columnId;
     }
 
     public String getColumnName() {

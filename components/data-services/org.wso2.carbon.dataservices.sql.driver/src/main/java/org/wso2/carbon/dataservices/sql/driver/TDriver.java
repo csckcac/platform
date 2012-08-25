@@ -109,14 +109,24 @@ public class TDriver implements Driver {
             props.setProperty(Constants.FILE_PATH, propValue);
         }
         pos = getNextTokenPos(url, pos, token);
+        if (Constants.SHEET_NAME.equals(token.toString())) {
+             pos = getNextTokenPos(url, pos, token);
+            String propValue = token.toString();
+            if (propValue == null || "".equals(propValue)) {
+                throw new SQLException("File path attribute is missing");
+            }
+            props.setProperty(Constants.SHEET_NAME, propValue);
+        }
+        pos = getNextTokenPos(url, pos, token);
         if (Constants.VISIBILITY.equals(token.toString())) {
             pos = getNextTokenPos(url, pos, token);
             props.setProperty(Constants.VISIBILITY, token.toString());
         }
+        getNextTokenPos(url, pos, token);
         return props;
     }
 
-    private  int getNextTokenPos(String url, int pos, StringBuffer token) {
+    private int getNextTokenPos(String url, int pos, StringBuffer token) {
         token.setLength(0);
         while (pos < url.length()) {
             char c = url.charAt(pos++);
@@ -128,6 +138,8 @@ public class TDriver implements Driver {
             if (c == ';') {
                 if (isFilePath()) {
                     isFilePath = false;
+                    break;
+                } else {
                     break;
                 }
             }
@@ -143,7 +155,7 @@ public class TDriver implements Driver {
             }
             token.append(c);
         }
-        if ("".equals(token.toString())) {
+        if ("".equals(token.toString()) && pos < url.length()) {
             return getNextTokenPos(url, pos, token);
         }
         return pos;

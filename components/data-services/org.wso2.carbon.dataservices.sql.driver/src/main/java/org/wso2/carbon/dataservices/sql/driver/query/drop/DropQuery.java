@@ -16,60 +16,35 @@
  *  under the License.
  *
  */
-package org.wso2.carbon.dataservices.sql.driver.query.create;
+package org.wso2.carbon.dataservices.sql.driver.query.drop;
 
-import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
-import org.wso2.carbon.dataservices.sql.driver.query.ColumnInfo;
 import org.wso2.carbon.dataservices.sql.driver.query.Query;
 
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Queue;
 
-public abstract class CreateQuery extends Query {
+public abstract class DropQuery extends Query {
 
     private String tableName;
 
-    private List<ColumnInfo> columns;
-
-    public CreateQuery(Statement stmt) throws SQLException {
+    public DropQuery(Statement stmt) throws SQLException {
         super(stmt);
         this.tableName = this.extractTableName(this.getProcessedTokens());
-        this.columns = this.extractColumns(this.getProcessedTokens(), new ArrayList<ColumnInfo>());
     }
 
     private String extractTableName(Queue<String> tokens) {
-        //Dropping CREATE keyword
+        //Dropping DROP keyword
         tokens.poll();
-        //Dropping SHEET keyword;
+        //Dropping SHEET keyword
         tokens.poll();
         //Dropping TABLE identifier
         tokens.poll();
-        //Returning the table name
         return tokens.poll();
-    }
-
-    private List<ColumnInfo> extractColumns(Queue<String> tokens,
-                                            List<ColumnInfo> columns) throws SQLException {
-        if (!Constants.COLUMN.equals(tokens.peek())) {
-             throw new SQLException("Unable to extract columns");
-        }
-        tokens.poll();
-        columns.add(new ColumnInfo(tokens.poll(), this.getTableName(), -1));
-        if (Constants.COLUMN.equals(tokens.peek())) {
-            columns = extractColumns(tokens, columns);
-        }
-        return columns;
     }
 
     public String getTableName() {
         return tableName;
-    }
-
-    public List<ColumnInfo> getColumns() {
-        return columns;
     }
 
 }

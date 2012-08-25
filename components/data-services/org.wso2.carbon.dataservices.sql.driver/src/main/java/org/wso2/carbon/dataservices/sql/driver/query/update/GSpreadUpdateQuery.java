@@ -18,9 +18,16 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.query.update;
 
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataCell;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.FixedDataTable;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.Map;
 
 public class GSpreadUpdateQuery extends UpdateQuery {
     
@@ -43,4 +50,26 @@ public class GSpreadUpdateQuery extends UpdateQuery {
         return false;
     }
 
+    private int executeSQL() throws SQLException {
+        Map<Integer, DataRow> result;
+        DataTable table = new FixedDataTable(getTargetTableName(), getTargetTable().getHeaders());
+        if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
+            result = getTargetTable().getRows();
+        } else {
+            result = getCondition().process(getTargetTable()).getRows();
+        }
+        table.setData(result);
+
+        for (Map.Entry<Integer, DataRow> row : result.entrySet()) {
+            List<DataCell> cells = row.getValue().getCells();
+            for (DataCell cell : cells) {
+                if (cell.getColumnId() == this.extractColumnId(cell.getColumnName())) {
+                    //cell.setCellValue();
+                }
+            }
+        }
+        return 0;
+    }
+
+    
 }

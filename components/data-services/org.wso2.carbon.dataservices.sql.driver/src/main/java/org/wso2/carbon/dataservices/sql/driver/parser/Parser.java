@@ -36,7 +36,7 @@ public class Parser {
         Queue<String> processed = new ConcurrentLinkedQueue<String>();
         switch (types) {
             case SELECT:
-                parseSelectModified(tokens, processed);
+                parseSelect(tokens, processed);
                 break;
             case INSERT:
                 parseInsert(tokens, processed);
@@ -48,13 +48,74 @@ public class Parser {
                 parseDelete(tokens, processed);
                 break;
             case CREATE:
+                parseCreate(tokens, processed);
                 break;
             case DROP:
+                parseDrop(tokens, processed);
                 break;
             default:
                 throw new SQLException("Query type unsupported");
         }
         return processed;
+    }
+
+    private static void parseDrop(Queue<String> tokens,
+                                  Queue<String> processedTokens) throws SQLException {
+        if (!Constants.DROP.equalsIgnoreCase(tokens.peek())) {
+            throw new SQLException("Syntax Error : 'DROP' keyword is expected");
+        }
+        processedTokens.add(tokens.poll().toUpperCase());
+        if (!Constants.SHEET.equalsIgnoreCase(tokens.peek())) {
+            throw new SQLException("Syntax Error : 'SHEET' keyword is expected");
+        }
+        processedTokens.add(tokens.poll().toUpperCase());
+        if (!ParserUtil.isStringLiteral(tokens.peek())) {
+            throw new SQLException("Syntax Error : String literal is expected");
+        }
+        processedTokens.add(Constants.TABLE);
+        processedTokens.add(tokens.poll());
+        processDelimiter(tokens);
+        if (!tokens.isEmpty()) {
+            throw new SQLException("Syntax Error : Unusual end to the statement");
+        }
+    }
+
+    private static void parseCreate(Queue<String> tokens,
+                                    Queue<String> processedTokens) throws SQLException {
+        if (!Constants.CREATE.equalsIgnoreCase(tokens.peek())) {
+             throw new SQLException("Syntax Error : 'CREATE' keyword is expected");
+        }
+        processedTokens.add(tokens.poll().toUpperCase());
+        if (!Constants.SHEET.equalsIgnoreCase(tokens.peek())) {
+            throw new SQLException("Syntax Error : 'SHEET' keyword is expected");
+        }
+        processedTokens.add(tokens.poll().toUpperCase());
+        if (!ParserUtil.isStringLiteral(tokens.peek())) {
+            throw new SQLException("Syntax Error : String literal is expected");
+        }
+        processedTokens.add(Constants.TABLE);
+        processedTokens.add(tokens.poll());
+        if (!Constants.LEFT_BRACKET.equals(tokens.peek())) {
+            throw new SQLException("Syntax Error : '(' is expected");
+        }
+        tokens.poll();
+        processColumnNames(tokens, processedTokens);
+        if (!Constants.RIGHT_BRACKET.equals(tokens.peek())) {
+            throw new SQLException("Syntax Error : ')' is expected");
+        }
+    }
+
+    private static void processColumnNames(Queue<String> tokens,
+                                           Queue<String> processedTokens) throws SQLException {
+        if (!ParserUtil.isStringLiteral(tokens.peek())) {
+            throw new SQLException("Syntax Error : String literal is expected");
+        }
+        processedTokens.add(Constants.COLUMN);
+        processedTokens.add(tokens.poll());
+        if (Constants.COMMA.equals(tokens.peek())) {
+            tokens.poll();
+            processColumnNames(tokens, processedTokens);
+        }
     }
 
     private static void parseSelect(Queue<String> tokens,
@@ -63,39 +124,32 @@ public class Parser {
             throw new SQLException("Syntax Error : 'SELECT' keyword is expected");
         }
         processed.add(tokens.poll().toUpperCase());
-        processSelectClause(tokens, processed);
-        processFromClause(tokens, processed);
-    }
-
-    private static void parseSelectModified(Queue<String> tokens,
-                                            Queue<String> processed) throws SQLException {
-        if (!Constants.SELECT.equalsIgnoreCase(tokens.peek())) {
-            throw new SQLException("Syntax Error : 'SELECT' keyword is expected");
-        }
-        processed.add(tokens.poll().toUpperCase());
         processSelectedColumns(tokens, processed);
         processFromClause(tokens, processed);
+        if (tokens.isEmpty()) {
+            return;
+        }
+        processWhereClause(tokens, processed);
     }
 
     private static void processSelectedColumns(Queue<String> tokens,
                                                Queue<String> processed) throws SQLException {
-        if (ParserUtil.isStringLiteral(tokens.peek()) &&
-                !Constants.ASTERISK.equalsIgnoreCase(tokens.peek())) {
+        if (Constants.ASTERISK.equalsIgnoreCase(tokens.peek())) {
+            processed.add(tokens.poll());
+            return;
+        }
+        if (ParserUtil.isStringLiteral(tokens.peek())) {
             processed.add(Constants.COLUMN);
             processed.add(tokens.poll());
             if (Constants.COMMA.equalsIgnoreCase(tokens.peek())) {
                 tokens.poll();
                 processSelectedColumns(tokens, processed);
             }
-        } else if (Constants.ASTERISK.equalsIgnoreCase(tokens.peek())) {
-            tokens.poll();
-            processed.add(Constants.ALL);
-            return;
         }
     }
 
     private static void processSelectClause(Queue<String> tokens,
-                                      Queue<String> processed) throws SQLException {
+                                            Queue<String> processed) throws SQLException {
         StringBuilder sb;
         if (ParserUtil.isAggregateFunction(tokens.peek()) ||
                 ParserUtil.isStringFunction(tokens.peek())) {
@@ -219,7 +273,7 @@ public class Parser {
                     processSelectClause(tokens, processed);
                 } else {
                     if (!ParserUtil.isStringLiteral(tokens.peek())) {
-                       return;
+                        return;
                     }
                     processed.add(Constants.COLUMN);
                     processed.add(strRef);
@@ -236,7 +290,7 @@ public class Parser {
     }
 
     private static void processFromClause(Queue<String> tokens,
-                                   Queue<String> processed) throws SQLException {
+                                          Queue<String> processed) throws SQLException {
         if (!Constants.FROM.equalsIgnoreCase(tokens.peek())) {
             throw new SQLException("Syntax Error : 'FROM' keyword is missing");
         }
@@ -250,11 +304,9 @@ public class Parser {
                 Constants.JOIN.equalsIgnoreCase(tokens.peek()) ||
                 Constants.INNER.equalsIgnoreCase(tokens.peek()) ||
                 Constants.OUTER.equalsIgnoreCase(tokens.peek())) {
-           throw new SQLException("JOINs are not supported");
+            throw new SQLException("JOINs are not supported");
         }
     }
-
-    public static boolean isCondition = false;
 
     private static void processWhereClause(Queue<String> tokens,
                                            Queue<String> processed) throws SQLException {
@@ -262,11 +314,73 @@ public class Parser {
             throw new SQLException("Syntax Error : 'WHERE' keyword is expected");
         }
         processed.add(tokens.poll().toUpperCase());
-
+        processConditions(tokens, processed);
     }
 
 
-
+    private static void processConditions(Queue<String> tokens,
+                                          Queue<String> processed) throws SQLException {
+        if (!tokens.isEmpty() && Constants.LEFT_BRACKET.equals(tokens.peek())) {
+            processed.add(tokens.poll());
+            if (Constants.LEFT_BRACKET.equals(tokens.peek())) {
+                processConditions(tokens, processed);
+            }
+            if (!ParserUtil.isStringLiteral(tokens.peek())) {
+                throw new SQLException("Syntax Error : String literal expected");
+            }
+            processed.add(Constants.COLUMN);
+            processed.add(tokens.poll());
+//            if (!Constants.EQUAL.equals(tokens.peek())) {
+//                throw new SQLException("Syntax Error : '=' is expected");
+//            }
+            processed.add(Constants.OPERATOR);
+            processed.add(tokens.poll());
+            processColumnValue(tokens, processed);
+            if (!tokens.isEmpty() && Constants.RIGHT_BRACKET.equals(tokens.peek())) {
+                processed.add(tokens.poll());
+            }
+            if (tokens.isEmpty()) {
+                return;
+            }
+            if (!(Constants.OR.equals(tokens.peek()) || Constants.AND.equals(tokens.peek()))) {
+                throw new SQLException("Syntax Error : 'OR' or 'AND' keyword is expected");
+            }
+            processed.add(tokens.poll());
+            processConditions(tokens, processed);
+        } else if (!tokens.isEmpty() && ParserUtil.isStringLiteral(tokens.peek())) {
+            processed.add(Constants.COLUMN);
+            processed.add(tokens.poll());
+//            if (!Constants.EQUAL.equals(tokens.peek())) {
+//                throw new SQLException("Syntax Error : '=' is expected");
+//            }
+            processed.add(Constants.OPERATOR);
+            processed.add(tokens.poll());
+            processColumnValue(tokens, processed);
+            if (!tokens.isEmpty() && Constants.RIGHT_BRACKET.equals(tokens.peek())) {
+                processConditions(tokens, processed);
+            }
+            if (!tokens.isEmpty()) {
+                if (!(Constants.OR.equals(tokens.peek()) || Constants.AND.equals(tokens.peek()))) {
+                    throw new SQLException("Syntax Error : 'OR' or 'AND' keyword is expected");
+                }
+                processed.add(tokens.poll());
+                processConditions(tokens, processed);
+            }
+        } else if (!tokens.isEmpty() && Constants.RIGHT_BRACKET.equals(tokens.peek())) {
+            processed.add(tokens.poll());
+            if (!tokens.isEmpty() && Constants.RIGHT_BRACKET.equals(tokens.peek())) {
+                processConditions(tokens, processed);
+            }
+            if (tokens.isEmpty()) {
+                return;
+            }
+            if (!(Constants.OR.equals(tokens.peek()) || Constants.AND.equals(tokens.peek()))) {
+                throw new SQLException("Syntax Error : 'OR' or 'AND' keyword is expected");
+            }
+            processed.add(tokens.poll());
+            processConditions(tokens, processed);
+        }
+    }
 
     private static void parseInsert(Queue<String> tokens,
                                     Queue<String> processed) throws SQLException {
@@ -401,15 +515,15 @@ public class Parser {
     }
 
     private static void processUpdateTargets(Queue<String> tokens,
-                                         Queue<String> processed) throws SQLException {
+                                             Queue<String> processed) throws SQLException {
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error");
         }
         processed.add(Constants.COLUMN);
         processed.add(tokens.poll());
-        if (!Constants.EQUAL.equalsIgnoreCase(tokens.peek())) {
-            throw new SQLException("Syntax Error : '=' is expected");
-        }
+//        if (!Constants.EQUAL.equalsIgnoreCase(tokens.peek())) {
+//            throw new SQLException("Syntax Error : '=' is expected");
+//        }
         tokens.poll();
         processColumnValue(tokens, processed);
         if (Constants.WHERE.equalsIgnoreCase(tokens.peek())) {
@@ -451,13 +565,13 @@ public class Parser {
             throw new SQLException("Syntax Error : 'FROM' expected");
         }
         processed.add(tokens.poll().toUpperCase());
-        if (!ParserUtil.isStringFunction(tokens.peek())) {
+        if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal expected");
         }
         processed.add(Constants.TABLE);
         processed.add(tokens.poll());
-        if (Constants.WHERE.equalsIgnoreCase(tokens.peek())) {
-            processWhereTargets(tokens, processed);
+        if (!tokens.isEmpty()) {
+            processWhereClause(tokens, processed);
         }
         processDelimiter(tokens);
     }
@@ -496,9 +610,9 @@ public class Parser {
         }
         processed.add(Constants.COLUMN);
         processed.add(tokens.poll());
-        if (!Constants.EQUAL.equalsIgnoreCase(tokens.peek())) {
-            throw new SQLException("Syntax Error : '=' expected");
-        }
+//        if (!Constants.EQUAL.equalsIgnoreCase(tokens.peek())) {
+//            throw new SQLException("Syntax Error : '=' expected");
+//        }
         tokens.poll();
         processWhereColumnValues(tokens, processed, false, false, true);
     }
@@ -552,7 +666,8 @@ public class Parser {
                 isParameterized = false;
                 processed.add(tokens.poll());
             }
-            if (!Constants.AND.equalsIgnoreCase(tokens.peek()) || !Constants.OR.equalsIgnoreCase(tokens.peek())) {
+            if (!Constants.AND.equalsIgnoreCase(tokens.peek()) ||
+                    !Constants.OR.equalsIgnoreCase(tokens.peek())) {
                 isEnd = true;
             }
             tokens.poll();

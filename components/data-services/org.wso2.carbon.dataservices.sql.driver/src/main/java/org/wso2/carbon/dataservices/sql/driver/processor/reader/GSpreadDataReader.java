@@ -18,21 +18,16 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
-import com.google.gdata.client.spreadsheet.CellQuery;
 import com.google.gdata.data.spreadsheet.CellEntry;
 import com.google.gdata.data.spreadsheet.CellFeed;
 import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.data.spreadsheet.WorksheetFeed;
-import com.google.gdata.util.ServiceException;
 import org.wso2.carbon.dataservices.sql.driver.TDriverUtil;
 import org.wso2.carbon.dataservices.sql.driver.TGSpreadConnection;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GSpreadDataReader extends DataReader {
 
@@ -41,49 +36,78 @@ public class GSpreadDataReader extends DataReader {
     }
 
     public void populateData() throws SQLException {
+        int tmp = -1;
+        DataRow dataRow = null;
+
         TGSpreadConnection gsConnection = (TGSpreadConnection) getConnection();
-        WorksheetFeed workSheetFeed = gsConnection.getWorkSheetFeed();
+        WorksheetFeed workSheetFeed = gsConnection.getWorksheetFeed();
         if (workSheetFeed == null) {
             throw new SQLException("Work sheet feed it not initialized properly and is null");
         }
-        try {
-            List<WorksheetEntry> workSheets = workSheetFeed.getEntries();
-            for (WorksheetEntry workSheet : workSheets) {
-                CellQuery cellQuery = new CellQuery(workSheet.getCellFeedUrl());
-                CellFeed cellFeed =
-                        gsConnection.getSpreadSheetService().query(cellQuery, CellFeed.class);
-                List<CellEntry> cells = cellFeed.getEntries();
-                int tmp = -1;
-                DataRow dataRow = null;
-                String workSheetName = workSheet.getTitle().getPlainText();
-                DataTable dataTable = new DataTable(workSheetName, extractHeaders(workSheet));
-                for (CellEntry cell : cells) {
-                    int rowId = TDriverUtil.getRowIndex(cell.getId());
-                    if (tmp != rowId) {
-                        if (dataRow != null) {
-                            dataTable.addRow(dataRow);
-                        }
-                        dataRow = new DataRow(rowId);
-                        tmp = rowId;
+        List<WorksheetEntry> workSheets = workSheetFeed.getEntries();
+        for (WorksheetEntry workSheet : workSheets) {
+            CellFeed cellFeed = TDriverUtil.getCellFeed(gsConnection, workSheet);
+            List<CellEntry> cells = cellFeed.getEntries();
+
+            Map<String, Integer> headers = this.extractHeaders(workSheet);
+            DataTable result = new FixedDataTable(workSheet.getTitle().getPlainText(), headers);
+
+            for (CellEntry cell : cells) {
+                int rowId = TDriverUtil.getRowIndex(cell.getId());
+                if (tmp != rowId && rowId != 1) {
+                    if (dataRow != null) {
+                        result.addRow(this.fillUpEmptyCells(dataRow, headers.values()));
                     }
-                    if (rowId != 1) {
-                        DataCell dataCell = new DataCell(TDriverUtil.getColumnIndex(cell.getId()),
-                                cell.getTextContent().getContent().getPlainText());
-                        if (dataRow != null) {
-                            dataRow.addCell(dataCell);
-                        }
-                    }
+                    dataRow = new DataRow(rowId - 1);
+                    tmp = rowId;
                 }
-                addTable(dataTable);
+                int columnId = TDriverUtil.getColumnIndex(cell.getId());
+                if (columnId > headers.size()) {
+                    continue;
+                }
+                if (rowId != 1 && dataRow != null) {
+                    DataCell dataCell =
+                            new DataCell(TDriverUtil.getColumnIndex(cell.getId()) - 1,
+                                    cell.getContent().getType(),
+                                    cell.getTextContent().getContent().getPlainText());
+
+                    dataRow.addCell(dataCell);
+                }
             }
-        } catch (IOException e) {
-            throw new SQLException("Error occurred while retrieving the CellFeed", e);
-        } catch (ServiceException e) {
-            throw new SQLException("Error occurred while retrieving the CellFeed", e);
+            this.addTable(result);
         }
     }
 
-    private Map<String, Integer> extractHeaders(WorksheetEntry currentWorkSheet) throws SQLException {
+    /**
+     * Google gdata-client spreadsheet API only returns the non-empty cells that exist in the
+     * spreadsheet document that is being queried. This method fills up the data rows with the
+     * dummy cells containing null as cell value in place of the missing empty rows.
+     * @param row       Data row to be modified
+     * @param columns   Column indices of the header row
+     * @return          Processed data row to add empty data cells
+     */
+    private DataRow fillUpEmptyCells(DataRow row, Collection<Integer> columns) {
+        List<Integer> existingColumns = new ArrayList<Integer>();
+        for (DataCell cell : row.getCells()) {
+            existingColumns.add(cell.getColumnId());
+        }
+        for (Integer column : columns) {
+            if (!existingColumns.contains(column - 1)) {
+                row.addCell(new DataCell(column - 1, -1, null));
+            }
+        }
+        return row;
+    }
+
+    /**
+     * Extracts out the header elements of the spreadsheet entry that is being queried.
+     * @param currentWorkSheet  Worksheet being queried
+     * @return                  Map containing the header names and their indices
+     * @throws SQLException     Is thrown if an error occurs while extracting the spreadsheet
+     *                          cell feed 
+     */
+    private Map<String, Integer> extractHeaders(WorksheetEntry currentWorkSheet) throws
+            SQLException {
         Map<String, Integer> headers = new HashMap<String, Integer>();
 
         CellFeed cellFeed = TDriverUtil.getCellFeed(getConnection(), currentWorkSheet);

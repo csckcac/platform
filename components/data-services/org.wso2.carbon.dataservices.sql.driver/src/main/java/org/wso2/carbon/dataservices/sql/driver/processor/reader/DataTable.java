@@ -35,9 +35,9 @@ public interface DataTable {
 	
 	void addRow(DataRow dataRow);
 	
-	void updateRow(DataRow... dataRows);
+	void updateRows(DataRow... dataRows);
 	
-	void deleteRow(int... rowIds);
+	void deleteRows(int... rowIds);
 	
 	Map<Integer, DataRow> applyCondition(String column, String value, String operator);
 	

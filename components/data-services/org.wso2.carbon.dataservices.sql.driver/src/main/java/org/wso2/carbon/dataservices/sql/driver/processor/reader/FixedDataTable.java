@@ -162,14 +162,14 @@ public class FixedDataTable implements DataTable {
 	}
 
 	@Override
-	public void updateRow(DataRow... dataRows) {
+	public void updateRows(DataRow... dataRows) {
 		for (DataRow dataRow : dataRows) {
 			this.getRows().put(dataRow.getRowId(), dataRow);
 		}
 	}
 
 	@Override
-	public void deleteRow(int... rowIds) {
+	public void deleteRows(int... rowIds) {
 		for (int rowId : rowIds) {
 			this.getRows().remove(rowId);
 		}

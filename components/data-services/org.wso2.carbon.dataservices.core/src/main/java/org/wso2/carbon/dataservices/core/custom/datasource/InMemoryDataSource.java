@@ -44,8 +44,8 @@ public class InMemoryDataSource implements CustomDataSource {
 	}
 
 	@Override
-	public void init(Map<String, String> params) throws DataServiceFault {
-		this.dataSourceId = params.get(CustomDataSource.DATASOURCE_ID);
+	public void init(Map<String, String> props) throws DataServiceFault {
+		this.dataSourceId = props.get(CustomDataSource.DATASOURCE_ID);
 	}
 
 	public String getDataSourceId() {

@@ -21,8 +21,11 @@ package org.wso2.carbon.dataservices.core.description.config;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.UUID;
@@ -37,11 +40,16 @@ import org.wso2.carbon.dataservices.common.DBConstants.DataSourceTypes;
 import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.custom.datasource.CustomDataSource;
+import org.wso2.carbon.dataservices.core.custom.datasource.CustomDataSource.FilterOperator;
+import org.wso2.carbon.dataservices.core.custom.datasource.DataColumn;
+import org.wso2.carbon.dataservices.core.custom.datasource.DataRow;
+import org.wso2.carbon.dataservices.core.custom.datasource.DataTable;
+import org.wso2.carbon.dataservices.core.custom.datasource.FixedDataRow;
 import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.dataservices.sql.driver.TConnectionFactory;
 import org.wso2.carbon.dataservices.sql.driver.TCustomConnection;
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
-import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataCell;
 
 /**
  * This class represents a data services custom data source.
@@ -192,29 +200,199 @@ public class CustomConfig extends SQLConfig {
 			@Override
 			public void createDataTable(String name, Map<String, Integer> columns)
 					throws SQLException {
+				List<DataColumn> dataColumns = new ArrayList<DataColumn>();
+				for (Map.Entry<String, Integer> entry : columns.entrySet()) {
+					dataColumns.add(new DataColumn(entry.getKey(), entry.getValue()));
+				}
+				this.customDS.createDataTable(name, dataColumns);
 			}
 
 			@Override
 			public void dropDataTable(String name) throws SQLException {
-				
+				this.customDS.dropDataTable(name);
 			}
 
 			@Override
-			public DataTable getDataTable(String name) throws SQLException {
-				return null;
+			public org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable getDataTable(
+					String name) throws SQLException {
+				try {
+					return new SQLParserDataTableAdapter(name, this.customDS.getDataTable(name));
+				} catch (DataServiceFault e) {
+					throw new SQLException(e);
+				}
 			}
 
 			@Override
 			public Set<String> getDataTableNames() throws SQLException {
-				return null;
+				try {
+					return this.customDS.getDataTableNames();
+				} catch (DataServiceFault e) {
+					throw new SQLException(e);
+				}
 			}
 
 			@Override
 			public void init(Properties props) throws SQLException {
+				try {
+					Map<String, String> dsProps = new HashMap<String, String>();
+					for (Entry<String, String> entry : dsProps.entrySet()) {
+						dsProps.put(entry.getKey(), entry.getValue());
+					}
+					this.customDS.init(dsProps);
+				} catch (DataServiceFault e) {
+					throw new SQLException(e);
+				}
 			}
 			
 			public void close() {
 				this.customDS.close();
+			}
+			
+			/**
+			 * Adapter class for a SQL Parser data table.
+			 */
+			public class SQLParserDataTableAdapter implements 
+			            org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable {
+
+				private String tableName;
+				
+				private DataTable customDataTable;
+				
+				private String[] columns;
+				
+				private int[] types;
+				
+				public SQLParserDataTableAdapter(String tableName,
+						DataTable customDataTable) throws DataServiceFault {
+					this.tableName = tableName;
+					this.customDataTable = customDataTable;
+					/* columns, types pre-populated for performance reasons */
+					this.columns = new String[this.customDataTable.getDataColumns().size()];
+					this.types = new int[this.columns.length];
+					for (int i = 0; i < this.columns.length; i++) {
+						this.columns[i] = this.customDataTable.getDataColumns().get(i).getName();
+						this.types[i] = this.customDataTable.getDataColumns().get(i).getDataType();
+					}
+				}
+				
+				@Override
+				public void addRow(org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow row) 
+				            throws SQLException {
+					try {
+						this.customDataTable.insertData(this.convertDataRow(row));
+					} catch (DataServiceFault e) {
+						throw new SQLException(e);
+					}
+				}
+				
+				private DataRow convertDataRow(org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow row) {
+					Map<String, Object> values = new HashMap<String, Object>();
+					for (DataCell cell : row.getCells()) {
+						values.put(cell.getColumnName(), cell.getCellValue());
+					}
+					return new FixedDataRow(values);
+				}
+				
+				private org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow convertDataRow(
+						int rowId, DataRow row) {
+					org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow result = 
+						new org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow(rowId);
+					for (int i = 0; i < this.types.length; i++) {
+						result.addCell(new DataCell(i, this.types[i], row.getValueAt(columns[i])));
+					}
+					return result;
+				}
+
+				private FilterOperator convertOperator(String operator) throws SQLException {
+					if (Constants.EQUAL.equals(operator)) {
+						return FilterOperator.EQUALS;
+					} else if (Constants.GREATER_THAN.equals(operator)) {
+						return FilterOperator.GREATER_THAN;
+					} else if (Constants.LESS_THAN.equals(operator)) {
+						return FilterOperator.LESS_THAN;
+					} else {
+						throw new SQLException("The operator '" + operator + 
+								"' is not supported by DS custom data sources");
+					}
+				}
+				
+				@Override
+				public Map<Integer, org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow> applyCondition(
+						String column, String value, String operator) throws SQLException {
+					try {
+						FilterOperator dsOp = this.convertOperator(operator);
+						Map<Integer, org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow> result = 
+							new HashMap<Integer, org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow>();
+					    for (Map.Entry<Long, DataRow> row : this.customDataTable.filterData(
+					    		column, value, dsOp).entrySet()) {
+						    result.put(row.getKey().intValue(), this.convertDataRow(
+						    		row.getKey().intValue(), row.getValue()));
+					    }
+					    return result;
+					} catch (DataServiceFault e) {
+						throw new SQLException(e);
+					}
+				}
+
+				@Override
+				public Map<String, Integer> getHeaders() throws SQLException {
+					try {
+					    Map<String, Integer> headers = new HashMap<String, Integer>();
+					    for (DataColumn column : this.customDataTable.getDataColumns()) {
+						    headers.put(column.getName(), column.getDataType());
+					    }
+					    return headers;
+					} catch (DataServiceFault e) {
+						throw new SQLException(e);
+					}
+				}
+
+				@Override
+				public Map<Integer, org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow> getRows() 
+				            throws SQLException {
+					try {
+					    Map<Integer, org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow> result = 
+						    new HashMap<Integer, org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow>();
+					    for (Map.Entry<Long, DataRow> row : this.customDataTable.getData(0, -1).entrySet()) {
+					        result.put(row.getKey().intValue(), this.convertDataRow(
+					    		    row.getKey().intValue(), row.getValue()));
+				        }
+					    return result;
+					} catch (DataServiceFault e) {
+						throw new SQLException(e);
+					}
+				}
+
+				@Override
+				public String getTableName() {
+					return this.tableName;
+				}
+
+				@Override
+				public void deleteRows(int... rowIds) throws SQLException {
+					try {
+						for (int rowId : rowIds) {
+							this.customDataTable.deleteData((long) rowId);
+						}
+					} catch (DataServiceFault e) {
+						throw new SQLException(e);
+					}
+				}
+
+				@Override
+				public void updateRows(org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow... data) 
+				        throws SQLException {
+					Map<Long, DataRow> updateValues = new HashMap<Long, DataRow>();
+					for (org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow row : data) {
+					    updateValues.put((long) row.getRowId(), this.convertDataRow(row));
+					}
+					try {
+					    this.customDataTable.updateData(updateValues);
+					} catch (DataServiceFault e) {
+						throw new SQLException(e);
+					}
+				}
+				
 			}
 			
 		}

@@ -68,8 +68,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
 
     private List<QueryParam> outQueryParams;
 
-    private List<QueryParam> onlyOutQueryParams;
-
     private boolean hasOutParams;
 
     private boolean resultOnlyOutParams;
@@ -81,14 +79,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
     private QueryParam currentRefCursor;
 
     private boolean hasRefCursor;
-
-    private QueryParam currentSqlArray;
-
-    private boolean hasSqlArrayType;
-
-    private int prevRefCursorOrdinal;
-
-    private boolean arrayTypesEnabled = false;
 
     private String sql;
 
@@ -168,7 +158,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         this.processAdvancedProps(this.getAdvancedProperties());
         this.queryType = this.retrieveQueryType(this.getQuery());
         this.outQueryParams = this.extractOutQueryParams(this.getQueryParams());
-        this.onlyOutQueryParams = this.extractOnlyOutQueryParams(this.getOutQueryParams());
         this.processNamedParams();
         /* re-format sql query with named params */
         this.sql = this.createSqlFromQueryString(this.getQuery());
@@ -196,7 +185,7 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
     }
 
     private boolean calculateResultOnlyOutParams() {
-        return (this.getResult() != null) && (this.hasRefCursor() || this.hasSqlArrayType() ||
+        return (this.getResult() != null) && (this.hasRefCursor() ||
                 (this.hasOutParams() &&
                         ((this.getResult().getDefaultElementGroup().getAllElements().size() +
                                 this.getResult().getDefaultElementGroup().getAttributeEntries().size()) ==
@@ -520,10 +509,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         return queryTimeout;
     }
 
-    public QueryParam getCurrentSqlArray() {
-        return currentSqlArray;
-    }
-
     public int getOptimalRSFetchSize() {
         return optimalRSFetchSize;
     }
@@ -603,8 +588,9 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         Set<InternalParam> remainingParams = new HashSet<InternalParam>(params.getParams());
         InternalParam tmpParam;
         int i;
+        List<InternalParam> tmpList = new ArrayList<InternalParam>(params.getParams());
         for (i = 0; i < indices.length; i++) {
-            tmpParam = params.getParam(indices[i]);
+            tmpParam = tmpList.get(indices[i] - 1);
             remainingParams.remove(tmpParam);
             if (tmpParam == null) {
                 throw new DataServiceFault(
@@ -640,16 +626,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
             }
         }
         return inOutQueryParams;
-    }
-
-    private List<QueryParam> extractOnlyOutQueryParams(List<QueryParam> queryParams) {
-        List<QueryParam> outQueryParams = new ArrayList<QueryParam>();
-        for (QueryParam queryParam : queryParams) {
-            if (queryParam.getType().equals(QueryTypes.OUT)) {
-                outQueryParams.add(queryParam);
-            }
-        }
-        return outQueryParams;
     }
 
     public List<QueryParam> getOutQueryParams() {
@@ -924,9 +900,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
                     /* if there's a ref cursor, get the result set */
                     if (this.hasRefCursor()) {
                         rs = (ResultSet) stmt.getObject(this.getCurrentRefCursor().getOrdinal());
-                        if (this.arrayTypesEnabled()) {
-                            this.getCurrentRefCursor().setOrdinal(this.getPrevRefCusorOrdinal());
-                        }
                     }
                 } else {
                     rs = this.getFirstRSOfStoredProc(stmt);
@@ -1288,20 +1261,11 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
             if (value != null && (value.getValueType() == ParamValue.PARAM_VALUE_ARRAY)) {
                 count = (value.getArrayValue()).size();
                 if (this.hasRefCursor()) {
-                    this.arrayTypesEnabled = true;
                     int currentRefCursorOrdinal = this.getCurrentRefCursor().getOrdinal();
                     if (i < currentRefCursorOrdinal) {
-                        this.prevRefCursorOrdinal = currentRefCursorOrdinal;
                         this.getCurrentRefCursor().setOrdinal(currentRefCursorOrdinal + count - 1);
                     }
-                } else if (this.hasSqlArrayType()) {
-                    this.arrayTypesEnabled = true;
-                    int currentSqlArrayOrdinal = this.getCurrentSqlArray().getOrdinal();
-                    if (i < currentSqlArrayOrdinal) {
-                        this.prevRefCursorOrdinal = currentSqlArrayOrdinal;
-                        this.getCurrentSqlArray().setOrdinal(currentSqlArrayOrdinal + count - 1);
-                    }
-                }
+                } 
             } else {
                 count = 1;
             }
@@ -2160,18 +2124,6 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         return hasRefCursor;
     }
 
-    public boolean hasSqlArrayType() {
-        return hasSqlArrayType;
-    }
-
-    public boolean arrayTypesEnabled() {
-        return arrayTypesEnabled;
-    }
-
-    public int getPrevRefCusorOrdinal() {
-        return prevRefCursorOrdinal;
-    }
-
     public void runQuery(XMLStreamWriter xmlWriter,
                          InternalParamCollection params, int queryLevel)
             throws DataServiceFault {
@@ -2191,7 +2143,7 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
             throw new DataServiceFault("Unsupported query type: " + type);
         }
     }
-
+    
     @Override
     public void releaseBatchRequestResources() {
         /* clear the TL batch prepared statement */

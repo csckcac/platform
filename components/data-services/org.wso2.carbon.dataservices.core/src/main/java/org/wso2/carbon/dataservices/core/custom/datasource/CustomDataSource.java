@@ -37,10 +37,10 @@ public interface CustomDataSource {
 
 	/**
 	 * Initialized the custom data source.
-	 * @param params The parameters used for initialization
+	 * @param props The properties used for initialization
 	 * @throws DataServiceFault Thrown if any error occurs
 	 */
-	void init(Map<String, String> params) throws DataServiceFault;
+	void init(Map<String, String> props) throws DataServiceFault;
 	
 	/**
 	 * Returns all the table names of the custom data source.

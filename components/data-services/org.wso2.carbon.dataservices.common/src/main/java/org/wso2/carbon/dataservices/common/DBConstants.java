@@ -253,6 +253,7 @@ public final class DBConstants {
         public static final String CARBON = "CARBON_DATASOURCE";
         public static final String WEB = "WEB_CONFIG";
         public static final String CASSANDRA = "Cassandra";
+        public static final String CUSTOM = "CUSTOM";
     }
 
     /**
@@ -554,6 +555,19 @@ public final class DBConstants {
 
         public static final String WEB_CONFIG = "web_harvest_config";
         public static final String QUERY_VARIABLE = "scraperVariable";
+    }
+    
+    /**
+     * Constants related to custom data sources.
+     */
+    public static final class CustomDatasource {
+
+        private CustomDatasource() {
+            throw new AssertionError();
+        }
+
+        public static final String DATA_SOURCE_CLASS = "custom_datasource_class";
+        public static final String DATA_SOURCE_PROPS = "custom_datsource_props";
     }
 
     /**

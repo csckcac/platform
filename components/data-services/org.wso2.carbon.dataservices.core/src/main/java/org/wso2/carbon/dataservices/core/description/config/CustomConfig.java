@@ -295,7 +295,7 @@ public class CustomConfig extends SQLConfig {
 				private DataRow convertDataRow(org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow row) {
 					Map<String, Object> values = new HashMap<String, Object>();
 					for (DataCell cell : row.getCells()) {
-						values.put(cell.getColumnName(), cell.getCellValue());
+						values.put(this.columns[cell.getColumnId()], cell.getCellValue());
 					}
 					return new FixedDataRow(values);
 				}

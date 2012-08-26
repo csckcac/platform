@@ -59,6 +59,8 @@ public class ConfigFactory {
 			return getCarbonDataSourceConfig(dataService, configId, properties);
 		} else if (DataSourceTypes.WEB.equals(configType)) {
             return getWebConfig(dataService, configId, properties);
+        } else if (DataSourceTypes.CUSTOM.equals(configType)) {
+            return getCustomConfig(dataService, configId, properties);
         }
 		
 		return null;
@@ -106,6 +108,12 @@ public class ConfigFactory {
         WebConfig config = new WebConfig(dataService, configId, properties);
         return config;
     }
+    
+    private static CustomConfig getCustomConfig(DataService dataService, String configId,
+            Map<String, String> properties) throws DataServiceFault {
+       CustomConfig config = new CustomConfig(dataService, configId, properties);
+       return config;
+    }
 
 	private static GSpreadConfig getGSpreadConfig(DataService dataService, String configId, 
 			Map<String, String> properties) throws DataServiceFault {
@@ -149,6 +157,8 @@ public class ConfigFactory {
 		    return DataSourceTypes.CARBON;
 		} else if (properties.get(DBConstants.WebDatasource.WEB_CONFIG) != null) {
             return DataSourceTypes.WEB;
+        } else if (properties.get(DBConstants.CustomDatasource.DATA_SOURCE_CLASS) != null) {
+            return DataSourceTypes.CUSTOM;
         }
 		throw new DataServiceFault("Cannot create config with properties: " + properties);
 	}

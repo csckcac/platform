@@ -128,6 +128,11 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.dataservices.sql.driver</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.webharvest.wso2</groupId>
             <artifactId>webharvest-core</artifactId>
             <version>${web-harvest.wso2.version.data-services}</version>

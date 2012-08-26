@@ -337,11 +337,7 @@ public class QueryFactory {
                 }
             }
         }
-        if (connectionURL != null) {
-            return getSQLQueryForConnectionURL(queryEl, connectionURL);
-        }
-        return null;
-
+        return getSQLQueryForConnectionURL(queryEl, connectionURL);
 	}
 
 	private static SQLQuery createSQLQuery(DataService dataService,	OMElement queryEl) 

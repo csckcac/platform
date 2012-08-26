@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.dataservices.core.custom.datasource;
 
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,6 +47,28 @@ public class InMemoryDataSource implements CustomDataSource {
 	@Override
 	public void init(Map<String, String> props) throws DataServiceFault {
 		this.dataSourceId = props.get(CustomDataSource.DATASOURCE_ID);
+		this.populateSampleData();
+	}
+	
+	private void populateSampleData() {
+		List<DataColumn> columns = new ArrayList<DataColumn>();
+		columns.add(new DataColumn("Model", Types.VARCHAR));
+		columns.add(new DataColumn("Classification", Types.VARCHAR));
+		columns.add(new DataColumn("Year", Types.VARCHAR));
+		this.createDataTable("Sheet1", columns);
+		Map<String, Object> values1 = new HashMap<String, Object>();
+		values1.put("Model", "Harley Davidson Ultimate Chopper");
+		values1.put("Classification", "Motorcycles");
+		values1.put("Year", "2010");
+		Map<String, Object> values2 = new HashMap<String, Object>();
+		values2.put("Model", "Alfa Romeo GTA");
+		values2.put("Classification", "Classic Cars");
+		values2.put("Year", "2011");
+		try {
+			this.getDataTable("Sheet1").insertData(new FixedDataRow(values1), new FixedDataRow(values2));
+		} catch (DataServiceFault e) {
+			e.printStackTrace();
+		}
 	}
 
 	public String getDataSourceId() {
@@ -165,14 +188,14 @@ public class InMemoryDataSource implements CustomDataSource {
 			case GREATER_THAN:
 				double lhs = Double.parseDouble(colValue.toString());
 				double rhs = Double.parseDouble(value.toString());
-				if (!(rhs > lhs)) {
+				if (!(lhs > rhs)) {
 					return false;
 				}
 				break;
 			case LESS_THAN:
 				lhs = Double.parseDouble(colValue.toString());
 				rhs = Double.parseDouble(value.toString());
-				if (!(rhs < lhs)) {
+				if (!(lhs < rhs)) {
 					return false;
 				}
 				break;

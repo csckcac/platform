@@ -19,6 +19,7 @@
 package org.wso2.carbon.dataservices.core.description.config;
 
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -92,7 +93,8 @@ public class CustomConfig extends SQLConfig {
 	private void populateStandardProps(Map<String, String> dsProps) {
 		String dsInfo = this.getDataService().getTenantId() + "#"
 				+ this.getDataService().getName() + "#" + this.getConfigId();
-		dsProps.put(CustomDataSource.DATASOURCE_ID, UUID.fromString(dsInfo).toString());
+		dsProps.put(CustomDataSource.DATASOURCE_ID, UUID.nameUUIDFromBytes(
+				dsInfo.getBytes(Charset.forName(DBConstants.DEFAULT_CHAR_SET_TYPE))).toString());
 	}
 	
 	@Override
@@ -136,6 +138,7 @@ public class CustomConfig extends SQLConfig {
 		public CustomSQLDataSource(CustomDataSource dataSource) {
 			this.dataSource = new SQLParserCustomDataSourceAdapter(dataSource);
 			this.customDSProps = new Properties();
+			this.customDSProps.put(Constants.DATA_SOURCE_TYPE, Constants.CUSTOM);
 			this.customDSProps.put(TCustomConnection.CUSTOM_DATASOURCE, this.dataSource);
 		}
 		
@@ -216,7 +219,11 @@ public class CustomConfig extends SQLConfig {
 			public org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable getDataTable(
 					String name) throws SQLException {
 				try {
-					return new SQLParserDataTableAdapter(name, this.customDS.getDataTable(name));
+					DataTable dataTable = this.customDS.getDataTable(name);
+					if (dataTable == null) {
+						throw new SQLException("The custom data table '" + name + "' does not exist");
+					}
+					return new SQLParserDataTableAdapter(name, dataTable);
 				} catch (DataServiceFault e) {
 					throw new SQLException(e);
 				}
@@ -338,10 +345,24 @@ public class CustomConfig extends SQLConfig {
 				public Map<String, Integer> getHeaders() throws SQLException {
 					try {
 					    Map<String, Integer> headers = new HashMap<String, Integer>();
+					    int i = 0;
 					    for (DataColumn column : this.customDataTable.getDataColumns()) {
-						    headers.put(column.getName(), column.getDataType());
+						    headers.put(column.getName(), i++);
 					    }
 					    return headers;
+					} catch (DataServiceFault e) {
+						throw new SQLException(e);
+					}
+				}
+				
+				@Override
+				public Map<String, Integer> getHeaderTypes() throws SQLException {
+					try {
+					    Map<String, Integer> headerTypes = new HashMap<String, Integer>();
+					    for (DataColumn column : this.customDataTable.getDataColumns()) {
+						    headerTypes.put(column.getName(), column.getDataType());
+					    }
+					    return headerTypes;
 					} catch (DataServiceFault e) {
 						throw new SQLException(e);
 					}

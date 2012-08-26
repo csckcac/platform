@@ -42,6 +42,13 @@ public class ColumnInfo {
         this.sqlType = sqlType;
         this.value = value;
     }
+    
+    public ColumnInfo(int id, String name, String tableName, int sqlType) {
+    	this.id = id;
+        this.name = name;
+        this.tableName = tableName;
+        this.sqlType = sqlType;
+    }
 
     public ColumnInfo(String name) {
         this.name = name;

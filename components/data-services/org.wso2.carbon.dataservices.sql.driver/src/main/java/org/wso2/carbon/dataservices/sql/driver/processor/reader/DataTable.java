@@ -30,6 +30,8 @@ public interface DataTable {
 	
 	Map<String, Integer> getHeaders() throws SQLException;
 	
+	Map<String, Integer> getHeaderTypes() throws SQLException;
+	
 	Map<Integer, DataRow> getRows() throws SQLException;
 		
 	void addRow(DataRow dataRow) throws SQLException;

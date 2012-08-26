@@ -18,12 +18,16 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import org.wso2.carbon.dataservices.sql.driver.parser.Constants;
 
+/**
+ * Fixed data table implementation.
+ */
 public class FixedDataTable implements DataTable {
 
     private Map<Integer, DataRow> rows;
@@ -172,6 +176,11 @@ public class FixedDataTable implements DataTable {
 		for (int rowId : rowIds) {
 			this.getRows().remove(rowId);
 		}
+	}
+
+	@Override
+	public Map<String, Integer> getHeaderTypes() throws SQLException {
+		throw new SQLException("getHeaderTypes() not implemented in FixedDataTable");
 	}
 
 }

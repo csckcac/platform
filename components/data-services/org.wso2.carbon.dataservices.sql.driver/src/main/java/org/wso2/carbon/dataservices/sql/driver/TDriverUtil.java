@@ -26,6 +26,7 @@ import com.google.gdata.util.ServiceException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
 import org.wso2.carbon.dataservices.sql.driver.query.ColumnInfo;
 import org.wso2.carbon.dataservices.sql.driver.query.ParamInfo;
 import org.wso2.carbon.dataservices.sql.driver.query.QueryFactory;
@@ -39,6 +40,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 public class TDriverUtil {
 
@@ -55,8 +57,10 @@ public class TDriverUtil {
                 return getExcelHeaders(connection, tableName);
             case GSPREAD:
                 return getGSpreadHeaders(connection, tableName);
+            case CUSTOM:
+                return getCustomHeaders(connection, tableName);                
             default:
-                throw new SQLException("Invalid query type");
+                throw new SQLException("Invalid query type: " + type);
         }
     }
 
@@ -87,6 +91,19 @@ public class TDriverUtil {
         return columns.toArray(new ColumnInfo[columns.size()]);
     }
 
+    private static ColumnInfo[] getCustomHeaders(Connection connection,
+            String sheetName) throws SQLException {
+    	DataTable table = ((TCustomConnection) connection).getDataSource().getDataTable(sheetName);
+    	Map<String, Integer> headers = table.getHeaders();
+    	Map<String, Integer> headerTypes = table.getHeaderTypes();
+    	ColumnInfo[] result = new ColumnInfo[headers.size()];
+    	for (Map.Entry<String, Integer> header : headers.entrySet()) {
+    		result[header.getValue()] = new ColumnInfo(header.getValue(), header.getKey(), 
+    				sheetName, headerTypes.get(header.getKey()));
+    	}
+    	return result;
+    }
+    
     private static ColumnInfo[] getGSpreadHeaders(Connection connection,
                                                   String sheetName) throws SQLException {
         WorksheetEntry currentWorksheet;

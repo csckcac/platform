@@ -52,7 +52,7 @@ public class ExcelUpdateQuery extends UpdateQuery {
         return rowCount;
     }
 
-    private int findColumn(DataTable table, String columnName) {
+    private int findColumn(DataTable table, String columnName) throws SQLException {
         return table.getHeaders().get(columnName);
     }
 

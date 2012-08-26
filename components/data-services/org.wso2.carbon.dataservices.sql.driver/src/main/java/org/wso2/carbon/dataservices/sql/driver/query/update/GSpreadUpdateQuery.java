@@ -52,7 +52,8 @@ public class GSpreadUpdateQuery extends UpdateQuery {
 
     private int executeSQL() throws SQLException {
         Map<Integer, DataRow> result;
-        DataTable table = new FixedDataTable(getTargetTableName(), getTargetTable().getHeaders());
+        FixedDataTable table = new FixedDataTable(getTargetTableName(), 
+        		getTargetTable().getHeaders());
         if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
             result = getTargetTable().getRows();
         } else {

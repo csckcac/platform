@@ -84,7 +84,7 @@ public abstract class DeleteQuery extends ConditionalQuery {
         return targetTableName;
     }
 
-    public Map<Integer, DataRow> getResultantRows() {
+    public Map<Integer, DataRow> getResultantRows() throws SQLException {
         Map<Integer, DataRow> result;
         if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
             result = getTargetTable().getRows();

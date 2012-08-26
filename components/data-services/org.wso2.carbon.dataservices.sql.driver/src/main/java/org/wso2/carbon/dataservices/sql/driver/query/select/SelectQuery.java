@@ -62,7 +62,7 @@ public abstract class SelectQuery extends ConditionalQuery {
 
     public synchronized ResultSet executeSQL() throws SQLException {
         Map<Integer, DataRow> result;
-        DataTable table = new FixedDataTable(getTargetTableName(), getTargetTable().getHeaders());
+        FixedDataTable table = new FixedDataTable(getTargetTableName(), getTargetTable().getHeaders());
         if (getCondition().getLhs() == null && getCondition().getRhs() == null) {
             result = getTargetTable().getRows();
         } else {

@@ -18,11 +18,11 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.parser;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataRow;
 import org.wso2.carbon.dataservices.sql.driver.processor.reader.DataTable;
-import org.wso2.carbon.dataservices.sql.driver.processor.reader.FixedDataTable;
 
 public class Condition {
 
@@ -41,9 +41,10 @@ public class Condition {
      * creates while parsing the WHERE clause of a conditional SQL statement.</p>
      *
      * @param dataTable Input data
-     * @return          Filtered out data after evaluating the input against the provided conditions
+     * @return Filtered out data after evaluating the input against the provided conditions
+     * @throws SQLException
      */
-    public Map<Integer, DataRow> process(DataTable dataTable) {
+    public Map<Integer, DataRow> process(DataTable dataTable) throws SQLException {
         if (this.getLhs() != null && this.getRhs() == null) {
         	return this.getLhs().process(dataTable);
         } else if (this.getLhs() == null) {
@@ -61,8 +62,9 @@ public class Condition {
      * 
      * @param dataTable Input data
      * @return          Filtered out data after evaluating the input against the provided conditions
+     * @throws SQLException
      */
-    private Map<Integer, DataRow> applyCondition(DataTable dataTable) {
+    private Map<Integer, DataRow> applyCondition(DataTable dataTable) throws SQLException {
         return dataTable.applyCondition(this.getColumn(), this.getValue(), 
         		this.getOperator());
     }

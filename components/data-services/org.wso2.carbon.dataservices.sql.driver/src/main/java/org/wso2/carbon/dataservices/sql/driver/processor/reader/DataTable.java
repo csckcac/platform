@@ -18,6 +18,7 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 /**
@@ -27,18 +28,17 @@ public interface DataTable {
 
 	String getTableName();
 	
-	Map<String, Integer> getHeaders();
+	Map<String, Integer> getHeaders() throws SQLException;
 	
-	Map<Integer, DataRow> getRows();
+	Map<Integer, DataRow> getRows() throws SQLException;
+		
+	void addRow(DataRow dataRow) throws SQLException;
 	
-	void setData(Map<Integer, DataRow> rows);
+	void updateRows(DataRow... dataRows) throws SQLException;
 	
-	void addRow(DataRow dataRow);
+	void deleteRows(int... rowIds) throws SQLException;
 	
-	void updateRows(DataRow... dataRows);
-	
-	void deleteRows(int... rowIds);
-	
-	Map<Integer, DataRow> applyCondition(String column, String value, String operator);
+	Map<Integer, DataRow> applyCondition(String column, String value, 
+			String operator) throws SQLException;
 	
 }

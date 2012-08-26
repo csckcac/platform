@@ -31,6 +31,7 @@ import org.wso2.carbon.registry.core.session.CurrentSession;
 import org.wso2.carbon.throttling.agent.cache.TenantThrottlingInfo;
 import org.wso2.carbon.throttling.agent.cache.ThrottlingActionInfo;
 import org.wso2.carbon.throttling.agent.internal.ThrottlingAgentServiceComponent;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 public class PerRegistryRequestListener extends Handler {
 
@@ -63,7 +64,8 @@ public class PerRegistryRequestListener extends Handler {
     }
 
     private void validateRegistryAction(String action) throws RegistryException {
-        if (CurrentSession.getCallerTenantId() == 0 || CurrentSession.getTenantId() == 0) {
+        if (CurrentSession.getCallerTenantId() == MultitenantConstants.SUPER_TENANT_ID
+                || CurrentSession.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
             // no limitations for the super tenant
             return;
         }

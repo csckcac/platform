@@ -41,7 +41,6 @@ public class TCustomConnection extends TConnection {
 	public TCustomConnection(Properties props) throws SQLException {
 		super(props);
 		this.dataSource = (CustomDataSource) props.get(CUSTOM_DATASOURCE);
-		this.dataSource.init(props);
 		if (this.dataSource == null) {
 			throw new SQLException("Custom data source object not available in properties");
 		}

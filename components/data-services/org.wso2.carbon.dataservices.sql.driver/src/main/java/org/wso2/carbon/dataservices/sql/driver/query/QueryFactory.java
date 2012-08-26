@@ -25,6 +25,7 @@ import org.wso2.carbon.dataservices.sql.driver.query.delete.ExcelDeleteQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.delete.GSpreadDeleteQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.drop.ExcelDropQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.drop.GSpreadDropQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.insert.CustomInsertQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.insert.ExcelInsertQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.insert.GSpreadInsertQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.select.CustomSelectQuery;
@@ -118,6 +119,8 @@ public class QueryFactory {
                 return new ExcelInsertQuery(stmt);
             case GSPREAD:
                 return new GSpreadInsertQuery(stmt);
+            case CUSTOM:
+                return new CustomInsertQuery(stmt);
             default:
                 throw new SQLException("Unsupported type");
         }

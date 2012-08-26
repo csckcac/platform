@@ -29,7 +29,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
-public class GSpreadDataReader extends DataReader {
+public class GSpreadDataReader extends AbstractFixedDataReader {
 
     public GSpreadDataReader(Connection connection) throws SQLException {
         super(connection);
@@ -74,7 +74,7 @@ public class GSpreadDataReader extends DataReader {
                     dataRow.addCell(dataCell);
                 }
             }
-            this.addTable(result);
+            this.getData().put(result.getTableName(), result);
         }
     }
 

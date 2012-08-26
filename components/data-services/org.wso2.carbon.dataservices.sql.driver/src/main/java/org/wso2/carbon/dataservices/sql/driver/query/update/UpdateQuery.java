@@ -46,7 +46,7 @@ public abstract class UpdateQuery extends ConditionalQuery {
         this.targetColumns = new ParamInfo[getParameters().length];
         preprocessTokens(getProcessedTokens());
         this.targetTable = 
-                DataReaderFactory.createDataReader(getConnection()).getData().get(
+                DataReaderFactory.createDataReader(getConnection()).getDataTable(
                         getTargetTableName());
         this.columns = TDriverUtil.getHeaders(stmt.getConnection(), getTargetTableName());
     }

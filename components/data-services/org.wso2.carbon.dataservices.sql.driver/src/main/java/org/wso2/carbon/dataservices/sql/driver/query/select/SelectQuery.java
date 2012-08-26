@@ -48,7 +48,7 @@ public abstract class SelectQuery extends ConditionalQuery {
         super(stmt);
         this.targetColumns = new ArrayList<ColumnInfo>();
         this.preProcessTokens(getProcessedTokens());
-        this.targetTable = DataReaderFactory.createDataReader(getConnection()).getData().get(
+        this.targetTable = DataReaderFactory.createDataReader(getConnection()).getDataTable(
                 getTargetTableName());
         this.columns = TDriverUtil.getHeaders(stmt.getConnection(), getTargetTableName());
         this.preProcessColumns(getColumns(), getTargetColumns());

@@ -18,15 +18,36 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * This interface represents a data retrieval mechanism for data sources.
- */
-public interface DataReader {
+public abstract class AbstractFixedDataReader implements DataReader {
 
-	void populateData() throws SQLException;
-	
-	DataTable getDataTable(String name) throws SQLException;
-	
+    private Connection connection;
+
+    private Map<String, DataTable> data;
+
+    public AbstractFixedDataReader(Connection connection) throws SQLException {
+        this.connection = connection;
+        this.data = new HashMap<String, DataTable>();
+        populateData();
+    }
+
+    public abstract void populateData() throws SQLException;
+
+    public Connection getConnection() {
+        return connection;
+    }
+
+    public Map<String, DataTable> getData() {
+        return data;
+    }
+    
+    @Override
+    public DataTable getDataTable(String name) {
+    	return this.getData().get(name);
+    }
+
 }

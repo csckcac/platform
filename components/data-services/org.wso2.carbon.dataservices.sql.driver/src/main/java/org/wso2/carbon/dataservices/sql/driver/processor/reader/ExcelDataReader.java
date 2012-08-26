@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-public class ExcelDataReader extends DataReader {
+public class ExcelDataReader extends AbstractFixedDataReader {
 
     public ExcelDataReader(Connection connection) throws SQLException {
         super(connection);
@@ -63,7 +63,7 @@ public class ExcelDataReader extends DataReader {
                     dataTable.addRow(dataRow);
                 }
             }
-            addTable(dataTable);
+            this.getData().put(dataTable.getTableName(), dataTable);
         }
     }
 

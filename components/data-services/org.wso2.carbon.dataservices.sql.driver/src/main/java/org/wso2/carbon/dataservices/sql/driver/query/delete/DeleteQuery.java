@@ -40,7 +40,7 @@ public abstract class DeleteQuery extends ConditionalQuery {
         super(stmt);
         this.targetTableName = this.extractTargetTableName(getProcessedTokens());
         this.targetTable =
-                DataReaderFactory.createDataReader(getConnection()).getData().get(
+                DataReaderFactory.createDataReader(getConnection()).getDataTable(
                         getTargetTableName());
         this.populateConditions(getProcessedTokens());
     }

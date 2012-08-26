@@ -18,15 +18,34 @@
  */
 package org.wso2.carbon.dataservices.sql.driver.processor.reader;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 
-/**
- * This interface represents a data retrieval mechanism for data sources.
- */
-public interface DataReader {
+import org.wso2.carbon.dataservices.sql.driver.TCustomConnection;
+import org.wso2.carbon.dataservices.sql.driver.TCustomConnection.CustomDataSource;
 
-	void populateData() throws SQLException;
+/**
+ * This class represents a data reader class for a custom data source.
+ */
+public class CustomDataReader implements DataReader {
+
+	private CustomDataSource dataSource;
 	
-	DataTable getDataTable(String name) throws SQLException;
+	public CustomDataReader(Connection connection) throws SQLException {
+		this.dataSource = ((TCustomConnection) connection).getDataSource();
+	}
+
+	public CustomDataSource getDataSource() {
+		return dataSource;
+	}
+
+	@Override
+	public void populateData() throws SQLException {		
+	}
+
+	@Override
+	public DataTable getDataTable(String name) throws SQLException {
+		return this.getDataSource().getDataTable(name);
+	}
 	
 }

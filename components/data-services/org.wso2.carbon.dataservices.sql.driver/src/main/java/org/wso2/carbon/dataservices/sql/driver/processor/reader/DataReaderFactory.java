@@ -35,6 +35,8 @@ public class DataReaderFactory {
             return new ExcelDataReader(connection);
         } else if (Constants.GSPREAD.equals(connectionType)) {
             return new GSpreadDataReader(connection);
+        } else if (Constants.CUSTOM.equals(connectionType)) {
+            return new CustomDataReader(connection);
         } else {
             throw new SQLException("Unsupported config type");
         }

@@ -398,9 +398,11 @@ public class CustomConfig extends SQLConfig {
 				@Override
 				public void deleteRows(int... rowIds) throws SQLException {
 					try {
-						for (int rowId : rowIds) {
-							this.customDataTable.deleteData((long) rowId);
+						long[] longIds = new long[rowIds.length];
+						for (int i = 0; i < rowIds.length; i++) {
+							longIds[i] = rowIds[i];
 						}
+						this.customDataTable.deleteData(longIds);
 					} catch (DataServiceFault e) {
 						throw new SQLException(e);
 					}

@@ -69,7 +69,8 @@ public class CustomInsertQuery extends InsertQuery {
 
 	@Override
 	public boolean execute() throws SQLException {
-		return this.executeUpdate() > 0;
+		this.executeUpdate();
+		return true;
 	}
 
 }

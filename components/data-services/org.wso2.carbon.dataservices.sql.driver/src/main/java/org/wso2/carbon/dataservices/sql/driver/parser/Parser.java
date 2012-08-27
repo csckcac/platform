@@ -582,9 +582,6 @@ public class Parser {
             throw new SQLException("Syntax Error : 'WHERE' clause expected");
         }
         processed.add(tokens.poll().toUpperCase());
-        if (!ParserUtil.isStringLiteral(tokens.peek())) {
-            throw new SQLException("Syntax Error : String literal expected");
-        }
         processWhereTargets(tokens, processed);
         processDelimiter(tokens);
     }
@@ -601,10 +598,6 @@ public class Parser {
 
     private static void processWhereTargets(Queue<String> tokens,
                                             Queue<String> processed) throws SQLException {
-        if (!Constants.WHERE.equalsIgnoreCase(tokens.peek())) {
-            throw new SQLException("Syntax Error : 'WHERE' keyword is expected");
-        }
-        processed.add(tokens.poll().toUpperCase());
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal expected");
         }
@@ -613,7 +606,8 @@ public class Parser {
 //        if (!Constants.EQUAL.equalsIgnoreCase(tokens.peek())) {
 //            throw new SQLException("Syntax Error : '=' expected");
 //        }
-        tokens.poll();
+        processed.add(Constants.OPERATOR);
+        processed.add(tokens.poll());
         processWhereColumnValues(tokens, processed, false, false, true);
     }
 

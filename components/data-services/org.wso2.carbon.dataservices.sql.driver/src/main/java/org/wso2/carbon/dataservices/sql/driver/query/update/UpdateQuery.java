@@ -53,7 +53,7 @@ public abstract class UpdateQuery extends ConditionalQuery {
 
     private void preprocessTokens(Queue<String> tokens) throws SQLException {
         //Dropping UPDATE token
-        tokens.poll();
+    	tokens.poll();
         if (!Constants.TABLE.equals(tokens.peek())) {
             throw new SQLException("Syntax Error : 'TABLE' keyword is expected");
         }
@@ -66,19 +66,21 @@ public abstract class UpdateQuery extends ConditionalQuery {
         tokens.poll();
         processUpdatedColumns(tokens, 0);
         if (Constants.WHERE.equals(tokens.peek())) {
-            throw new SQLException("'WHERE' keyword is expected");
+        	tokens.poll();
+        	this.processConditions(tokens, getCondition());
         }
-        processUpdatedColumns(tokens, 0);
     }
 
     private void processUpdatedColumns(Queue<String> tokens,
                                        int targetColCount) throws SQLException {
+    	/* drop COLUMN */
+    	tokens.poll();
         if (!ParserUtil.isStringLiteral(tokens.peek())) {
             throw new SQLException("Syntax Error : String literal is expected");
         }
         this.targetColumns[targetColCount] = new ParamInfo(targetColCount, tokens.poll());
         //getTargetColumns().put(targetColCount, tokens.poll());
-        processColumnValues(tokens, 0, false, false, true);
+        processColumnValues(tokens, targetColCount, false, false, true);
     }
 
     private void processColumnValues(Queue<String> tokens,
@@ -139,7 +141,10 @@ public abstract class UpdateQuery extends ConditionalQuery {
             } else {
                 tokens.poll();
             }
-            processColumnValues(tokens, valCount + 1, isParameterized, isEnd, isInit);
+            if (tokens.isEmpty() || Constants.WHERE.equals(tokens.peek())) {
+            	return;
+            }
+            processUpdatedColumns(tokens, valCount + 1);
         }
     }
     

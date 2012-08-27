@@ -293,8 +293,6 @@
                 <include>**/qpid-config.xml</include>
                 <include>**/qpid-jmxremote.access</include>
                 <include>**/qpid-virtualhosts.xml</include>
-                <include>**/coordination-client-config.xml</include>
-                <include>**/zoo.cfg</include>		
             </includes>
         </fileSet>
 
@@ -428,7 +426,15 @@
             </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/
             </outputDirectory>
-        </file>           
+        </file>  
+	<!-- Including coordination-client-config.xml file -->
+	<file>
+            <source>
+		../p2-profile-gen/target/wso2carbon-core-${carbon.version}/repository/conf/etc/coordination-client-config.xml
+	    </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/
+	    </outputDirectory>
+        </file>         
         <file>
             <source>INSTALL.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>

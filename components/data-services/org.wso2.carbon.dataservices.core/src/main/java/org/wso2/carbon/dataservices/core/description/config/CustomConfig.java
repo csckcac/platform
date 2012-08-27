@@ -269,6 +269,10 @@ public class CustomConfig extends SQLConfig {
 				
 				private int[] types;
 				
+				private Map<String, Integer> headers;
+				
+				private Map<String, Integer> headerTypes;
+				
 				public SQLParserDataTableAdapter(String tableName,
 						DataTable customDataTable) throws DataServiceFault {
 					this.tableName = tableName;
@@ -280,6 +284,8 @@ public class CustomConfig extends SQLConfig {
 						this.columns[i] = this.customDataTable.getDataColumns().get(i).getName();
 						this.types[i] = this.customDataTable.getDataColumns().get(i).getDataType();
 					}
+					this.headers = this.generateHeaders();
+					this.headerTypes = this.generateHeaderTypes();
 				}
 				
 				@Override
@@ -340,32 +346,32 @@ public class CustomConfig extends SQLConfig {
 						throw new SQLException(e);
 					}
 				}
+				
+				private Map<String, Integer> generateHeaders() throws DataServiceFault {
+					Map<String, Integer> headers = new HashMap<String, Integer>();
+					int i = 0;
+					for (DataColumn column : this.customDataTable.getDataColumns()) {
+						headers.put(column.getName(), i++);
+					}
+					return headers;
+				}
+				
+				private Map<String, Integer> generateHeaderTypes() throws DataServiceFault {
+				    Map<String, Integer> headerTypes = new HashMap<String, Integer>();
+				    for (DataColumn column : this.customDataTable.getDataColumns()) {
+					    headerTypes.put(column.getName(), column.getDataType());
+				    }
+				    return headerTypes;
+				}
 
 				@Override
-				public Map<String, Integer> getHeaders() throws SQLException {
-					try {
-					    Map<String, Integer> headers = new HashMap<String, Integer>();
-					    int i = 0;
-					    for (DataColumn column : this.customDataTable.getDataColumns()) {
-						    headers.put(column.getName(), i++);
-					    }
-					    return headers;
-					} catch (DataServiceFault e) {
-						throw new SQLException(e);
-					}
+				public Map<String, Integer> getHeaders() {
+					return headers;
 				}
 				
 				@Override
-				public Map<String, Integer> getHeaderTypes() throws SQLException {
-					try {
-					    Map<String, Integer> headerTypes = new HashMap<String, Integer>();
-					    for (DataColumn column : this.customDataTable.getDataColumns()) {
-						    headerTypes.put(column.getName(), column.getDataType());
-					    }
-					    return headerTypes;
-					} catch (DataServiceFault e) {
-						throw new SQLException(e);
-					}
+				public Map<String, Integer> getHeaderTypes() {
+					return headerTypes;
 				}
 
 				@Override

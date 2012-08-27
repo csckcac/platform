@@ -29,13 +29,22 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
+
+import com.hp.hpl.jena.sparql.lib.org.json.JSONArray;
+import com.hp.hpl.jena.sparql.lib.org.json.JSONObject;
+import com.hp.hpl.jena.sparql.lib.org.json.JSONTokener;
 
 /**
  * An in-memory custom data source implementation.
  */
 public class InMemoryDataSource implements CustomDataSource {
 
+	public static final String IN_MEMORY_DATASOURCE_SCHEMA = "inmemory_datasource_schema";
+	
+	public static final String IN_MEMORY_DATASOURCE_RECORDS = "inmemory_datasource_records";
+	
 	private Map<String, InMemoryDataTable> dataTables = new ConcurrentHashMap<String, InMemoryDataTable>();
 	
 	private String dataSourceId;
@@ -47,27 +56,55 @@ public class InMemoryDataSource implements CustomDataSource {
 	@Override
 	public void init(Map<String, String> props) throws DataServiceFault {
 		this.dataSourceId = props.get(CustomDataSource.DATASOURCE_ID);
-		this.populateSampleData();
+		String schemaContents = props.get(IN_MEMORY_DATASOURCE_SCHEMA);
+		if (!DBUtils.isEmptyString(schemaContents)) {
+			this.createInitialSchema(schemaContents);
+		}
+		String recordContents = props.get(IN_MEMORY_DATASOURCE_RECORDS);
+		if (!DBUtils.isEmptyString(schemaContents)) {
+			this.populateInitialData(recordContents);
+		}
 	}
 	
-	private void populateSampleData() {
-		List<DataColumn> columns = new ArrayList<DataColumn>();
-		columns.add(new DataColumn("Model", Types.VARCHAR));
-		columns.add(new DataColumn("Classification", Types.VARCHAR));
-		columns.add(new DataColumn("Year", Types.VARCHAR));
-		this.createDataTable("Sheet1", columns);
-		Map<String, Object> values1 = new HashMap<String, Object>();
-		values1.put("Model", "Harley Davidson Ultimate Chopper");
-		values1.put("Classification", "Motorcycles");
-		values1.put("Year", "2010");
-		Map<String, Object> values2 = new HashMap<String, Object>();
-		values2.put("Model", "Alfa Romeo GTA");
-		values2.put("Classification", "Classic Cars");
-		values2.put("Year", "2011");
+	private void createInitialSchema(String schemaContents) throws DataServiceFault {
 		try {
-			this.getDataTable("Sheet1").insertData(new FixedDataRow(values1), new FixedDataRow(values2));
-		} catch (DataServiceFault e) {
-			e.printStackTrace();
+		    JSONObject obj = new JSONObject(new JSONTokener(schemaContents));
+		    List<DataColumn> columns;
+		    JSONArray colArray;
+		    for (String table : JSONObject.getNames(obj)) {
+		    	columns = new ArrayList<DataColumn>();
+		    	colArray = obj.getJSONArray(table);
+		    	for (int i = 0; i < colArray.length(); i++) {
+		    		columns.add(new DataColumn(colArray.getString(i), Types.VARCHAR));
+		    	}
+		    	this.createDataTable(table, columns);
+		    }
+		} catch (Exception e) {
+			throw new DataServiceFault(e, "Error in creating initial schema " +
+					"for In-Memory data source: " + e.getMessage());
+		}
+	}
+	
+	private void populateInitialData(String recordContents) throws DataServiceFault {
+		try {
+		    JSONObject obj = new JSONObject(new JSONTokener(recordContents));
+		    JSONArray entryArray, recordArray;
+		    Map<String, Object> rowValues;
+		    for (String table : JSONObject.getNames(obj)) {
+		    	entryArray = obj.getJSONArray(table);
+		    	for (int i = 0; i < entryArray.length(); i++) {
+		    		recordArray = entryArray.getJSONArray(i);
+		    		rowValues = new HashMap<String, Object>();
+		    		for (int j = 0; j < recordArray.length(); j++) {
+		    			rowValues.put(this.getDataTable(table).getDataColumns().get(j).getName(), 
+		    					recordArray.get(j).toString());
+		    		}
+		    		this.getDataTable(table).insertData(new FixedDataRow(rowValues));
+		    	}
+		    }
+		} catch (Exception e) {
+			throw new DataServiceFault(e, "Error in populating data " +
+					"for In-Memory data source: " + e.getMessage());
 		}
 	}
 

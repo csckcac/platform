@@ -402,16 +402,12 @@ public class GhostWebappDeployerUtils {
             }
             if (dummyContextPath != null) {
                 Host host = DataHolder.getCarbonTomcatService().getTomcat().getHost();
-                Context oldContext  = (Context) host.findChild(contextName);
-                if (oldContext != null) {
-                    oldContext.setRealm(null);
-                    oldContext.stop();
-                    oldContext.destroy();
+                if (host.findChild(contextName) == null) {
+                    context.setDocBase(dummyContextPath);
+                    ContextConfig ctxCfg = new ContextConfig();
+                    context.addLifecycleListener(ctxCfg);
+                    host.addChild(context);
                 }
-                context.setDocBase(dummyContextPath);
-                ContextConfig ctxCfg = new ContextConfig();
-                context.addLifecycleListener(ctxCfg);
-                host.addChild(context);
             }
 
         } catch (Exception e) {

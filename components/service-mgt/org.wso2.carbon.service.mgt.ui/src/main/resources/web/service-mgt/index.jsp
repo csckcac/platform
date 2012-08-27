@@ -459,7 +459,7 @@
                 <% } %>
             </td>
             <% if (loggedIn && hasDownloadableServices) { %>
-            <td>
+            <td width="100px">
                 <% if ((service.getServiceType().equalsIgnoreCase("axis2") && !(service.getName().equalsIgnoreCase("xkms"))) ||
                         service.getServiceType().equalsIgnoreCase("jaxws") ||service.getServiceType().equalsIgnoreCase("spring") ||
                         service.getServiceType().equalsIgnoreCase("js_service") || service.getServiceType().equalsIgnoreCase("jarservice")) { %>

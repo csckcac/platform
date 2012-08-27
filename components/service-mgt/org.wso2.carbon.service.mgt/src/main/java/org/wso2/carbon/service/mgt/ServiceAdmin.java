@@ -502,7 +502,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             // Filter out services based on serviceSearchString
             if (serviceSearchString != null &&
                 serviceSearchString.trim().length() > 0 &&
-                isServiceSatisfySearchString(serviceSearchString, axisService.getName())) {
+                !isServiceSatisfySearchString(serviceSearchString, axisService.getName())) {
                 continue;
             }
             axisServicesList.add(axisService);

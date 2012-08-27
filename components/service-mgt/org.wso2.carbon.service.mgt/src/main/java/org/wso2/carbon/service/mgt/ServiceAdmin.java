@@ -101,6 +101,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @SuppressWarnings("unused")
 public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
@@ -500,7 +502,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
             // Filter out services based on serviceSearchString
             if (serviceSearchString != null &&
                 serviceSearchString.trim().length() > 0 &&
-                !axisService.getName().toLowerCase().contains(serviceSearchString.toLowerCase())) {
+                isServiceSatisfySearchString(serviceSearchString, axisService.getName())) {
                 continue;
             }
             axisServicesList.add(axisService);
@@ -598,6 +600,21 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         //  DataPaginator.doPaging(pageNumber, axisServicesList, serviceList, wrapper);
         DataPaginator.doPaging(pageNumber, serviceList, wrapper);
         return wrapper;
+    }
+
+    private boolean isServiceSatisfySearchString(String serviceSearchString,
+                                                 String axisServiceName) {
+        if (serviceSearchString != null) {
+            String regex = serviceSearchString.toLowerCase().
+                    replace("..?", ".?").replace("..*", ".*").
+                    replaceAll("\\?", ".?").replaceAll("\\*", ".*?");
+
+            Pattern pattern = Pattern.compile(regex);
+            Matcher matcher = pattern.matcher(axisServiceName.toLowerCase());
+
+            return regex.trim().length() == 0 || matcher.find();
+        }
+        return false;
     }
 
     public int getNumberOfServiceGroups() throws AxisFault {

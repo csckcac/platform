@@ -21,6 +21,7 @@ import org.wso2.carbon.dataservices.sql.driver.TConnection;
 import org.wso2.carbon.dataservices.sql.driver.TPreparedStatement;
 import org.wso2.carbon.dataservices.sql.driver.query.create.ExcelCreateQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.create.GSpreadCreateQuery;
+import org.wso2.carbon.dataservices.sql.driver.query.delete.CustomDeleteQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.delete.ExcelDeleteQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.delete.GSpreadDeleteQuery;
 import org.wso2.carbon.dataservices.sql.driver.query.drop.ExcelDropQuery;
@@ -106,6 +107,8 @@ public class QueryFactory {
                 return new ExcelDeleteQuery(stmt);
             case GSPREAD:
                 return new GSpreadDeleteQuery(stmt);
+            case CUSTOM:
+                return new CustomDeleteQuery(stmt);
             default:
                 throw new SQLException("Unsupported type");
         }

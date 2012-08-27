@@ -86,7 +86,7 @@
             <td>
                 <% if ("Started".equals(data.getState())) { %>
                 <a href="<%= "http://" + data.getHostName() + ":" + data.getHttpPort() + data.getContext() + "/services" %>" target="_blank" class="icon-link"
-                   style='background-image:url(../webapp-mgt/images/goto_url.gif)'>
+                   style='background-image:url(../webapp-list/images/goto_url.gif)'>
                     <fmt:message key="carbonapps.jax.webapp.find.services"/>
                 </a>
                 <% } %>

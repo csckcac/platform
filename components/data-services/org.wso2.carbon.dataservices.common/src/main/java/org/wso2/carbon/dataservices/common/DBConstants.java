@@ -567,7 +567,7 @@ public final class DBConstants {
         }
 
         public static final String DATA_SOURCE_CLASS = "custom_datasource_class";
-        public static final String DATA_SOURCE_PROPS = "custom_datsource_props";
+        public static final String DATA_SOURCE_PROPS = "custom_datasource_props";
     }
 
     /**

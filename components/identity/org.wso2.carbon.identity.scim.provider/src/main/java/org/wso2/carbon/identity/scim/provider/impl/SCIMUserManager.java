@@ -19,6 +19,7 @@ package org.wso2.carbon.identity.scim.provider.impl;
 
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.scim.common.impl.AbstractProvisioningHandler;
+import org.wso2.carbon.identity.scim.common.utils.AttributeMapper;
 import org.wso2.carbon.identity.scim.common.utils.IdentitySCIMException;
 import org.wso2.carbon.user.api.Claim;
 import org.wso2.carbon.user.api.ClaimManager;
@@ -55,27 +56,11 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
     }
 
     public User createUser(User user) throws CharonException {
-        //get user attributes map: <String(scimAttributeName),Attribute-(simple,multivalue,complex)>
-
-        //if attribute == simple, new attribute map: <String(attributeName),value>
-        /*if attribute == complex,
-          read all subattributes,
-            if sub attribute == simple, addsimple attribute to map  (attributename == mainattribute.subattributename)
-            if sub attribute == mt  addmt attribute
-         */
-        /**
-         * if attribute == MTAttribute,
-         * if attribute value, simple attribute, add simple attribute (attributename == MTAttributeName#valueAttributename)
-         */
-        user.getAttributeList();
-        //iterate thru list, get attribute value and attribute uri
-        //build the claim map
-        Map<String, String> claims = new HashMap<String, String>();
-        //String[] roles = (String[]) user.getGroups().toArray();
-
+        Map<String, String> claimsMap = AttributeMapper.getClaimsMap(user);
+        //TODO: extract the role list as well if exist.
         try {
             //TODO:add id value to user attributes since it is used to query users
-            carbonUM.addUser(user.getUserName(), user.getPassword(), null, claims, null);
+            carbonUM.addUser(user.getUserName(), user.getPassword(), null, claimsMap, null);
             log.info("User: " + user.getUserName() + " is created through SCIM.");
             //if a consumer is registered for this SCIM operation, provision as appropriate
             if (isSCIMConsumerEnabled(consumerName)) {

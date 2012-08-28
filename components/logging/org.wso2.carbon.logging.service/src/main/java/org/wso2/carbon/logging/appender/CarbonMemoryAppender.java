@@ -20,6 +20,7 @@ package org.wso2.carbon.logging.appender;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.logging.appenders.CircularBuffer;
 import org.wso2.carbon.utils.logging.TenantAwareLoggingEvent;
 import org.wso2.carbon.utils.multitenancy.CarbonApplicationContextHolder;
@@ -54,6 +55,8 @@ public class CarbonMemoryAppender extends AppenderSkeleton {
     }
 
     protected void append(LoggingEvent loggingEvent) {
+        int tenantId = CarbonContext.getCurrentContext().getTenantId();
+        String appName = CarbonApplicationContextHolder.getThreadLocalCarbonApplicationContextHolder().getApplicationName();
     	Logger logger = Logger.getLogger(loggingEvent.getLoggerName());
 		TenantAwareLoggingEvent tenantEvent;
 		if (loggingEvent.getThrowableInformation() != null) {
@@ -64,9 +67,8 @@ public class CarbonMemoryAppender extends AppenderSkeleton {
 			tenantEvent = new TenantAwareLoggingEvent(loggingEvent.fqnOfCategoryClass, logger,
 					loggingEvent.timeStamp, loggingEvent.getLevel(), loggingEvent.getMessage(), null);
 		}
-		tenantEvent.setTenantId(Integer.toString(CarbonContextHolder.getCurrentCarbonContextHolder().getTenantId()));
-            tenantEvent.setServiceName(CarbonApplicationContextHolder.
-                    getCurrentCarbonAppContextHolder().getApplicationName());
+	     tenantEvent.setTenantId(Integer.toString(tenantId));
+            tenantEvent.setServiceName(appName);
         if (circularBuffer != null) {
             circularBuffer.append(tenantEvent);
         }
@@ -107,3 +109,4 @@ public class CarbonMemoryAppender extends AppenderSkeleton {
         this.bufferSize = bufferSize;
     }
 }
+

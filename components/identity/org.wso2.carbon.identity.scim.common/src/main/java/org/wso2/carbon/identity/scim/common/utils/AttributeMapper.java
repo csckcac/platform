@@ -34,11 +34,21 @@ import java.util.Map;
  */
 public class AttributeMapper {
 
+    /**
+     * Return claims as a map of <ClaimUri (which is mapped to SCIM attribute uri),ClaimValue>
+     *
+     * @param scimObject
+     * @return
+     */
     public static Map<String, String> getClaimsMap(AbstractSCIMObject scimObject) {
         Map<String, String> claimsMap = new HashMap<String, String>();
         Map<String, Attribute> attributeList = scimObject.getAttributeList();
         for (Map.Entry<String, Attribute> attributeEntry : attributeList.entrySet()) {
             Attribute attribute = attributeEntry.getValue();
+            //if the attribute is password, skip it
+            if (SCIMConstants.UserSchemaConstants.PASSWORD.equals(attribute.getName())) {
+                continue;
+            }
             if (attribute instanceof SimpleAttribute) {
                 String attributeURI = ((SimpleAttribute) attribute).getAttributeURI();
                 String attributeValue = String.valueOf(((SimpleAttribute) attribute).getValue());
@@ -92,5 +102,5 @@ public class AttributeMapper {
 
 
     //TODO: when constructing SCIM object from attribute values and claim uris, in multi attributes,
-    //
+    //TODO: get the role list as well.
 }

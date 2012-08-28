@@ -54,6 +54,12 @@ public class JSMessageReceiverServiceComponent {
      */
     public void activate(ComponentContext componentContext) {
         try {
+            //initializing E4X
+            Class.forName("org.wso2.javascript.xmlimpl.XML");
+        } catch (ClassNotFoundException e) {
+            log.error("Error while loading axiom-e4x implementation", e);
+        }
+        try {
             JavaScriptEngineUtils.setHostObjectService(hostObjectService);
             JavaScriptEngineUtils.setEngine(new RhinoEngine(new CacheManager(null), new RhinoSecurityController() {
                 @Override

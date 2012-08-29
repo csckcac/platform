@@ -147,5 +147,9 @@ public class Attribute extends DataServiceConfigurationElement{
             return false;
         }
     }
+	
+	public int hashCode() {
+		return this.getName().hashCode();
+	}
     
 }

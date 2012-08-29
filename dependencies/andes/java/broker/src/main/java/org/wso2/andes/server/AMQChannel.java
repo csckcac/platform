@@ -20,7 +20,6 @@
  */
 package org.wso2.andes.server;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,8 +35,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-
-import me.prettyprint.hector.api.exceptions.HNotFoundException;
 
 import org.apache.log4j.Logger;
 import org.wso2.andes.AMQException;
@@ -105,6 +102,12 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
     public static final int DEFAULT_PREFETCH = 5000;
 
     private static final Logger _logger = Logger.getLogger(AMQChannel.class);
+    
+    /**
+     * Following used by a performance counter
+     */
+    private static AtomicLong receivedMessageCounter = new AtomicLong(); 
+    private static long last10kMessageReceivedTimestamp = System.currentTimeMillis(); 
 
     private static final boolean MSG_AUTH =
         ApplicationRegistry.getInstance().getConfiguration().getMsgAuth();
@@ -409,6 +412,20 @@ public class AMQChannel implements SessionConfig, AMQSessionModel
                         }
                     }
                 }, getId().toString());
+                /*
+                 * Following code is only a performance counter. No effect of broker logic
+                 */
+                Long localCount = receivedMessageCounter.incrementAndGet();
+                if(localCount%10000 == 0){
+                    long timetook = System.currentTimeMillis() - last10kMessageReceivedTimestamp;
+                    _logger.info("received "+ localCount + ", throughput ="+ (10000*1000/timetook) + " msg/sec,"+ timetook);
+                    System.out.println("received "+ localCount + ", throughput ="+ (10000*1000/timetook) + " msg/sec,"+ timetook);
+                    last10kMessageReceivedTimestamp = System.currentTimeMillis();
+                }
+                /*
+                 * End of perofrmance counter
+                 */
+
             }
             finally
             {

@@ -178,10 +178,6 @@ public class CassandraMessageFlusher extends Thread{
                             e.printStackTrace();
                         }
                     }
-                    if(messageProcessed > 90){
-                        System.out.println();
-                    }
-                    
                     iterations++;
                     if(messageProcessed > 10 || workqueueSize > 100){
                         log.debug("[Flusher]read="+ messages.size() + " tot= "+ messageProcessed + ". queue size = "+ workqueueSize);

@@ -309,8 +309,10 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
 
                                 ByteBuffer buf = ByteBuffer.allocate(100);
                                 int readCount = entry.getMessage().getContent(buf, 0);
-                                log.debug("sent1(" + entry.getMessage().getMessageNumber() + ")"
-                                        + new String(buf.array(), 0, readCount));
+                                if(log.isDebugEnabled()){
+                                    log.debug("sent1(" + entry.getMessage().getMessageNumber() + ")"
+                                            + new String(buf.array(), 0, readCount));
+                                }
                                 sendToClient(entry, deliveryTag);
                                 break;
                             } else {
@@ -325,18 +327,21 @@ public abstract class SubscriptionImpl implements Subscription, FlowCreditManage
                                     getChannel().getChannelId());
                             if(i < retryCount -1){
                                 //will try again
+                                if (log.isDebugEnabled()) {
+                                    log.debug("Sent failed for " + entry.getMessage().getMessageNumber() + " retrying");
+                                }
                                 Thread.sleep(waitTime);
                             }else{
                                 //we are done with all retries, so giving up. This will be picked up by Cassandra message
                                 //publisher and get delivered, but then it will be done out of order
-                                throw new AMQException("Error sending message ID"+ entry.getMessage().getMessageNumber() + " "+ e.getMessage(), e);
+                                throw new AMQException("Error sending message ID:"+ entry.getMessage().getMessageNumber() + " "+ e.getMessage(), e);
                             }
                         }
                     }
                     
                 }
             } catch (Exception e) {
-                throw new AMQException(e.toString());
+                throw new AMQException(e.toString(),e);
             }
         }
     }

@@ -28,11 +28,18 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * TODO handle message timeouts
  */
 public class QueueSubscriptionAcknowledgementHandler {
+    /** 
+     * this is a delivery performance counter
+     */
+    private static AtomicLong deliveryCount =  new AtomicLong();
+    private static long last10kMessageTimestamp = System.currentTimeMillis(); 
+    
 
     private CassandraMessageStore cassandraMessageStore;
 
@@ -99,6 +106,19 @@ public class QueueSubscriptionAcknowledgementHandler {
     }
 
     public void handleAcknowledgement(long deliveryTag, int channelID) {
+        /*
+         * Following code is only a performance counter. No effect of broker logic
+         */
+        Long localCount = deliveryCount.incrementAndGet();
+        if(localCount%10000 == 0){
+            long timetook = System.currentTimeMillis() - last10kMessageTimestamp;
+            log.info("delivered "+ localCount + ", throughput ="+ (10000*1000/timetook) + " msg/sec, "+ timetook);
+            last10kMessageTimestamp = System.currentTimeMillis();
+        }
+        /*
+         * End of perofrmance counter
+         */
+        
         if (!old) {
             try {
                 try {

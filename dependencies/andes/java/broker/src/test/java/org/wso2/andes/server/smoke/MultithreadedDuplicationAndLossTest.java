@@ -36,7 +36,7 @@ public class MultithreadedDuplicationAndLossTest extends MultiThreadedTest {
      */
     public static void main(String[] args) throws Exception {
         MultithreadedDuplicationAndLossTest base = new MultithreadedDuplicationAndLossTest();
-        int producerCount = 10;
+        int producerCount = 20;
         int consumerCount = 10;
         String queueName = "queue1";
 

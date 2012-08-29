@@ -15,33 +15,34 @@ import org.apache.commons.logging.LogFactory;
 public class AndesExecuter {
 
     private static Log log = LogFactory.getLog(AndesExecuter.class);
+    private static boolean isDebugEnabled = log.isDebugEnabled();
     private static Map<String, PendingJob> pendingJobsTracker = new ConcurrentHashMap<String, PendingJob>();
     private static ExecutorService executorService = Executors.newFixedThreadPool(8);
     static {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (true) {
-                    try {
-                        if (log.isDebugEnabled()) {
+        if (isDebugEnabled) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        try {
                             int workqueueSize = ((ThreadPoolExecutor) AndesExecuter.executorService).getQueue().size();
                             log.debug("AndesExecuter pool queue size " + workqueueSize);
                             Thread.sleep(30000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
                     }
                 }
-            }
-        }).start();
+            }).start();
+        }
     }
 
     public static Future<?> submit(Runnable job, String channelId) {
-        if(channelId != null){
+        if (channelId != null) {
             synchronized (pendingJobsTracker) {
                 PendingJob pendingJob = pendingJobsTracker.get(channelId);
-                if(pendingJob == null){
-                    pendingJob = new PendingJob(); 
+                if (pendingJob == null) {
+                    pendingJob = new PendingJob();
                     pendingJobsTracker.put(channelId, pendingJob);
                 }
                 pendingJob.submittedJobs = pendingJob.submittedJobs + 1;
@@ -53,17 +54,21 @@ public class AndesExecuter {
     public static class RunnableWrapper implements Runnable {
         Runnable runnable;
         String channelID;
+
         @Override
         public void run() {
             try {
                 long start = System.currentTimeMillis();
                 runnable.run();
-                if(log.isDebugEnabled()){
-                    log.debug(new StringBuffer().append("took ").append(runnable.getClass().getName())
-                            .append(" ").append(System.currentTimeMillis() - start));
+                if (isDebugEnabled) {
+                    long timetook = System.currentTimeMillis() - start; 
+                    if(timetook > 20){
+                        log.debug(new StringBuffer().append("took ").append(runnable.getClass().getName()).append(" ")
+                                .append(timetook));
+                    }
                 }
-            } finally{
-                if(channelID != null){
+            } finally {
+                if (channelID != null) {
                     synchronized (pendingJobsTracker) {
                         pendingJobsTracker.get(channelID).semaphore.release();
                     }
@@ -76,26 +81,27 @@ public class AndesExecuter {
             this.channelID = channelID;
         }
     }
-    
-    public static class PendingJob{
-        Semaphore semaphore = new Semaphore(0); 
+
+    public static class PendingJob {
+        Semaphore semaphore = new Semaphore(0);
         int submittedJobs = 0;
     }
-    
-    
-    public static void wait4JobsfromThisChannel2End(String channelId){
-        PendingJob pendingJobs; 
+
+    public static void wait4JobsfromThisChannel2End(String channelId) {
+        PendingJob pendingJobs;
         synchronized (pendingJobsTracker) {
             pendingJobs = pendingJobsTracker.get(channelId);
         }
 
-        if(pendingJobs != null){
+        if (pendingJobs != null) {
             try {
                 pendingJobs.semaphore.tryAcquire(pendingJobs.submittedJobs, 1, TimeUnit.SECONDS);
-                log.info("All "+ pendingJobs.submittedJobs + " completed for channel "+ channelId);
+                if (isDebugEnabled) {
+                    log.debug("All " + pendingJobs.submittedJobs + " completed for channel " + channelId);
+                }
             } catch (InterruptedException e) {
-                log.warn("Closing Channnel "+channelId+ "timedout waiting for submitted jobs to finish");
-            }finally{
+                log.warn("Closing Channnel " + channelId + "timedout waiting for submitted jobs to finish");
+            } finally {
                 synchronized (pendingJobsTracker) {
                     pendingJobsTracker.remove(channelId);
                 }

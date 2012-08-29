@@ -89,7 +89,8 @@ public class OnflightMessageTracker {
      * @param channelID
      */
     public void removeMessage(long deliveryTag, long messageId, int channelID){
-        Long messageIDStored = deliveryTag2MsgID.remove(deliveryTag);
+        String deliveryID = new StringBuffer(String.valueOf(channelID)).append("/").append(deliveryTag).toString(); 
+        Long messageIDStored = deliveryTag2MsgID.remove(deliveryID);
         if(messageIDStored != null && messageIDStored.longValue() == messageId){
             throw new RuntimeException("Delivery Tag reused, this should not happen");
         }
@@ -97,7 +98,7 @@ public class OnflightMessageTracker {
     }
     
     public synchronized boolean testAndAddMessage(long deliveryTag, long messageId, String queue, int channelID){
-        String deliveryID = new StringBuffer(String.valueOf(channelID)).append(deliveryTag).toString(); 
+        String deliveryID = new StringBuffer(String.valueOf(channelID)).append("/").append(deliveryTag).toString(); 
         long currentTime = System.currentTimeMillis();
         MsgData mdata = msgId2MsgData.get(messageId); 
         
@@ -107,7 +108,7 @@ public class OnflightMessageTracker {
                 
         if (mdata == null || (!mdata.ackreceived && (currentTime - mdata.timestamp) > acktimeout)) {
             if (deliveryTag2MsgID.containsKey(deliveryID)) {
-                throw new RuntimeException("Delivery Tag reused, this should not happen");
+                throw new RuntimeException("Delivery Tag "+deliveryID+" reused, this should not happen");
             }
             if (mdata != null) {
                 // message has sent once, we will clean that up
@@ -123,7 +124,7 @@ public class OnflightMessageTracker {
     }
     
     public synchronized MsgData ackReceived(long deliveryTag, long channelID){
-        String deliveryID = new StringBuffer(String.valueOf(channelID)).append(deliveryTag).toString(); 
+        String deliveryID = new StringBuffer(String.valueOf(channelID)).append("/").append(deliveryTag).toString(); 
         Long messageid = deliveryTag2MsgID.get(deliveryID); 
         if(messageid != null){
             MsgData msgData = msgId2MsgData.get(messageid);

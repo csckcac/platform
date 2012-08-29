@@ -76,8 +76,6 @@ public class Result extends DataServiceConfigurationElement {
 
 	private String elementLocalNames[];
 
-	private String mappingType;
-
 	/* represents the xslt path for xslt transformation */
 	private String xsltPath;
 
@@ -473,23 +471,6 @@ public class Result extends DataServiceConfigurationElement {
 		this.displayColumnNames = displayColumns.toArray(new String[displayColumns.size()]);
 		this.resultSetColumnNames = resultSetColumns.toArray(new String[resultSetColumns.size()]);
 		this.elementLocalNames = elementLclNames.toArray(new String[elementLclNames.size()]);
-	}
-
-	public String getMappingType() {
-		return this.mappingType;
-	}
-
-	public void setMappingType(String mappingType) {
-		if (mappingType.equals("attribute")) {
-			Attribute attribute = new Attribute();
-			attribute.buildXML();
-		} else if (mappingType.equals("element")) {
-			Element element = new Element();
-			element.buildXML();
-		} else if (mappingType.equals("query")) {
-			CallQuery query = new CallQuery();
-			query.buildXML();
-		}
 	}
 
 	public OMElement buildXML() {

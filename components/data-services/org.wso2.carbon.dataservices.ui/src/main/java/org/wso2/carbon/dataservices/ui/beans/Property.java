@@ -66,6 +66,7 @@ public class Property extends DataServiceConfigurationElement{
 		this.useSecretAlias = useSecretAlias;
 	}
 
+	@SuppressWarnings("unchecked")
 	public OMElement buildXML() {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMElement propEl = fac.createOMElement("property", null);

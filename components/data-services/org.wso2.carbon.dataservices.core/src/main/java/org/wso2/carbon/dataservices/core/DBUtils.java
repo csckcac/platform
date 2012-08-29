@@ -19,6 +19,7 @@
 package org.wso2.carbon.dataservices.core;
 
 import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -936,6 +937,18 @@ public class DBUtils {
 		    		getSecretCallbackHandlerService().getSecretCallbackHandler());
 		}
 		return secretResolver.resolve(alias);
+	}
+	
+	public static OMElement wrapBoxCarringResponse(OMElement result) {
+		OMFactory fac = OMAbstractFactory.getOMFactory();
+		OMElement wrapperElement = fac.createOMElement(new QName(DBConstants.WSO2_DS_NAMESPACE,
+                DBConstants.DATA_SERVICE_RESPONSE_WRAPPER_ELEMENT));
+		if (result != null) {
+			wrapperElement.addChild(result);
+		}
+		OMDocument doc = fac.createOMDocument();
+		doc.addChild(wrapperElement);
+		return doc.getOMDocumentElement();
 	}
 
 }

@@ -61,6 +61,7 @@ public class RequestBox {
 		OMElement result;
 		List<DataServiceRequest> reqList = this.getRequests();
 		int n = reqList.size();
+		OMElement resultElement = null;
 		for (int i = 0; i < n; i++) {
 			result = reqList.get(i).dispatch();
 			if (result != null) {
@@ -68,13 +69,18 @@ public class RequestBox {
 					/* if it's the last request, return the result,
 					 * getXMLStreamReader() method will execute the actual request */
 					if (i == (n - 1)) {
-						return DBUtils.cloneAndReturnBuiltElement(result);
+						resultElement = DBUtils.cloneAndReturnBuiltElement(result);
+						return DBUtils.wrapBoxCarringResponse(resultElement);
 					} else {
 					    /* process the result of the request, no need to cache the data */
 					    result.serializeAndConsume(new NullOutputStream());
 					}
 				} catch (XMLStreamException e) {
 					throw new DataServiceFault(e, "Error in request box result serializing");
+				}
+			} else {
+				if (i == (n - 1)) {
+					return DBUtils.wrapBoxCarringResponse(resultElement);
 				}
 			}
 		}

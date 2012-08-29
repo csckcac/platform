@@ -68,6 +68,9 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		/* create the request status element */
 		createAndStoreRequestStatusElement(cparams);
 		
+		/* Creates the default data services response element */
+		createAndStoreDataServiceResponseElement(cparams);
+		
 		/* process normal operations */
 		for (Operation normalOp : normalOperations) {
 			processRequest(cparams, normalOp);
@@ -226,7 +229,8 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 		
 		Result result = defCQ.getQuery().getResult();
 		if (result.isXsAny() || result.getResultType() == ResultTypes.RDF) {
-			outMessage.setElementQName(Constants.XSD_ANYTYPE);
+			outMessage.setElementQName(new QName(DBConstants.WSO2_DS_NAMESPACE,
+					DBConstants.DATA_SERVICE_RESPONSE_WRAPPER_ELEMENT));
 			return;
 		}
 		
@@ -452,6 +456,23 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 				DBConstants.REQUEST_STATUS_WRAPPER_ELEMENT, true);
 		element.setSchemaTypeName(Constants.XSD_STRING);
 	}
+	
+	/**
+	 * Creates the default data services response element, and stores it in the schema.
+	 * @param cparams The common parameters used in the schema generator
+	 */
+	private static void createAndStoreDataServiceResponseElement(CommonParams cparams) {
+		XmlSchemaElement element = createElement(cparams, DBConstants.WSO2_DS_NAMESPACE,
+				DBConstants.DATA_SERVICE_RESPONSE_WRAPPER_ELEMENT, true);
+		XmlSchemaComplexType type = createComplexType(cparams, DBConstants.WSO2_DS_NAMESPACE, 
+				DBConstants.DATA_SERVICE_RESPONSE_WRAPPER_ELEMENT, false);
+		element.setType(type);
+		XmlSchemaAny anyEl = new XmlSchemaAny();
+		anyEl.setMinOccurs(0);
+		XmlSchemaSequence seq = new XmlSchemaSequence();
+		seq.getItems().add(anyEl);
+		type.setParticle(seq);
+	}
 		
 	/**
 	 * Creates an XML schema element. If an element with the given QName already exists, 
@@ -531,6 +552,7 @@ public class DataServiceDocLitWrappedSchemaGenerator {
 			type.setName(name);
 			cparams.getTypeMap().put(qname, type);
 			schema.getItems().add(type);
+            schema.getSchemaTypes().add(qname, type);
 		}
 		return type;
 	}

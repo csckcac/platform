@@ -12,24 +12,24 @@
     <query id="select_udt_from_table_SQL" useConfig="default">
       <sql>select ob from ob_table</sql>
       <result element="Entries" rowName="Entry">
-         <element name="ID" column="employee[0]" xsdType="xs:integer" />
-         <element name="Name" column="employee[1]" xsdType="xs:string" />
+         <element name="ID" column="employee[0]" xsdType="integer" />
+         <element name="Name" column="employee[1]" xsdType="string" />
       </result>
    </query>
 
    <query id="select_nested_udt_from_table_SQL" useConfig="default">
       <sql>select ob from ob_table_1</sql>
       <result element="Entries" rowName="Entry">
-         <element name="ID" column="ob[1][0]" xsdType="xs:integer" />
-         <element name="Name" column="ob[1][1]" xsdType="xs:string" />
+         <element name="ID" column="ob[1][0]" xsdType="integer" />
+         <element name="Name" column="ob[1][1]" xsdType="string" />
       </result>
    </query>
 
    <query id="select_udt_as_out_param_SQL" useConfig="default">
       <sql>call ob_proc(?,?)</sql>
       <result element="Entries" rowName="Entry">
-         <element name="ID1" column="obj[1][0]" xsdType="xs:integer" />
-         <element name="name" column="obj[1][1]" xsdType="xs:string" />
+         <element name="ID1" column="obj[1][0]" xsdType="integer" />
+         <element name="name" column="obj[1][1]" xsdType="string" />
       </result>
       <param name="ID" sqlType="INTEGER" ordinal="1" />
       <param name="obj" sqlType="STRUCT" type="OUT" ordinal="2" structType="OB1" />

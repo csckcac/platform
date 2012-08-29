@@ -601,7 +601,7 @@ public class DataService implements EventBrokerServiceListener {
                 *     <query id="select_query_count">
                 *        <sql>SELECT COUNT(*) as orderDetailsCount FROM OrderDetails</sql>
                 *        <result element="Orders" rowName="OrderDetails">
-                *          <element name="orderDetailsCount" column="orderDetailsCount" xsdType="xs:integer" />
+                *          <element name="orderDetailsCount" column="orderDetailsCount" xsdType="integer" />
                 *        </result>
                 *     </query>
                 *      ....

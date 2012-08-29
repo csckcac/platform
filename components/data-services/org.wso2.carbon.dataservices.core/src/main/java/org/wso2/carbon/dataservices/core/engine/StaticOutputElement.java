@@ -67,7 +67,7 @@ public class StaticOutputElement extends OutputElement {
     private String elementType;
 
     /**
-     * i.e. xs:string, xs:decimal, etc..
+     * i.e. string, decimal, etc..
      */
     private QName xsdType;
 
@@ -407,6 +407,10 @@ public class StaticOutputElement extends OutputElement {
     public boolean equals(Object o) {
         return (o instanceof StaticOutputElement) &&
                 (((StaticOutputElement) o).getName().equals(this.getName()));
+    }
+    
+    public int hashCode() {
+    	return this.getName().hashCode();
     }
 
     /* Acts as a container for UDT related metadata */

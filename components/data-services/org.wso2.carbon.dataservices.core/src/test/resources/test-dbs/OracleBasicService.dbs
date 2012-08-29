@@ -15,12 +15,12 @@
 			FROM Customers</sql>
 		<result element="Customers" rowName="Customer">
 			<element name="customerNumber" column="customerNumber"
-				xsdType="xs:integer" />
-			<element name="customerName" column="customerName" xsdType="xs:string" />
+				xsdType="integer" />
+			<element name="customerName" column="customerName" xsdType="string" />
 			<element name="contactLastName" column="contactLastName"
-				xsdType="xs:string" />
-			<element name="phone" column="phone" xsdType="xs:string" />
-			<element name="city" column="city" xsdType="xs:string" />
+				xsdType="string" />
+			<element name="phone" column="phone" xsdType="string" />
+			<element name="city" column="city" xsdType="string" />
 		</result>
 	</query>
 
@@ -38,11 +38,11 @@
 		<sql>SELECT * FROM Products</sql>
 
 		<result element="Products" rowName="Product">
-			<element name="productCode" column="productCode" xsdType="xs:string" />
-			<element name="productName" column="productName" xsdType="xs:string" />
+			<element name="productCode" column="productCode" xsdType="string" />
+			<element name="productName" column="productName" xsdType="string" />
 			<element name="quantityInStock" column="quantityInStock"
-				xsdType="xs:integer" />
-			<element name="buyPrice" column="buyPrice" xsdType="xs:double" />
+				xsdType="integer" />
+			<element name="buyPrice" column="buyPrice" xsdType="double" />
 		</result>
 	</query>
 
@@ -61,7 +61,7 @@
 
 		<result element="Orders" rowName="OrderDetails">
 			<element name="orderDetailsCount" column="orderDetailsCount"
-				xsdType="xs:integer" />
+				xsdType="integer" />
 		</result>
 	</query>
 
@@ -77,10 +77,10 @@
 
 		<result element="Payments" rowName="Payment">
 			<attribute name="customerNumber" column="customerNumber"
-				xsdType="xs:integer" />
-			<attribute name="paymentDate" column="paymentDate" xsdType="xs:dateTime" />
-			<attribute name="amount" column="amount" xsdType="xs:double" />
-			<element name="checkNumber" column="checkNumber" xsdType="xs:string" />
+				xsdType="integer" />
+			<attribute name="paymentDate" column="paymentDate" xsdType="dateTime" />
+			<attribute name="amount" column="amount" xsdType="double" />
+			<element name="checkNumber" column="checkNumber" xsdType="string" />
 		</result>
 	</query>
 
@@ -94,12 +94,12 @@
 			FROM Customers WHERE rownum BETWEEN 1 AND 2</sql>
 		<result element="Customers" rowName="Customer">
 			<element name="customerNumber" column="customerNumber"
-				xsdType="xs:integer" />
-			<element name="customerName" column="customerName" xsdType="xs:string" />
+				xsdType="integer" />
+			<element name="customerName" column="customerName" xsdType="string" />
 			<element name="contactLastName" column="contactLastName"
-				xsdType="xs:string" />
-			<element name="phone" column="phone" xsdType="xs:string" />
-			<element name="city" column="city" xsdType="xs:string" />
+				xsdType="string" />
+			<element name="phone" column="phone" xsdType="string" />
+			<element name="city" column="city" xsdType="string" />
 		</result>
 	</query>
 	<query id="basic_merge_query2" useConfig="default">
@@ -108,12 +108,12 @@
 			phone, city FROM Customers ) WHERE r BETWEEN 4 AND 6</sql>
 		<result element="Customers" rowName="Customer">
 			<element name="customerNumber" column="customerNumber"
-				xsdType="xs:integer" />
-			<element name="customerName" column="customerName" xsdType="xs:string" />
+				xsdType="integer" />
+			<element name="customerName" column="customerName" xsdType="string" />
 			<element name="contactLastName" column="contactLastName"
-				xsdType="xs:string" />
-			<element name="phone" column="phone" xsdType="xs:string" />
-			<element name="city" column="city" xsdType="xs:string" />
+				xsdType="string" />
+			<element name="phone" column="phone" xsdType="string" />
+			<element name="city" column="city" xsdType="string" />
 		</result>
 	</query>
 
@@ -142,11 +142,11 @@
 
 		<result element="Customers" rowName="Customer"
 			useColumnNumbers="true">
-			<element name="customerNumber" column="1" xsdType="xs:integer" />
-			<element name="customerName" column="2" xsdType="xs:string" />
-			<element name="contactLastName" column="3" xsdType="xs:string" />
-			<element name="phone" column="4" xsdType="xs:string" />
-			<element name="city" column="5" xsdType="xs:string" />
+			<element name="customerNumber" column="1" xsdType="integer" />
+			<element name="customerName" column="2" xsdType="string" />
+			<element name="contactLastName" column="3" xsdType="string" />
+			<element name="phone" column="4" xsdType="string" />
+			<element name="city" column="5" xsdType="string" />
 		</result>
 	</query>
 

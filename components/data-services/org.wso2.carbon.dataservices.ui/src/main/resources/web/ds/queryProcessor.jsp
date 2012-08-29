@@ -375,7 +375,7 @@
                   newElement.setDataSourceType("column");
                   newElement.setName("ID");
                   newElement.setDataSourceValue("1");
-                  newElement.setxsdType("xs:integer");
+                  newElement.setxsdType("integer");
                   res.addElement(newElement);
               }
            }   
@@ -439,7 +439,7 @@
                                     el.setDataSourceType("column");
                                     el.setDataSourceValue(name);
                                     el.setName(name);
-                                    el.setxsdType("xs:string");
+                                    el.setxsdType("string");
                                     res.addElement(el);
                                 }
                             }

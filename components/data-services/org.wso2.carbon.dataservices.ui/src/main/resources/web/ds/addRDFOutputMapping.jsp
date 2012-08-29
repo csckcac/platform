@@ -237,50 +237,50 @@
                     <option value="" selected="selected">--SELECT--</option>
                     <% } else { %>--%>
                     <option value="">--SELECT--</option>
-                    <% } if (xsdType.equals("xs:string")) { %>
-                    <option value="xs:string" selected="selected">xs:string</option>
+                    <% } if (xsdType.equals("string")) { %>
+                    <option value="string" selected="selected">string</option>
                     <% } else { %>
-                    <option value="xs:string">xs:string</option>
-                    <% } if (xsdType.equals("xs:integer")) { %>
-                    <option value="xs:integer" selected="selected">xs:integer</option>
+                    <option value="string">string</option>
+                    <% } if (xsdType.equals("integer")) { %>
+                    <option value="integer" selected="selected">integer</option>
                     <% } else { %>
-                    <option value="xs:integer">xs:integer</option>
-                    <% } if (xsdType.equals("xs:boolean")) { %>
-                    <option value="xs:boolean" selected="selected">xs:boolean</option>
+                    <option value="integer">integer</option>
+                    <% } if (xsdType.equals("boolean")) { %>
+                    <option value="boolean" selected="selected">boolean</option>
                     <% } else { %>
-                    <option value="xs:boolean">xs:boolean</option>
-                    <% } if (xsdType.equals("xs:float")) { %>
-                    <option value="xs:float" selected="selected">xs:float</option>
+                    <option value="boolean">boolean</option>
+                    <% } if (xsdType.equals("float")) { %>
+                    <option value="float" selected="selected">float</option>
                     <% } else { %>
-                    <option value="xs:float">xs:float</option>
-                    <% } if (xsdType.equals("xs:double")) { %>
-                    <option value="xs:double" selected="selected">xs:double</option>
+                    <option value="float">float</option>
+                    <% } if (xsdType.equals("double")) { %>
+                    <option value="double" selected="selected">double</option>
                     <% } else{ %>
-                    <option value="xs:double">xs:double</option>
-                    <% } if (xsdType.equals("xs:decimal")) { %>
-                    <option value="xs:decimal" selected="selected">xs:decimal</option>
+                    <option value="double">double</option>
+                    <% } if (xsdType.equals("decimal")) { %>
+                    <option value="decimal" selected="selected">decimal</option>
                     <% } else { %>
-                    <option value="xs:decimal">xs:decimal</option>
-                    <% } if (xsdType.equals("xs:dateTime")) { %>
-                    <option value="xs:dateTime" selected="selected">xs:dateTime</option>
+                    <option value="decimal">decimal</option>
+                    <% } if (xsdType.equals("dateTime")) { %>
+                    <option value="dateTime" selected="selected">dateTime</option>
                     <% } else { %>
-                    <option value="xs:dateTime">xs:dateTime</option>
-                    <% } if (xsdType.equals("xs:time")) { %>
-                    <option value="xs:time" selected="selected">xs:time</option>
+                    <option value="dateTime">dateTime</option>
+                    <% } if (xsdType.equals("time")) { %>
+                    <option value="time" selected="selected">time</option>
                     <% } else { %>
-                    <option value="xs:time">xs:time</option>
-                    <% } if (xsdType.equals("xs:date")) { %>
-                    <option value="xs:date" selected="selected">xs:date</option>
+                    <option value="time">time</option>
+                    <% } if (xsdType.equals("date")) { %>
+                    <option value="date" selected="selected">date</option>
                     <% } else { %>
-                    <option value="xs:date">xs:date</option>
-                    <% } if (xsdType.equals("xs:long")) { %>
-                    <option value="xs:long" selected="selected">xs:long</option>
+                    <option value="date">date</option>
+                    <% } if (xsdType.equals("long")) { %>
+                    <option value="long" selected="selected">long</option>
                     <% } else { %>
-                    <option value="xs:long">xs:long</option>
-                    <% } if (xsdType.equals("xs:base64Binary")) { %>
-                    <option value="xs:base64Binary" selected="selected">xs:base64Binary</option>
+                    <option value="long">long</option>
+                    <% } if (xsdType.equals("base64Binary")) { %>
+                    <option value="base64Binary" selected="selected">base64Binary</option>
                     <% } else { %>
-                    <option value="xs:base64Binary">xs:base64Binary</option>
+                    <option value="base64Binary">base64Binary</option>
                     <% } %>
                  </select></td></tr> 
    					</table>

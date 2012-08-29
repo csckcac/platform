@@ -100,9 +100,7 @@ public class GhostWebappDeployerUtils {
                     return null;
                 }
 
-                String ghostParam = String.valueOf(deployedWebapp.
-                        getProperty(CarbonConstants.GHOST_WEBAPP_PARAM));
-                if ("false".equals(ghostParam)) {
+                if (!isGhostWebApp(deployedWebapp)) {
                     // if the webapp from webappsholder is not a ghost, return it
                     newWebApp = deployedWebapp;
                 } else {

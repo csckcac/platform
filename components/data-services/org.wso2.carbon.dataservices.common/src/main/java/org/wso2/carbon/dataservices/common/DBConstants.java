@@ -78,7 +78,8 @@ public final class DBConstants {
     /* Initial index of UDT attributes */
     public static final int UDT_ATTRIBUTE_INITIAL_INDEX = 0;
     public static final String SECUREVAULT_NAMESPACE = "http://org.wso2.securevault/configuration";
-    
+    public static final String DATA_SERVICE_RESPONSE_WRAPPER_ELEMENT = "DATA_SERVICE_RESPONSE";
+        
     /**
      * Codes to be used as fault codes.
      */

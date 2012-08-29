@@ -22,7 +22,7 @@ package org.wso2.dss.sample.gspread;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.dataservices.samples.gspread_sample_service.DataServiceFaultException;
+import org.wso2.carbon.dataservices.samples.gspread_sample_service.DataServiceFault;
 import org.wso2.carbon.dataservices.samples.gspread_sample_service.GSpreadSample;
 import org.wso2.carbon.dataservices.samples.gspread_sample_service.GSpreadSampleStub;
 import org.wso2.dss.sample.DSSTestUtils;
@@ -39,11 +39,11 @@ public class GSpreadSampleTestCase {
     private static final Log log = LogFactory.getLog(GSpreadSampleTestCase.class);
 
     @Test(groups = {"wso2.dss"})
-    public void testGSpreadQuery() throws DataServiceFaultException, RemoteException {
+    public void testGSpreadQuery() throws DataServiceFault, RemoteException {
 
         if (this.isOnlineTestsEnabled()) {
             log.info("Running GSpreadSampleTestCase#testGSpreadQuery");
-           GSpreadSample stub = new GSpreadSampleStub(SERVICE_EPR);
+            GSpreadSample stub = new GSpreadSampleStub(SERVICE_EPR);
             assert stub.getCustomers().length > 0 : "No of customers should be greater than zero";
 
         }

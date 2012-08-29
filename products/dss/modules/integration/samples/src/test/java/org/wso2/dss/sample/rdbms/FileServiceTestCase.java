@@ -22,7 +22,7 @@ package org.wso2.dss.sample.rdbms;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.dataservices.samples.file_service.DataServiceFaultException;
+import org.wso2.carbon.dataservices.samples.file_service.DataServiceFault;
 import org.wso2.carbon.dataservices.samples.file_service.FileService;
 import org.wso2.carbon.dataservices.samples.file_service.FileServiceStub;
 import org.wso2.dss.sample.DSSTestUtils;
@@ -50,10 +50,10 @@ public class FileServiceTestCase {
     private static final Log log = LogFactory.getLog(FileServiceTestCase.class);
 
     @Test(groups = {"wso2.dss"})
-	public void testAddFile() throws DataServiceFaultException, RemoteException {
+	public void testAddFile() throws DataServiceFault, RemoteException {
 
 			log.info("Running FileServiceTestCase#testAddFile");
-		    FileService stub = new FileServiceStub(SERVICE_EPR);
+			FileService stub = new FileServiceStub(SERVICE_EPR);
 		    stub._getcreatenewfile("file1.txt", "txt");
 		    assertEquals(stub._getcheckfileexists("file1.txt")[0].getFileExists().intValue(), 1);
 
@@ -62,7 +62,7 @@ public class FileServiceTestCase {
 
 
     @Test(groups = {"wso2.dss"})
-	public void testDeleteFile() throws DataServiceFaultException, RemoteException {
+	public void testDeleteFile() throws DataServiceFault, RemoteException {
 
 			log.info("Running FileServiceTestCase#testDeleteFile");
 		    FileService stub = new FileServiceStub(SERVICE_EPR);
@@ -74,10 +74,10 @@ public class FileServiceTestCase {
 	}
 
     @Test(groups = {"wso2.dss"})
-	public void testGetFileNames() throws DataServiceFaultException, RemoteException {
+	public void testGetFileNames() throws DataServiceFault, RemoteException {
 
 			log.info("Running FileServiceTestCase#testGetFileNames");
-		    FileService stub = new FileServiceStub(SERVICE_EPR);
+			FileService stub = new FileServiceStub(SERVICE_EPR);
 		    stub._getcreatenewfile("file3.txt", "txt");
 		    stub._getcreatenewfile("file4.txt", "txt");
 		    boolean check1 = false, check2 = false;
@@ -94,10 +94,10 @@ public class FileServiceTestCase {
 	}
 
     @Test(groups = {"wso2.dss"})
-	public void testGetFileType() throws DataServiceFaultException, RemoteException {
+	public void testGetFileType() throws DataServiceFault, RemoteException {
 
 			log.info("Running FileServiceTestCase#testGetFileType");
-		    FileService stub = new FileServiceStub(SERVICE_EPR);
+			FileService stub = new FileServiceStub(SERVICE_EPR);
 		    stub._getcreatenewfile("file5.avi", "avi");
 		    String type = stub._getgetfiletype("file5.avi")[0].getType();
 		    assertTrue("avi".equals(type), "File should be type avi");
@@ -105,10 +105,10 @@ public class FileServiceTestCase {
 	}
 
     @Test(groups = {"wso2.dss"})
-	public void testGetFileSize() throws DataServiceFaultException, RemoteException {
+	public void testGetFileSize() throws DataServiceFault, RemoteException {
 
 			log.info("Running FileServiceTestCase#testGetFileSize");
-		    FileService stub = new FileServiceStub(SERVICE_EPR);
+			FileService stub = new FileServiceStub(SERVICE_EPR);
 		    stub._getcreatenewfile("file6.txt", "txt");
 		    BigInteger value = stub._getgetfilesize("file6.txt")[0].getFileSize();
 		    assertTrue(value == null || value.intValue() == 0);
@@ -116,15 +116,15 @@ public class FileServiceTestCase {
 		    stub._postappenddatatofile("file6.txt", dh);
 		    dh = new StringDataHandler("record2");
 		    stub._postappenddatatofile("file6.txt", dh);
-		    assertEquals(stub._getgetfilesize("file6.txt")[0].getFileSize().intValue(), 14);
+		    assertEquals(((stub._getgetfilesize("file6.txt")[0]).getFileSize()).intValue(), 14);
 
 	}
 
     @Test(groups = {"wso2.dss"})
-	public void testAppendRecords() throws DataServiceFaultException, IOException {
+	public void testAppendRecords() throws DataServiceFault, IOException {
 
 			log.info("Running FileServiceTestCase#testAppendRecords");
-		    FileService stub = new FileServiceStub(SERVICE_EPR);
+			FileService stub = new FileServiceStub(SERVICE_EPR);
 		    stub._getcreatenewfile("file7.txt", "txt");
 		    String srcData1 = "ABCD1234!@#$%_+_()<>?|[]XXXXXXXXXXXXXXXXXYYYYYYYYYYYYAB";
 		    String srcData2 = "IOFIJW)($$$9999999999";

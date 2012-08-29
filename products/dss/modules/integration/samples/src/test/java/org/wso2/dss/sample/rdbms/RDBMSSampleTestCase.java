@@ -27,7 +27,7 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.dataservices.samples.rdbms_sample.DataServiceFaultException;
+import org.wso2.carbon.dataservices.samples.rdbms_sample.DataServiceFault;
 import org.wso2.carbon.dataservices.samples.rdbms_sample.RDBMSSample;
 import org.wso2.carbon.dataservices.samples.rdbms_sample.RDBMSSampleStub;
 import org.wso2.dss.sample.DSSTestUtils;
@@ -50,7 +50,7 @@ public class RDBMSSampleTestCase {
     private static final Log log = LogFactory.getLog(RDBMSSampleTestCase.class);
 
     @Test(groups = {"wso2.dss"})
-    public void testCreateEmployee() throws DataServiceFaultException, RemoteException {
+    public void testCreateEmployee() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testCreateEmployee");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5001, "Cena", "John", "john@gmail.com", 100000.0);
@@ -62,8 +62,8 @@ public class RDBMSSampleTestCase {
 
     }
 
-    @Test(groups = {"wso2.dss"}, expectedExceptions = DataServiceFaultException.class)
-    public void testCreateEmployeeLastNameValidation() throws RemoteException, DataServiceFaultException {
+    @Test(groups = {"wso2.dss"}, expectedExceptions = DataServiceFault.class)
+    public void testCreateEmployeeLastNameValidation() throws RemoteException, DataServiceFault {
         log.info("Running RDBMSSampleTestCase#testCreateEmployeeLastNameValidation");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5002, "X", "John", "john@gmail.com", 100000.0);
@@ -71,7 +71,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"}, expectedExceptions = Exception.class)
-    public void testCreateEmployeeEmailValidation() throws DataServiceFaultException, RemoteException {
+    public void testCreateEmployeeEmailValidation() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testCreateEmployeeEmailValidation");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5003, "Cena", "John", "john.gmail.com", 100000.0);
@@ -79,7 +79,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"}, expectedExceptions = Exception.class)
-    public void testCreateEmployeePrimaryKeyConstrainCheck() throws DataServiceFaultException, RemoteException {
+    public void testCreateEmployeePrimaryKeyConstrainCheck() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testCreateEmployeePrimaryKeyConstrainCheck");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5004, "Cena", "John", "john@gmail.com", 100000.0);
@@ -87,7 +87,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testCreateEmployeeNullValuesCheck() throws DataServiceFaultException, RemoteException {
+    public void testCreateEmployeeNullValuesCheck() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testCreateEmployeeNullValuesCheck");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5005, "Cena", null, "john@gmail.com", 100000.0);
@@ -96,7 +96,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testCustomersInBoston() throws DataServiceFaultException, RemoteException {
+    public void testCustomersInBoston() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testCustomersInBoston");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         assertTrue(stub.customersInBoston().length > 0, "Customers in Boston should be greater than zero");
@@ -104,14 +104,14 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testProductsInfo() throws DataServiceFaultException, RemoteException {
+    public void testProductsInfo() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testProductsInfo");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         assertTrue(stub.productsInfo().length > 0, "product info should be greater than zero");
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testSetSalaryForEmployeesArrayTypesRequest() throws DataServiceFaultException, RemoteException {
+    public void testSetSalaryForEmployeesArrayTypesRequest() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testSetSalaryForEmployeesArrayTypesRequest");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5006, "Smith", "Will", "will@gmail.com", 0);
@@ -131,7 +131,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testSetSalaryForEmployee() throws DataServiceFaultException, RemoteException {
+    public void testSetSalaryForEmployee() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testSetSalaryForEmployee");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5010, "Smith", "Will", "will@gmail.com", 0);
@@ -141,7 +141,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testThousandFive() throws DataServiceFaultException, RemoteException {
+    public void testThousandFive() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testThousandFive");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         assertEquals(stub.thousandFive()[0].getValue().intValue(), 1500, "Thousand five should equal to 1500");
@@ -149,7 +149,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testIncrementEmployeeSalary() throws DataServiceFaultException, RemoteException {
+    public void testIncrementEmployeeSalary() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testIncrementEmployeeSalary");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);
         stub.addEmployee(5011, "Smith", "Will", "will@gmail.com", 1500.0);
@@ -161,7 +161,7 @@ public class RDBMSSampleTestCase {
 
     @Test(groups = {"wso2.dss"})
     public void testIncrementEmployeeSalaryExBoxcarringResultExport() throws RemoteException,
-            DataServiceFaultException {
+            DataServiceFault {
         log.info("Running RDBMSSampleTestCase#testIncrementEmployeeSalaryExBoxcarringResultExport");
         RDBMSSampleStub stub = new RDBMSSampleStub(SERVICE_EPR);
         stub._getServiceClient().getOptions().setManageSession(true);
@@ -175,7 +175,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testIncrementEmployeeSalaryBoxcarring() throws DataServiceFaultException, RemoteException {
+    public void testIncrementEmployeeSalaryBoxcarring() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testIncrementEmployeeSalaryBoxcarring");
         RDBMSSampleStub stub = new RDBMSSampleStub(SERVICE_EPR);
         stub._getServiceClient().getOptions().setManageSession(true);
@@ -190,7 +190,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testEmployeeByNumberEndBoxcarringResult() throws DataServiceFaultException, RemoteException {
+    public void testEmployeeByNumberEndBoxcarringResult() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testEmployeeByNumberEndBoxcarringResult");
         RDBMSSampleStub stub = new RDBMSSampleStub(SERVICE_EPR);
         stub._getServiceClient().getOptions().setManageSession(true);
@@ -202,7 +202,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testConnectionLeaksWithValidInOutRequests() throws DataServiceFaultException, RemoteException {
+    public void testConnectionLeaksWithValidInOutRequests() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testConnectionLeaksWithValidInOutRequests");
         RDBMSSampleStub stub = new RDBMSSampleStub(SERVICE_EPR);
         for (int i = 0; i < 100; i++) {
@@ -235,7 +235,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testConnectionLeaksWithOutRequests() throws DataServiceFaultException, RemoteException {
+    public void testConnectionLeaksWithOutRequests() throws DataServiceFault, RemoteException {
         log.info("Running RDBMSSampleTestCase#testConnectionLeaksWithOutRequests");
         RDBMSSampleStub stub = new RDBMSSampleStub(SERVICE_EPR);
         for (int i = 0; i < 100; i++) {
@@ -244,7 +244,7 @@ public class RDBMSSampleTestCase {
     }
 
     @Test(groups = {"wso2.dss"})
-    public void testConnectionLeaksWithInRequests() throws DataServiceFaultException, RemoteException {
+    public void testConnectionLeaksWithInRequests() throws DataServiceFault, RemoteException {
 
         log.info("Running RDBMSSampleTestCase#testConnectionLeaksWithInRequests");
         RDBMSSample stub = new RDBMSSampleStub(SERVICE_EPR);

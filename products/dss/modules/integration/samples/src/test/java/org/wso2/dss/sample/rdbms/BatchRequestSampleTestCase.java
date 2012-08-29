@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.dataservices.samples.batch_request_sample.BatchRequestSample;
 import org.wso2.carbon.dataservices.samples.batch_request_sample.BatchRequestSampleStub;
-import org.wso2.carbon.dataservices.samples.batch_request_sample.DataServiceFaultException;
+import org.wso2.carbon.dataservices.samples.batch_request_sample.DataServiceFault;
 import org.wso2.dss.sample.DSSTestUtils;
 import org.wso2.ws.dataservice.samples.batch_request_sample.AddEmployee;
 import org.wso2.ws.dataservice.samples.batch_request_sample.AddEmployee_batch_req;
@@ -150,9 +150,9 @@ public class BatchRequestSampleTestCase {
 
     }
 
-    @Test(groups = {"wso2.dss"}, expectedExceptions = DataServiceFaultException.class)
+    @Test(groups = {"wso2.dss"}, expectedExceptions = DataServiceFault.class)
     public void testAddEmployeeBatchRequestTransactionFail() throws Exception {
-        BatchRequestSample stub;
+    	BatchRequestSample stub;
 
         log.info("Running BatchRequestSampleTestCase#testAddEmployeeBatchRequestTransactionFail");
         stub = new BatchRequestSampleStub(SERVICE_EPR);

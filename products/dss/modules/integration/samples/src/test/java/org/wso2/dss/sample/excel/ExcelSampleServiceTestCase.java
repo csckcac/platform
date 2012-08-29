@@ -23,7 +23,7 @@ package org.wso2.dss.sample.excel;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.dataservices.samples.excel_sample_service.DataServiceFaultException;
+import org.wso2.carbon.dataservices.samples.excel_sample_service.DataServiceFault;
 import org.wso2.carbon.dataservices.samples.excel_sample_service.ExcelSampleService;
 import org.wso2.carbon.dataservices.samples.excel_sample_service.ExcelSampleServiceStub;
 import org.wso2.dss.sample.DSSTestUtils;
@@ -40,7 +40,7 @@ public class ExcelSampleServiceTestCase {
     private static final Log log = LogFactory.getLog(ExcelSampleServiceTestCase.class);
 
     @Test(groups = {"wso2.dss"})
-    public void testGetProducts() throws RemoteException, DataServiceFaultException {
+    public void testGetProducts() throws RemoteException, DataServiceFault {
 
             log.info("Running ExcelSampleServiceTestCase#testGetProducts");
             ExcelSampleService stub = new ExcelSampleServiceStub(SERVICE_EPR);

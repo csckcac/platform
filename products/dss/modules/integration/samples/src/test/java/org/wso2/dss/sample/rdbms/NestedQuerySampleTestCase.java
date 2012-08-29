@@ -22,7 +22,7 @@ package org.wso2.dss.sample.rdbms;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
-import org.wso2.carbon.dataservices.samples.nested_query_sample.DataServiceFaultException;
+import org.wso2.carbon.dataservices.samples.nested_query_sample.DataServiceFault;
 import org.wso2.carbon.dataservices.samples.nested_query_sample.NestedQuerySample;
 import org.wso2.carbon.dataservices.samples.nested_query_sample.NestedQuerySampleStub;
 import org.wso2.dss.sample.DSSTestUtils;
@@ -41,15 +41,15 @@ public class NestedQuerySampleTestCase {
     private static final Log log = LogFactory.getLog(NestedQuerySampleTestCase.class);
 
     @Test(groups = {"wso2.dss"})
-	public void testListOfficesNestedQuery() throws DataServiceFaultException, RemoteException {
+	public void testListOfficesNestedQuery() throws DataServiceFault, RemoteException {
 
 			log.info("Running NestedQuerySampleTestCase#testListOfficesNestedQuery");
-		    NestedQuerySample stub = new NestedQuerySampleStub(SERVICE_EPR);
+			NestedQuerySample stub = new NestedQuerySampleStub(SERVICE_EPR);
 			assertTrue(stub.listOffices().length > 0, "No of offices listed should be greater than zero");
 	}
 
     @Test(groups = {"wso2.dss"})
-	public void testCustomerOrdersNestedQuery() throws DataServiceFaultException, RemoteException {
+	public void testCustomerOrdersNestedQuery() throws DataServiceFault, RemoteException {
 
 			log.info("Running NestedQuerySampleTestCase#testCustomerOrdersNestedQuery");
 			NestedQuerySample stub = new NestedQuerySampleStub(SERVICE_EPR);

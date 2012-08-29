@@ -29,6 +29,8 @@ import java.io.InputStreamReader;
 public final class DSSTestUtils {
 
     public static final String SERVICE_BASE_EPR = "http://localhost:9763/services/samples/";
+    
+    public static final String DATA_SERVICE_RESPONSE_WRAPPER_ELEMENT = "DATA_SERVICE_RESPONSE";
 
     public static String getStringFromInputStream(InputStream in) throws IOException {
         InputStreamReader reader = new InputStreamReader(in);

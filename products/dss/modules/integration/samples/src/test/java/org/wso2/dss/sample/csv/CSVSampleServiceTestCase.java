@@ -25,7 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.dataservices.samples.csv_sample_service.CSVSampleService;
 import org.wso2.carbon.dataservices.samples.csv_sample_service.CSVSampleServiceStub;
-import org.wso2.carbon.dataservices.samples.csv_sample_service.DataServiceFaultException;
+import org.wso2.carbon.dataservices.samples.csv_sample_service.DataServiceFault;
 import org.wso2.dss.sample.DSSTestUtils;
 
 import java.rmi.RemoteException;
@@ -40,9 +40,9 @@ public class CSVSampleServiceTestCase {
     private static final Log log = LogFactory.getLog(CSVSampleServiceTestCase.class);
 
     @Test(groups = {"wso2.dss"})
-    public void testGetProducts() throws DataServiceFaultException, RemoteException {
+    public void testGetProducts() throws DataServiceFault, RemoteException {
         log.info("Running CSVSampleServiceTestCase#testGetProducts");
-       CSVSampleService stub = new CSVSampleServiceStub(SERVICE_EPR);
+        CSVSampleService stub = new CSVSampleServiceStub(SERVICE_EPR);
         assert stub.getProducts().length > 0 : "No of products should be greater than zero";
 
     }

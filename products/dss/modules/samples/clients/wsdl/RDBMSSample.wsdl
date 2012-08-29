@@ -1,5 +1,5 @@
-<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://ws.wso2.org/dataservice" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns0="http://ws.wso2.org/dataservice/samples/rdbms_sample" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://ws.wso2.org/dataservice">
-    <wsdl:documentation />
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://ws.wso2.org/dataservice" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:ns0="http://ws.wso2.org/dataservice/samples/rdbms_sample" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://ws.wso2.org/dataservice/samples/rdbms_sample">
+    <wsdl:documentation>This sample demonstrates some of the main functionalities of a dataservice using an RDBMS data source</wsdl:documentation>
     <wsdl:types>
         <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.wso2.org/dataservice/samples/rdbms_sample">
             <xs:element name="employeesByNumber">
@@ -30,12 +30,22 @@
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
+            <xs:element name="end_boxcar">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
             <xs:element name="setSalaryForEmployees">
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element name="salary" nillable="true" type="xs:double" />
-                        <xs:element maxOccurs="unbounded" minOccurs="0" name="employeeNumbers" nillable="true" type="xs:int" />
+                        <xs:element maxOccurs="unbounded" name="employeeNumbers" nillable="true" type="xs:int" />
                     </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="productsInfo">
+                <xs:complexType>
+                    <xs:sequence />
                 </xs:complexType>
             </xs:element>
             <xs:element name="Products" type="ns0:Products" />
@@ -72,8 +82,13 @@
                         <xs:element name="lastName" nillable="true" type="xs:string" />
                         <xs:element name="firstName" nillable="true" type="xs:string" />
                         <xs:element name="email" nillable="true" type="xs:string" />
-                        <xs:element minOccurs="0" name="salary" nillable="true" type="xs:double" />
+                        <xs:element name="salary" nillable="true" type="xs:double" />
                     </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="customersInBoston">
+                <xs:complexType>
+                    <xs:sequence />
                 </xs:complexType>
             </xs:element>
             <xs:element name="customers" type="ns0:customers" />
@@ -98,6 +113,11 @@
                         <xs:element name="increment" nillable="true" type="xs:double" />
                         <xs:element name="employeeNumber" nillable="true" type="xs:int" />
                     </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="abort_boxcar">
+                <xs:complexType>
+                    <xs:sequence />
                 </xs:complexType>
             </xs:element>
             <xs:element name="customerAddress">
@@ -127,6 +147,16 @@
                     <xs:element name="country" nillable="true" type="xs:string" />
                 </xs:sequence>
             </xs:complexType>
+            <xs:element name="begin_boxcar">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="thousandFive">
+                <xs:complexType>
+                    <xs:sequence />
+                </xs:complexType>
+            </xs:element>
             <xs:element name="Numbers" type="ns0:Numbers" />
             <xs:complexType name="Numbers">
                 <xs:sequence>
@@ -142,6 +172,13 @@
         <xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" targetNamespace="http://ws.wso2.org/dataservice">
             <xs:element name="DataServiceFault" type="xs:string" />
             <xs:element name="REQUEST_STATUS" type="xs:string" />
+            <xs:element name="DATA_SERVICE_RESPONSE">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any minOccurs="0" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
         </xs:schema>
     </wsdl:types>
     <wsdl:message name="customerAddressRequest">
@@ -153,20 +190,29 @@
     <wsdl:message name="DataServiceFault">
         <wsdl:part name="parameters" element="ns1:DataServiceFault" />
     </wsdl:message>
-    <wsdl:message name="abort_boxcarRequest" />
+    <wsdl:message name="abort_boxcarRequest">
+        <wsdl:part name="parameters" element="ns0:abort_boxcar" />
+    </wsdl:message>
     <wsdl:message name="incrementEmployeeSalaryRequest">
         <wsdl:part name="parameters" element="ns0:incrementEmployeeSalary" />
     </wsdl:message>
     <wsdl:message name="addEmployeeRequest">
         <wsdl:part name="parameters" element="ns0:addEmployee" />
     </wsdl:message>
+    <wsdl:message name="addEmployeeResponse">
+        <wsdl:part name="parameters" element="ns1:REQUEST_STATUS" />
+    </wsdl:message>
     <wsdl:message name="incrementEmployeeSalaryExRequest">
         <wsdl:part name="parameters" element="ns0:incrementEmployeeSalaryEx" />
     </wsdl:message>
-    <wsdl:message name="begin_boxcarRequest" />
-    <wsdl:message name="end_boxcarRequest" />
+    <wsdl:message name="begin_boxcarRequest">
+        <wsdl:part name="parameters" element="ns0:begin_boxcar" />
+    </wsdl:message>
+    <wsdl:message name="end_boxcarRequest">
+        <wsdl:part name="parameters" element="ns0:end_boxcar" />
+    </wsdl:message>
     <wsdl:message name="end_boxcarResponse">
-        <wsdl:part name="parameters" element="xs:anyType" />
+        <wsdl:part name="parameters" element="ns1:DATA_SERVICE_RESPONSE" />
     </wsdl:message>
     <wsdl:message name="setSalaryForEmployeesRequest">
         <wsdl:part name="parameters" element="ns0:setSalaryForEmployees" />
@@ -177,15 +223,21 @@
     <wsdl:message name="employeesByNumberResponse">
         <wsdl:part name="parameters" element="ns0:employees" />
     </wsdl:message>
-    <wsdl:message name="productsInfoRequest" />
+    <wsdl:message name="productsInfoRequest">
+        <wsdl:part name="parameters" element="ns0:productsInfo" />
+    </wsdl:message>
     <wsdl:message name="productsInfoResponse">
         <wsdl:part name="parameters" element="ns0:Products" />
     </wsdl:message>
-    <wsdl:message name="thousandFiveRequest" />
+    <wsdl:message name="thousandFiveRequest">
+        <wsdl:part name="parameters" element="ns0:thousandFive" />
+    </wsdl:message>
     <wsdl:message name="thousandFiveResponse">
         <wsdl:part name="parameters" element="ns0:Numbers" />
     </wsdl:message>
-    <wsdl:message name="customersInBostonRequest" />
+    <wsdl:message name="customersInBostonRequest">
+        <wsdl:part name="parameters" element="ns0:customersInBoston" />
+    </wsdl:message>
     <wsdl:message name="customersInBostonResponse">
         <wsdl:part name="parameters" element="ns0:customers" />
     </wsdl:message>
@@ -195,77 +247,72 @@
     <wsdl:portType name="RDBMSSamplePortType">
         <wsdl:operation name="customerAddress">
             <wsdl:documentation />
-            <wsdl:input message="ns1:customerAddressRequest" wsaw:Action="urn:customerAddress" />
-            <wsdl:output message="ns1:customerAddressResponse" wsaw:Action="urn:customerAddressResponse" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:customerAddressDataServiceFault" />
+            <wsdl:input message="ns0:customerAddressRequest" wsaw:Action="urn:customerAddress" />
+            <wsdl:output message="ns0:customerAddressResponse" wsaw:Action="urn:customerAddressResponse" />
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:customerAddressDataServiceFault" />
         </wsdl:operation>
         <wsdl:operation name="abort_boxcar">
             <wsdl:documentation>Control operation for aborting a boxcarring session</wsdl:documentation>
-            <wsdl:input message="ns1:abort_boxcarRequest" wsaw:Action="urn:abort_boxcar" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:abort_boxcarDataServiceFault" />
+            <wsdl:input message="ns0:abort_boxcarRequest" wsaw:Action="urn:abort_boxcar" />
         </wsdl:operation>
         <wsdl:operation name="incrementEmployeeSalary">
             <wsdl:documentation />
-            <wsdl:input message="ns1:incrementEmployeeSalaryRequest" wsaw:Action="urn:incrementEmployeeSalary" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:incrementEmployeeSalaryDataServiceFault" />
+            <wsdl:input message="ns0:incrementEmployeeSalaryRequest" wsaw:Action="urn:incrementEmployeeSalary" />
         </wsdl:operation>
         <wsdl:operation name="addEmployee">
             <wsdl:documentation />
-            <wsdl:input message="ns1:addEmployeeRequest" wsaw:Action="urn:addEmployee" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addEmployeeDataServiceFault" />
+            <wsdl:input message="ns0:addEmployeeRequest" wsaw:Action="urn:addEmployee" />
+            <wsdl:output message="ns0:addEmployeeResponse" wsaw:Action="urn:addEmployeeResponse" />
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:addEmployeeDataServiceFault" />
         </wsdl:operation>
         <wsdl:operation name="incrementEmployeeSalaryEx">
             <wsdl:documentation />
-            <wsdl:input message="ns1:incrementEmployeeSalaryExRequest" wsaw:Action="urn:incrementEmployeeSalaryEx" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:incrementEmployeeSalaryExDataServiceFault" />
+            <wsdl:input message="ns0:incrementEmployeeSalaryExRequest" wsaw:Action="urn:incrementEmployeeSalaryEx" />
         </wsdl:operation>
         <wsdl:operation name="begin_boxcar">
             <wsdl:documentation>Control operation for beginning a boxcarring session</wsdl:documentation>
-            <wsdl:input message="ns1:begin_boxcarRequest" wsaw:Action="urn:begin_boxcar" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:begin_boxcarDataServiceFault" />
+            <wsdl:input message="ns0:begin_boxcarRequest" wsaw:Action="urn:begin_boxcar" />
         </wsdl:operation>
         <wsdl:operation name="end_boxcar">
             <wsdl:documentation>Control operation for ending a boxcarring session</wsdl:documentation>
-            <wsdl:input message="ns1:end_boxcarRequest" wsaw:Action="urn:end_boxcar" />
-            <wsdl:output message="ns1:end_boxcarResponse" wsaw:Action="urn:end_boxcarResponse" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:end_boxcarDataServiceFault" />
+            <wsdl:input message="ns0:end_boxcarRequest" wsaw:Action="urn:end_boxcar" />
+            <wsdl:output message="ns0:end_boxcarResponse" wsaw:Action="urn:end_boxcarResponse" />
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:end_boxcarDataServiceFault" />
         </wsdl:operation>
         <wsdl:operation name="setSalaryForEmployees">
             <wsdl:documentation />
-            <wsdl:input message="ns1:setSalaryForEmployeesRequest" wsaw:Action="urn:setSalaryForEmployees" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:setSalaryForEmployeesDataServiceFault" />
+            <wsdl:input message="ns0:setSalaryForEmployeesRequest" wsaw:Action="urn:setSalaryForEmployees" />
         </wsdl:operation>
         <wsdl:operation name="employeesByNumber">
             <wsdl:documentation />
-            <wsdl:input message="ns1:employeesByNumberRequest" wsaw:Action="urn:employeesByNumber" />
-            <wsdl:output message="ns1:employeesByNumberResponse" wsaw:Action="urn:employeesByNumberResponse" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:employeesByNumberDataServiceFault" />
+            <wsdl:input message="ns0:employeesByNumberRequest" wsaw:Action="urn:employeesByNumber" />
+            <wsdl:output message="ns0:employeesByNumberResponse" wsaw:Action="urn:employeesByNumberResponse" />
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:employeesByNumberDataServiceFault" />
         </wsdl:operation>
         <wsdl:operation name="productsInfo">
             <wsdl:documentation />
-            <wsdl:input message="ns1:productsInfoRequest" wsaw:Action="urn:productsInfo" />
-            <wsdl:output message="ns1:productsInfoResponse" wsaw:Action="urn:productsInfoResponse" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:productsInfoDataServiceFault" />
+            <wsdl:input message="ns0:productsInfoRequest" wsaw:Action="urn:productsInfo" />
+            <wsdl:output message="ns0:productsInfoResponse" wsaw:Action="urn:productsInfoResponse" />
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:productsInfoDataServiceFault" />
         </wsdl:operation>
         <wsdl:operation name="thousandFive">
             <wsdl:documentation />
-            <wsdl:input message="ns1:thousandFiveRequest" wsaw:Action="urn:thousandFive" />
-            <wsdl:output message="ns1:thousandFiveResponse" wsaw:Action="urn:thousandFiveResponse" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:thousandFiveDataServiceFault" />
+            <wsdl:input message="ns0:thousandFiveRequest" wsaw:Action="urn:thousandFive" />
+            <wsdl:output message="ns0:thousandFiveResponse" wsaw:Action="urn:thousandFiveResponse" />
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:thousandFiveDataServiceFault" />
         </wsdl:operation>
         <wsdl:operation name="customersInBoston">
             <wsdl:documentation />
-            <wsdl:input message="ns1:customersInBostonRequest" wsaw:Action="urn:customersInBoston" />
-            <wsdl:output message="ns1:customersInBostonResponse" wsaw:Action="urn:customersInBostonResponse" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:customersInBostonDataServiceFault" />
+            <wsdl:input message="ns0:customersInBostonRequest" wsaw:Action="urn:customersInBoston" />
+            <wsdl:output message="ns0:customersInBostonResponse" wsaw:Action="urn:customersInBostonResponse" />
+            <wsdl:fault message="ns0:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:customersInBostonDataServiceFault" />
         </wsdl:operation>
         <wsdl:operation name="setEmployeeSalary">
             <wsdl:documentation />
-            <wsdl:input message="ns1:setEmployeeSalaryRequest" wsaw:Action="urn:setEmployeeSalary" />
-            <wsdl:fault message="ns1:DataServiceFault" name="DataServiceFault" wsaw:Action="urn:setEmployeeSalaryDataServiceFault" />
+            <wsdl:input message="ns0:setEmployeeSalaryRequest" wsaw:Action="urn:setEmployeeSalary" />
         </wsdl:operation>
     </wsdl:portType>
-    <wsdl:binding name="RDBMSSampleSOAP11Binding" type="ns1:RDBMSSamplePortType">
+    <wsdl:binding name="RDBMSSampleSOAP11Binding" type="ns0:RDBMSSamplePortType">
         <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
         <wsdl:operation name="customerAddress">
             <soap:operation soapAction="urn:customerAddress" style="document" />
@@ -284,24 +331,21 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="incrementEmployeeSalary">
             <soap:operation soapAction="urn:incrementEmployeeSalary" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="addEmployee">
             <soap:operation soapAction="urn:addEmployee" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal" />
+            </wsdl:output>
             <wsdl:fault name="DataServiceFault">
                 <soap:fault use="literal" name="DataServiceFault" />
             </wsdl:fault>
@@ -311,18 +355,12 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="begin_boxcar">
             <soap:operation soapAction="urn:begin_boxcar" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="end_boxcar">
             <soap:operation soapAction="urn:end_boxcar" style="document" />
@@ -341,9 +379,6 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="employeesByNumber">
             <soap:operation soapAction="urn:employeesByNumber" style="document" />
@@ -398,12 +433,9 @@
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:binding name="RDBMSSampleSOAP12Binding" type="ns1:RDBMSSamplePortType">
+    <wsdl:binding name="RDBMSSampleSOAP12Binding" type="ns0:RDBMSSamplePortType">
         <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
         <wsdl:operation name="customerAddress">
             <soap12:operation soapAction="urn:customerAddress" style="document" />
@@ -422,24 +454,21 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap12:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="incrementEmployeeSalary">
             <soap12:operation soapAction="urn:incrementEmployeeSalary" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap12:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="addEmployee">
             <soap12:operation soapAction="urn:addEmployee" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal" />
+            </wsdl:output>
             <wsdl:fault name="DataServiceFault">
                 <soap12:fault use="literal" name="DataServiceFault" />
             </wsdl:fault>
@@ -449,18 +478,12 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap12:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="begin_boxcar">
             <soap12:operation soapAction="urn:begin_boxcar" style="document" />
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap12:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="end_boxcar">
             <soap12:operation soapAction="urn:end_boxcar" style="document" />
@@ -479,9 +502,6 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap12:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
         <wsdl:operation name="employeesByNumber">
             <soap12:operation soapAction="urn:employeesByNumber" style="document" />
@@ -536,12 +556,9 @@
             <wsdl:input>
                 <soap12:body use="literal" />
             </wsdl:input>
-            <wsdl:fault name="DataServiceFault">
-                <soap12:fault use="literal" name="DataServiceFault" />
-            </wsdl:fault>
         </wsdl:operation>
     </wsdl:binding>
-    <wsdl:binding name="RDBMSSampleHttpBinding" type="ns1:RDBMSSamplePortType">
+    <wsdl:binding name="RDBMSSampleHttpBinding" type="ns0:RDBMSSamplePortType">
         <http:binding verb="POST" />
         <wsdl:operation name="customerAddress">
             <http:operation location="customerAddress" />
@@ -569,6 +586,9 @@
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:output>
         </wsdl:operation>
         <wsdl:operation name="incrementEmployeeSalaryEx">
             <http:operation location="incrementEmployeeSalaryEx" />
@@ -641,23 +661,23 @@
         </wsdl:operation>
     </wsdl:binding>
     <wsdl:service name="RDBMSSample">
-        <wsdl:port name="SOAP11Endpoint" binding="ns1:RDBMSSampleSOAP11Binding">
-            <soap:address location="http://10.200.3.96:9763/services/RDBMSSample.SOAP11Endpoint/" />
+        <wsdl:port name="SOAP11Endpoint" binding="ns0:RDBMSSampleSOAP11Binding">
+            <soap:address location="http://10.150.3.52:9763/services/RDBMSSample.SOAP11Endpoint/" />
         </wsdl:port>
-        <wsdl:port name="SecureSOAP11Endpoint" binding="ns1:RDBMSSampleSOAP11Binding">
-            <soap:address location="https://10.200.3.96:9443/services/RDBMSSample.SecureSOAP11Endpoint/" />
+        <wsdl:port name="SecureSOAP11Endpoint" binding="ns0:RDBMSSampleSOAP11Binding">
+            <soap:address location="https://10.150.3.52:9443/services/RDBMSSample.SecureSOAP11Endpoint/" />
         </wsdl:port>
-        <wsdl:port name="SecureSOAP12Endpoint" binding="ns1:RDBMSSampleSOAP12Binding">
-            <soap12:address location="https://10.200.3.96:9443/services/RDBMSSample.SecureSOAP12Endpoint/" />
+        <wsdl:port name="SecureSOAP12Endpoint" binding="ns0:RDBMSSampleSOAP12Binding">
+            <soap12:address location="https://10.150.3.52:9443/services/RDBMSSample.SecureSOAP12Endpoint/" />
         </wsdl:port>
-        <wsdl:port name="SOAP12Endpoint" binding="ns1:RDBMSSampleSOAP12Binding">
-            <soap12:address location="http://10.200.3.96:9763/services/RDBMSSample.SOAP12Endpoint/" />
+        <wsdl:port name="SOAP12Endpoint" binding="ns0:RDBMSSampleSOAP12Binding">
+            <soap12:address location="http://10.150.3.52:9763/services/RDBMSSample.SOAP12Endpoint/" />
         </wsdl:port>
-        <wsdl:port name="HTTPEndpoint" binding="ns1:RDBMSSampleHttpBinding">
-            <http:address location="http://10.200.3.96:9763/services/RDBMSSample.HTTPEndpoint/" />
+        <wsdl:port name="HTTPEndpoint" binding="ns0:RDBMSSampleHttpBinding">
+            <http:address location="http://10.150.3.52:9763/services/RDBMSSample.HTTPEndpoint/" />
         </wsdl:port>
-        <wsdl:port name="SecureHTTPEndpoint" binding="ns1:RDBMSSampleHttpBinding">
-            <http:address location="https://10.200.3.96:9443/services/RDBMSSample.SecureHTTPEndpoint/" />
+        <wsdl:port name="SecureHTTPEndpoint" binding="ns0:RDBMSSampleHttpBinding">
+            <http:address location="https://10.150.3.52:9443/services/RDBMSSample.SecureHTTPEndpoint/" />
         </wsdl:port>
     </wsdl:service>
 </wsdl:definitions>

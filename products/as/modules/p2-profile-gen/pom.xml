@@ -171,6 +171,9 @@
                                     org.wso2.carbon:org.wso2.carbon.discovery.core.feature:${carbon.platform.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.discovery.admin.ui.feature:${carbon.platform.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
                                     org.wso2.appserver:org.wso2.appserver.styles.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -392,6 +395,11 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.discovery.core.feature.group</id>
+                                    <version>${carbon.platform.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.carbon.discovery.admin.ui.feature.group</id>
                                     <version>${carbon.platform.version}</version>
                                 </feature>
 

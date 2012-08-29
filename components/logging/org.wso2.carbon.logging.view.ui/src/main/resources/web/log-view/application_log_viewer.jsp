@@ -74,18 +74,19 @@
 			logViewerClient = new LogViewerClient(cookie, backendServerURL, configContext);
 			applicationNames = logViewerClient.getApplicationNames();
 			
-			if (appName == null && applicationNames !=null  && applicationNames.length > 1) {
+			if (appName == null && applicationNames !=null  && applicationNames.length > 0) {
 				appName = applicationNames[0];
 			}
 			if (applicationNames == null) {
 				applicationNames = new String[]{"No applications"};
 				appName = applicationNames[0];
-			}
+				}
 			paginatedLogEvents = logViewerClient.getPaginatedApplicationLogEvents(pageNumber,type,keyword,appName);
 			if (paginatedLogEvents != null) {
 				events = paginatedLogEvents.getLogInfo();
 				numberOfPages = paginatedLogEvents.getNumberOfPages();
 			}
+			
 			parameter = "type=" + type + "&keyword=" + keyword+ "&appName="+appName;
 		} catch (Exception e) {
 			CarbonUIMessage.sendCarbonUIMessage(e.getMessage(), CarbonUIMessage.ERROR, request,
@@ -153,7 +154,7 @@
 												for (String name : applicationNames) {
 											%>
 											<%
-											   	if (name.equals(appName)) {
+												    if (name.equals(appName)) {
 											%>
 											<option selected="selected" value="<%=name%>">
 												<%=name%>
@@ -265,10 +266,10 @@
 									<%
 										}
 									%>
-								
-									<td colspan="4" width="100%">TID[<%=logMessage.getTenantId()%>] AppID[<%=logMessage.getAppName()%>] [<%=logMessage.getServerName()%>] [<%=logMessage.getLogTime()%>] <%=logMessage.getPriority().trim()%> {<%=logMessage.getLogger()%>} - <%=logMessage.getMessage()%>
-										<%=logMessage.getStacktrace()%><br/>
-									</td>
+
+                                    <td colspan="4" width="100%">TID[<%=logMessage.getTenantId()%>] AppID[<%=logMessage.getAppName()%>] [<%=logMessage.getServerName()%>] [<%=logMessage.getLogTime()%>] <%=logMessage.getPriority().trim()%> {<%=logMessage.getLogger()%>} - <%=logMessage.getMessage()%>
+                                        <%=logMessage.getStacktrace()%><br/>
+                                    </td>
 									</tr>
 							<%
 								}

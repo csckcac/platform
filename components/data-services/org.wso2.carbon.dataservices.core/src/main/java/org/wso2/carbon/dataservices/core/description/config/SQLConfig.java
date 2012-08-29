@@ -20,11 +20,14 @@ package org.wso2.carbon.dataservices.core.description.config;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 import javax.sql.XAConnection;
 import javax.transaction.Transaction;
+import javax.transaction.xa.XAResource;
 import javax.xml.stream.XMLStreamException;
 
 import org.apache.axiom.om.OMElement;
@@ -55,6 +58,15 @@ public abstract class SQLConfig extends Config {
 	private DynamicUserAuthenticator primaryDynAuth;
 	
 	private DynamicUserAuthenticator secondaryDynAuth;
+	
+	/**
+	 * This is used to keep the enlisted XADatasource objects
+	 */
+	private static ThreadLocal<Set<XAResource>> enlistedXADataSources = new ThreadLocal<Set<XAResource>>() {
+		protected Set<XAResource> initialValue() {
+			return new HashSet<XAResource>();
+		}
+	};
 	
 	public SQLConfig(DataService dataService, String configId, 
 			String type, Map<String, String> properties) throws DataServiceFault {
@@ -177,7 +189,13 @@ public abstract class SQLConfig extends Config {
 				try {
 					Transaction tx = this.getDataService().getDSSTxManager().
 							getTransactionManager().getTransaction();
-					tx.enlistResource(((XAConnection) conn).getXAResource());
+					XAResource xaResource = ((XAConnection) conn).getXAResource();
+					if (!isXAResourceEnlisted(xaResource)) {
+						tx.enlistResource(xaResource);
+						addToEnlistedXADataSources(xaResource);
+					}
+				} catch (IllegalStateException e) {
+					// ignore: can be because we are trying to enlist again
 				} catch (Exception e) {
 					throw new DataServiceFault(e, 
 							"Error in getting current transaction: " + e.getMessage());
@@ -200,5 +218,17 @@ public abstract class SQLConfig extends Config {
 			return false;
 		}
 	}
+	
+	/**
+     * This method adds XAResource object to enlistedXADataSources Threadlocal set
+     * @param resource
+     */
+    private void addToEnlistedXADataSources(XAResource resource) {
+    	enlistedXADataSources.get().add(resource);
+    }
+    
+    private boolean isXAResourceEnlisted(XAResource resource) {
+    	return enlistedXADataSources.get().contains(resource);
+    }
 	
 }

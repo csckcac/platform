@@ -20,8 +20,8 @@ Please follow the given steps:
 
 3.) Log into WSO2 AppServer administration console.
 
-4.) Select "wso2carbon-sts" service and setup security scenario "Sign and encrypt - X509 Authentication" on it.
-    Make sure wso2carbon.jks keystore (wso2carbon keystore) is used.
+4.) Select "wso2carbon-sts" service and setup security scenario #5 : "Sign and encrypt - X509 Authentication" on it.
+    Make sure the wso2carbon.jks keystore (wso2carbon keystore) is used for both Trust Store and Private Key Store.
 
 5.) Select "HelloService" service and copy the http service address.
 
@@ -31,11 +31,11 @@ Please follow the given steps:
       "Add new trusted service"->"Endpoint Address"
     Select the WSO2AppServer private key's certificate alias (wso2carbon)
     
-7.) Select "HelloService" service and setup security scenario 
+7.) Select "HelloService" service and setup security scenario #11 : 
     "SecureConversation - Sign and Encrypt - Service as STS - Bootstrap policy - Sign and Encrypt , X509 Authentication" on it.
-    Makesure wso2carbon.jks keystore (wso2carbon keystore) is used.
+    Makesure wso2carbon.jks keystore (wso2carbon keystore) is used for both Trust Store and Private Key Store.
 
-7.) Upload STS/conf/client.cert into the wso2carbon keystore using the 
+7.) Upload STS/conf/client.cert into the wso2carbon keystore (wso2carbon.jks) using the 
     WSO2AppServer admin console.
 
 8.) Run client

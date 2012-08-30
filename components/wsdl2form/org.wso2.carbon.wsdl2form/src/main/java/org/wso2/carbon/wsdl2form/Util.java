@@ -15,27 +15,29 @@
  */
 package org.wso2.carbon.wsdl2form;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.xalan.processor.TransformerFactoryImpl;
 import org.w3c.dom.Document;
 import org.wso2.carbon.CarbonException;
 
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamSource;
 import java.io.*;
-import java.util.*;
-import java.net.URL;
-import java.net.URLConnection;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Map;
+import java.util.Set;
 
 public class Util {
 
@@ -86,7 +88,7 @@ public class Util {
     public static void transform(Source xmlIn, Source xslIn, Result result, Map paramMap)
             throws TransformerException {
         try {
-            TransformerFactory transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+            TransformerFactory transformerFactory = new TransformerFactoryImpl();
             Transformer transformer = transformerFactory.newTransformer(xslIn);
             if (paramMap != null) {
                 Set set = paramMap.keySet();
@@ -108,7 +110,7 @@ public class Util {
     public static void transform(Source xmlIn, Source xslIn, Result result, Map paramMap,
                                  URIResolver uriResolver) throws TransformerException {
         try {
-            TransformerFactory transformerFactory = new org.apache.xalan.processor.TransformerFactoryImpl();
+            TransformerFactory transformerFactory = new TransformerFactoryImpl();
             transformerFactory.setURIResolver(uriResolver);
             Transformer transformer = transformerFactory.newTransformer(xslIn);
             if (paramMap != null) {
@@ -316,3 +318,4 @@ public class Util {
 
 
 }
+

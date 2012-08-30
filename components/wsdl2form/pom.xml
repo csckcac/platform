@@ -47,6 +47,12 @@
 		    </dependency>
 
 			<dependency>
+		        <groupId>xalan.wso2</groupId>
+		        <artifactId>xalan</artifactId>
+		        <version>${xalan.wso2.version}</version>
+		    </dependency>
+
+			<dependency>
 		        <groupId>org.apache.ws.commons.axiom.wso2</groupId>
 		        <artifactId>axiom</artifactId>
 				<version>${axiom.wso2.version.wsdl2form}</version>
@@ -69,5 +75,6 @@
         <wso2carbon.version.wsdl2form>${wso2carbon.version}</wso2carbon.version.wsdl2form>
 				<axis2.wso2.version.wsdl2form>${axis2.wso2.version}</axis2.wso2.version.wsdl2form>
 				<axiom.wso2.version.wsdl2form>${axiom.wso2.version}</axiom.wso2.version.wsdl2form>
+		<xalan.wso2.version>2.7.1.wso2v1</xalan.wso2.version>
     </properties>
 </project>

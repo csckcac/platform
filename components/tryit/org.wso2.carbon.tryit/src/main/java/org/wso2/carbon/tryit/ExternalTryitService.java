@@ -16,8 +16,8 @@
 package org.wso2.carbon.tryit;
 
 import org.apache.axis2.AxisFault;
-import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.wsdl2form.WSDL2FormGenerator;
 
 /**
@@ -26,7 +26,7 @@ import org.wso2.carbon.wsdl2form.WSDL2FormGenerator;
  * version 2.0 using wsdl11to20.xsl. This conversion is absolute necessary due to usage of dyanmic-
  * codegen project.
  */
-public class ExternalTryitService {
+public class ExternalTryitService extends AbstractAdmin {
 
     /**
      * This is a Web method. A URL of a WSDL document is given and the ID of the generated AJAX
@@ -40,7 +40,7 @@ public class ExternalTryitService {
     public String generateTryit(String url, String hostName) throws AxisFault {
         try {
             return WSDL2FormGenerator.getInstance().getExternalTryit(url, null,
-                                                                     null, null, hostName, true);
+                                                                     null, null, hostName, getConfigContext());
         } catch(CarbonException e) {
             throw new AxisFault(e.getCause().getMessage());
         }      

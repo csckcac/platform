@@ -55,6 +55,11 @@
                 <artifactId>org.wso2.carbon.ui</artifactId>
                 <version>${wso2carbon.version.tryit}</version>
             </dependency>
+			<dependency>
+		        <groupId>xalan.wso2</groupId>
+		        <artifactId>xalan</artifactId>
+		        <version>${xalan.wso2.version}</version>
+		    </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -62,6 +67,7 @@
         <wso2carbon.version.tryit>${wso2carbon.version}</wso2carbon.version.tryit>
         <axis2.osgi.version.range.tryit>${axis2.osgi.version.range}</axis2.osgi.version.range.tryit>
         <axiom.osgi.version.range.tryit>${axiom.osgi.version.range}</axiom.osgi.version.range.tryit>
+		<xalan.wso2.version>2.7.1.wso2v1</xalan.wso2.version>
     </properties>
     
 </project>

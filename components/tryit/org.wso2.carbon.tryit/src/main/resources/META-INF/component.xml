@@ -21,6 +21,14 @@
             <item>tryit</item>
             <class>org.wso2.carbon.tryit.TryitRequestProcessor</class>
         </processor>
+        <processor>
+			<item>stub</item>
+			<class>org.wso2.carbon.wsdl2form.StubRequestProcessor</class>
+		</processor>
+        <processor>
+			<item>wsdl2form</item>
+			<class>org.wso2.carbon.wsdl2form.WSDL2FormRequestProcessor</class>
+		</processor>
     </httpGetRequestProcessors>
     <ManagementPermissions>
         <ManagementPermission>

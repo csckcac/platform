@@ -36,7 +36,6 @@ import org.apache.axis2.util.MessageContextBuilder;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.wsdl2form.internal.WSDL2FormServiceComponent;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -48,6 +47,12 @@ import java.util.Set;
 public class ProxyMessageReceiver extends AbstractMessageReceiver {
 
     private static Log log = LogFactory.getLog(ProxyMessageReceiver.class);
+
+    private ConfigurationContext configCtx;
+
+    public ProxyMessageReceiver(ConfigurationContext configCtx) {
+        this.configCtx = configCtx;
+    }
 
 
     protected void invokeBusinessLogic(MessageContext inMessage) throws AxisFault {
@@ -79,8 +84,6 @@ public class ProxyMessageReceiver extends AbstractMessageReceiver {
             log.error(msg);
             throw new AxisFault(msg);
         }
-        ConfigurationContext configCtx =
-                WSDL2FormServiceComponent.getConfigurationContextService().getClientConfigContext();
         //Create ServiceClient with deafult config context.
         ServiceClient client = new ServiceClient(configCtx, null);
         OMElement element = env.getBody().getFirstElement();

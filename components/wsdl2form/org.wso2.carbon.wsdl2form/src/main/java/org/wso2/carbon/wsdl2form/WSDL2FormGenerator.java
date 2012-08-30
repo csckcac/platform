@@ -16,38 +16,37 @@
 
 package org.wso2.carbon.wsdl2form;
 
-import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
-import org.wso2.carbon.utils.*;
-import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
-import org.wso2.carbon.wsdl2form.internal.WSDL2FormServiceComponent;
-import org.apache.axis2.context.MessageContext;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.description.*;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMException;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.deployment.util.PhasesInfo;
+import org.apache.axis2.description.*;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMException;
+import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
-import javax.wsdl.Definition;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
+import javax.xml.stream.XMLStreamReader;
 import javax.xml.transform.Result;
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMSource;
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.util.*;
+import javax.xml.transform.stream.StreamResult;
 import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
 
 public class WSDL2FormGenerator {
 
@@ -103,8 +102,7 @@ public class WSDL2FormGenerator {
         try {
             URL url = new URL(tryitURL);
             String serviceContextRoot = configCtx.getServiceContextPath();
-            String contextRoot = WSDL2FormServiceComponent.getServerConfigurationService()
-                    .getFirstProperty("WebContextRoot");
+            String contextRoot = CarbonUtils.getServerConfiguration().getFirstProperty("WebContextRoot");
             if (!serviceContextRoot.endsWith("/")) {
                 serviceContextRoot = serviceContextRoot + "/";
             }
@@ -217,14 +215,13 @@ public class WSDL2FormGenerator {
      *                      only, then you can specify it here. It could be <i>SOAP11Endpoint,
      *                      SOAP12Endpoint</i> or <i>HTTPEndpoint etc</i>.
      * @param hostName      Hostname of the front end server
-     * @param fullPage      set {@code true} if you want to get a full html page. {@code false} will
-     *                      create a div.
+     * @param configCtx     ConfigurationContext
      *
      * @return URL for the mocked service.
      * @throws CarbonException Throws when an error occurred during the execution.
      */
     public String getExternalTryit(String tryitWSDL, String serviceName, String operationName,
-                                   String endpointName, String hostName, boolean fullPage)
+                                   String endpointName, String hostName, ConfigurationContext configCtx)
             throws CarbonException {
 
         Map fileResourcesMap =
@@ -237,9 +234,6 @@ public class WSDL2FormGenerator {
         }
         InputStream inXMLStream = null;
         try {
-            ConfigurationContext configCtx =
-                    WSDL2FormServiceComponent.getConfigurationContextService()
-                            .getServerConfigContext();
             File location = Util.writeWSDLToFileSystemHelpler(tryitWSDL);
             inXMLStream = new FileInputStream(location);
             AxisService axisService;
@@ -265,7 +259,7 @@ public class WSDL2FormGenerator {
             }
 
             axisService = builder.populateService();
-            updateMockProxyServiceGroup(axisService, MessageContext.getCurrentMessageContext()
+            updateMockProxyServiceGroup(axisService, configCtx, MessageContext.getCurrentMessageContext()
                     .getConfigurationContext().getAxisConfiguration());
             List<String> exposeTxList = new ArrayList<String>();
             exposeTxList.add(ServerConstants.HTTP_TRANSPORT);
@@ -322,7 +316,7 @@ public class WSDL2FormGenerator {
             axisService.printWSDL2(wsdl2Bos, hostName);
 
             return generateTryitExternal(axisService, configCtx, wsdl2Bos, serviceName, operationName,
-                    endpointName, fileResourcesMap, fullPage, false);
+                    endpointName, fileResourcesMap, true, false);
         } catch (IOException e) {
             log.error(e.getMessage(), e);
             throw new CarbonException(e);
@@ -477,78 +471,6 @@ public class WSDL2FormGenerator {
         }
     }
 
-    /**
-     * This method should be used if the mocking service is an external service. If the service is
-     * an internal one, use {@code getInternalMockit} method
-     *
-     * @param result        Result object containing the generated form
-     * @param mockitWSDL    WSDL 1.1 Definition of the service that need to be tried out.
-     * @param serviceName   QName of the service when multiple services are available in the WSDL.
-     *                      If {@code serviceName} is {@code null}, then the fist service in the
-     *                      WSDL will be used.
-     * @param portName      Port name of the specified service
-     * @param operationName Operation of the service that need to be tried out. If this is {@code
-     *                      null}, all operations will be available.
-     * @param taskID        Task ID value to be sent along with form submission.
-     * @param proxyUrl      Proxy url where the form response will be posted.
-     * @param fullPage      set {@code true} if you want to get a full html page. {@code false} will
-     *                      create a div.
-     *
-     * @return URL for the mocked service.
-     * @throws CarbonException Throws when an error occurred during the execution
-     */
-    public String getExternalMockit(Result result, Definition mockitWSDL, QName serviceName,
-                                    String portName, String operationName, String taskID,
-                                    String proxyUrl, String baseUrl, boolean fullPage) throws CarbonException {
-
-        try {
-
-            WSDLToAxisServiceBuilder builder =
-                    new WSDL11ToAxisServiceBuilder(mockitWSDL, serviceName, portName);
-            ((WSDL11ToAxisServiceBuilder) builder).setAllPorts(true);
-
-            AxisService axisService = builder.populateService();
-            updateMockProxyServiceGroup(axisService, MessageContext.getCurrentMessageContext()
-                    .getConfigurationContext().getAxisConfiguration());
-
-            Map<String, String> paramMap = new HashMap<String, String>();
-
-            DOMSource xmlSource = Util.getSigStream(axisService, null);
-
-            paramMap.put("image-path", "../../carbon/tryit/images/");
-            paramMap.put("show-alternate", "false");
-            paramMap.put("fixendpoints", "true");
-            paramMap.put("task-id", taskID);
-            paramMap.put("proxyAddress", proxyUrl);
-
-            if (serviceName != null && !serviceName.equals("")) {
-                paramMap.put("service", serviceName.getLocalPart());
-            }
-            if (operationName != null && !operationName.equals("")) {
-                paramMap.put("operation", operationName);
-            }
-            if (fullPage) {
-                paramMap.put("full-page", "true");
-            }
-
-            Util.generateMockit(xmlSource, result, paramMap);
-
-            return WSDL2FormGenerator.SUCCESS;
-
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
-            throw new CarbonException(e);
-        } catch (OMException e) {
-            log.error(e.getMessage(), e);
-            throw new CarbonException(e);
-        } catch (ParserConfigurationException e) {
-            log.error(e.getMessage(), e);
-            throw new CarbonException(e);
-        } catch (TransformerException e) {
-            log.error(e.getMessage(), e);
-            throw new CarbonException(e);
-        }
-    }
 
     /**
      * @param result       Result object containing the generated form
@@ -711,7 +633,7 @@ public class WSDL2FormGenerator {
     }
 
 
-    private synchronized void updateMockProxyServiceGroup(AxisService axisService,
+    private synchronized void updateMockProxyServiceGroup(AxisService axisService, ConfigurationContext configCtx,
                                                           AxisConfiguration axisConfig)
             throws AxisFault {
         /*axisService.addParameter("supportSingleOperation", Boolean.TRUE);
@@ -719,7 +641,7 @@ public class WSDL2FormGenerator {
         singleOP.setDocumentation("This operation is a 'passthrough' for all operations in " +
                                   " TryIt proxy service.");
         axisService.addOperation(singleOP);*/
-        ProxyMessageReceiver receiver = new ProxyMessageReceiver();
+        ProxyMessageReceiver receiver = new ProxyMessageReceiver(configCtx);
         PhasesInfo phaseInfo = axisConfig.getPhasesInfo();
         for (Iterator i = axisService.getOperations(); i.hasNext();) {
             AxisOperation op = (AxisOperation) i.next();

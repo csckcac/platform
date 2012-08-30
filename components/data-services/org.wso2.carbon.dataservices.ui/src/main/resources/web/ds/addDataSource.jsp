@@ -90,6 +90,9 @@ function getUseSecretAliasValue(chkbox, id) {
 		document.getElementById('useSecretAliasValue').value = 'true';
 		document.getElementById('pwdalias').style.display = '';
 		document.getElementById(id).style.display = 'none';
+		if (document.getElementById(id).value != null) {
+			document.getElementById('pwdalias').value = document.getElementById(id).value;
+		}
 	} else {
 		document.getElementById('useSecretAliasValue').value = 'false';
 		document.getElementById('pwdalias').style.display = 'none';

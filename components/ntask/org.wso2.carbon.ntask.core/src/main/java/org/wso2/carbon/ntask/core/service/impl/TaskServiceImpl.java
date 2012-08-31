@@ -25,8 +25,6 @@ import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.coordination.core.services.CoordinationService;
-import org.wso2.carbon.core.init.CarbonServerManager;
-import org.wso2.carbon.core.init.CarbonStartupListener;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.registry.api.Collection;
 import org.wso2.carbon.registry.api.Resource;
@@ -50,7 +48,7 @@ import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
  * This class represents the TaskService implementation.
  * @see TaskService
  */
-public class TaskServiceImpl implements TaskService, CarbonStartupListener {
+public class TaskServiceImpl implements TaskService {
 
 	private static final Log log = LogFactory.getLog(TaskServiceImpl.class);
 	
@@ -71,7 +69,6 @@ public class TaskServiceImpl implements TaskService, CarbonStartupListener {
 		this.registeredTaskTypes = new HashSet<String>();
 		this.taskManagerMap = new HashMap<TaskManagerId, TaskManager>();
 		this.taskAvailabilityManager = new RegistryTaskAvailabilityManager();
-		CarbonServerManager.addCarbonStartupListener(this);
 	}
 	
 	public boolean isServerInit() {

@@ -22,7 +22,9 @@ import org.osgi.service.component.ComponentContext;
 import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.wso2.carbon.coordination.core.services.CoordinationService;
+import org.wso2.carbon.core.ServerStartupHandler;
 import org.wso2.carbon.registry.core.service.RegistryService;
+import org.wso2.carbon.ntask.core.TaskStartupHandler;
 import org.wso2.carbon.ntask.core.impl.TaskAxis2ConfigurationContextObserver;
 import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.ntask.core.service.impl.TaskServiceImpl;
@@ -68,6 +70,8 @@ public class TasksDSComponent {
 				this.taskService = new TaskServiceImpl();
 			}
 			BundleContext bundleContext = ctx.getBundleContext();
+			bundleContext.registerService(ServerStartupHandler.class.getName(),
+                    new TaskStartupHandler(this.taskService), null);
 			bundleContext.registerService(TaskService.class.getName(), 
 					this.getTaskService(), null);
 			bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(),

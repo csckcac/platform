@@ -48,4 +48,9 @@ public interface TaskService {
 	 */
 	public void registerTaskType(String taskType) throws TaskException;
 	
+	/**
+	 * Notifies the task service implementation that the server is fully initialized.
+	 */
+	public void serverInitialized();
+	
 }

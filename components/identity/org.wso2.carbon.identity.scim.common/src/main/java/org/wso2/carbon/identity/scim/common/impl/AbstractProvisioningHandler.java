@@ -73,6 +73,7 @@ public abstract class AbstractProvisioningHandler {
                     //create relevant http method
                     switch (httpMethodInt) {
                         case SCIMConstants.DELETE:
+                            break;
                             //delete the object at the scim endpoint
 
                         case SCIMConstants.POST:
@@ -97,8 +98,10 @@ public abstract class AbstractProvisioningHandler {
                             } else {
                                 scimClient.decodeSCIMException(response, SCIMConstants.JSON);
                             }
+                            break;
 
                         case SCIMConstants.PUT:
+                            break;
                             //update the object at the scim endpoint
 
                     }

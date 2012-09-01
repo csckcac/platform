@@ -80,7 +80,11 @@ public class AttributeMapper {
                 if (attributeValues != null && (!attributeValues.isEmpty())) {
                     String values = null;
                     for (String attributeValue : attributeValues) {
-                        values = attributeValue + ",";
+                        if (values != null) {
+                            values += attributeValue + ",";
+                        } else {
+                            values = attributeValue + ",";
+                        }
                     }
                     claimsMap.put(attributeURI, values);
                 }

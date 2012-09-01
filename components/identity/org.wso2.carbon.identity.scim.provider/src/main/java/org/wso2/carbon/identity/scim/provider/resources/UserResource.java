@@ -88,6 +88,7 @@ public class UserResource extends AbstractResource {
             return new JAXRSResponseBuilder().buildResponse(scimResponse);
 
         } catch (CharonException e) {
+            e.printStackTrace();
             //create SCIM response with code as the same of exception and message as error message of the exception
             if (e.getCode() == -1) {
                 e.setCode(ResponseCodeConstants.CODE_INTERNAL_SERVER_ERROR);
@@ -95,9 +96,11 @@ public class UserResource extends AbstractResource {
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         } catch (UnauthorizedException e) {
+            e.printStackTrace();
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         } catch (FormatNotSupportedException e) {
+            e.printStackTrace();
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         }
@@ -143,24 +146,24 @@ public class UserResource extends AbstractResource {
             return new JAXRSResponseBuilder().buildResponse(response);
 
         } catch (CharonException e) {
+            e.printStackTrace();
             //create SCIM response with code as the same of exception and message as error message of the exception
             if (e.getCode() == -1) {
                 e.setCode(ResponseCodeConstants.CODE_INTERNAL_SERVER_ERROR);
             }
-            logger.error(e.getMessage());
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         } catch (UnauthorizedException e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         } catch (FormatNotSupportedException e) {
-            logger.error(e.getMessage());
+            e.printStackTrace();
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         }
     }
-    /*
+
     @DELETE
     @Path("{id}")
     public Response deleteUser(@PathParam(SCIMConstants.CommonSchemaConstants.ID) String id,
@@ -174,6 +177,9 @@ public class UserResource extends AbstractResource {
             if (format == null) {
                 format = SCIMConstants.APPLICATION_JSON;
             }
+            //set the format in which the response should be encoded, if not specified in the request,
+            // defaults to application/json.
+            format = identifyOutputFormat(format);
             //obtain the encoder at this layer in case exceptions needs to be encoded.
             encoder = identitySCIMManager.getEncoder(SCIMConstants.identifyFormat(format));
             //perform authentication
@@ -195,6 +201,7 @@ public class UserResource extends AbstractResource {
             return new JAXRSResponseBuilder().buildResponse(scimResponse);
 
         } catch (CharonException e) {
+            e.printStackTrace();
             //create SCIM response with code as the same of exception and message as error message of the exception
             if (e.getCode() == -1) {
                 e.setCode(ResponseCodeConstants.CODE_INTERNAL_SERVER_ERROR);
@@ -202,14 +209,16 @@ public class UserResource extends AbstractResource {
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         } catch (UnauthorizedException e) {
+            e.printStackTrace();
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         } catch (FormatNotSupportedException e) {
+            e.printStackTrace();
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         }
     }
-
+    /*
     @GET
     public Response getUser(@HeaderParam(SCIMConstants.ACCEPT_HEADER) String format,
                             @HeaderParam(SCIMConstants.AUTHORIZATION_HEADER) String authorization,

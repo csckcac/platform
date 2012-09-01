@@ -21,10 +21,13 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.identity.scim.common.impl.AbstractProvisioningHandler;
 import org.wso2.carbon.identity.scim.common.utils.AttributeMapper;
 import org.wso2.carbon.identity.scim.common.utils.IdentitySCIMException;
+import org.wso2.carbon.identity.scim.common.utils.SCIMCommonConstants;
 import org.wso2.carbon.user.api.Claim;
-import org.wso2.carbon.user.api.ClaimManager;
+import org.wso2.carbon.user.core.claim.ClaimManager;
 import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.carbon.user.core.UserCoreConstants;
+import org.wso2.carbon.user.core.UserStoreManager;
+import org.wso2.carbon.user.core.claim.ClaimManager;
 import org.wso2.charon.core.attributes.Attribute;
 import org.wso2.charon.core.attributes.SimpleAttribute;
 import org.wso2.charon.core.exceptions.CharonException;
@@ -38,6 +41,7 @@ import org.wso2.charon.core.schema.ResourceSchema;
 import org.wso2.charon.core.schema.SCIMConstants;
 import org.wso2.charon.core.schema.SCIMSchemaDefinitions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,17 +53,18 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
 
     private static Log log = LogFactory.getLog(SCIMUserManager.class);
 
-    public SCIMUserManager(UserStoreManager carbonUserStoreManager, String userName) {
+    public SCIMUserManager(UserStoreManager carbonUserStoreManager, String userName,
+                           ClaimManager claimManager) {
         this.initConfigManager();
         carbonUM = carbonUserStoreManager;
         consumerName = userName;
+        carbonClaimManager = claimManager;
     }
 
     public User createUser(User user) throws CharonException {
         Map<String, String> claimsMap = AttributeMapper.getClaimsMap(user);
         //TODO: extract the role list as well if exist.
         try {
-            //TODO:add id value to user attributes since it is used to query users
             carbonUM.addUser(user.getUserName(), user.getPassword(), null, claimsMap, null);
             log.info("User: " + user.getUserName() + " is created through SCIM.");
             //if a consumer is registered for this SCIM operation, provision as appropriate
@@ -72,44 +77,42 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
         } catch (IdentitySCIMException e) {
             throw new CharonException(e.getMessage());
         }
-        //carbonUM.
-        // when user claims are returned convert them to SCIM claims and construct SCIM attributes.
         return user;
     }
 
-    public User getUser(String userName) throws CharonException {
+    public User getUser(String userId) throws CharonException {
         if (log.isDebugEnabled()) {
-            log.debug("Get user: " + userName);
+            log.debug("Retrieving user: " + userId);
         }
-        ResourceSchema userResourceSchema = SCIMSchemaDefinitions.SCIM_USER_SCHEMA;
         User scimUser = null;
         try {
-            //TODO:make atributeschema list a map
+            //get the user name of the user with this id
+            String[] userNames = carbonUM.getUserList(SCIMConstants.ID_URI, userId,
+                                                      UserCoreConstants.DEFAULT_PROFILE);
+            //we assume (since id is unique per user) only one user exists for a given id
+            String userName = userNames[0];
 
             //get claims related to SCIM claim dialect
-            carbonClaimManager.getAllClaims("scim.claim");
-            //obtain user claim values
-            Claim[] claims = carbonUM.getUserClaimValues(userName, null);
-            if (claims != null && claims.length != 0) {
-                scimUser = new User();
-                for (Claim claim : claims) {
-                    String scimAttributeName = claim.getDisplayTag();
-                    String value = claim.getValue();
-                    //SCIMAttributeSchema attributeSchema = userResourceSchema.getAttributeSchemaMap.get(scimAttributeName);
-                    //if it is not found, i.e. it is a sub attribute. find it in attributes, sub attributes
-                    //if attribute schema found, and if sub attribute, find its parent,
-                    //if parent exist in user, fill sub attribute, if not, create parent and fill sub attribute.
-                    //if (scimAttributeName.equals(SCIMSchemaDefinitions.USER_NAME.getName())) {
-                    if (scimAttributeName.equals("")) {
-                        Attribute userNameAttribute = new SimpleAttribute(scimAttributeName, value);
-                        //create attribute using defaultattrfactory
-                        scimUser.setAttribute(userNameAttribute);
-                    }
-                }
+            Claim[] claims = carbonClaimManager.getAllClaims(SCIMCommonConstants.SCIM_CLAIM_DIALECT);
+
+            List<String> claimURIList = new ArrayList<String>();
+            for (Claim claim : claims) {
+                claimURIList.add(claim.getClaimUri());
             }
+            //obtain user claim values
+            Map<String, String> attributes = carbonUM.getUserClaimValues(
+                    userName, claimURIList.toArray(new String[claimURIList.size()]), null);
+
+            //construct the SCIM Object from the attributes
+            scimUser = (User) AttributeMapper.constructSCIMObjectFromAttributes(attributes,
+                                                                                SCIMConstants.USER_INT);
+            log.info("User: " + scimUser.getUserName() + " is retrieved through SCIM.");
 
         } catch (UserStoreException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            throw new CharonException("Error in getting user information from Carbon User Store for" +
+                                      "user: " + userId);
+        } catch (NotFoundException e) {
+            throw new CharonException(e.getDescription());
         }
         return scimUser;
     }
@@ -142,8 +145,24 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
         return null;
     }
 
-    public void deleteUser(String s) throws NotFoundException, CharonException {
-        //To change body of implemented methods use File | Settings | File Templates.
+    public void deleteUser(String userId) throws NotFoundException, CharonException {
+        if (log.isDebugEnabled()) {
+            log.debug("Deleting user: " + userId);
+        }
+        //get the user name of the user with this id
+        String[] userNames = new String[0];
+        String userName = null;
+        try {
+            userNames = carbonUM.getUserList(SCIMConstants.ID_URI, userId,
+                                             UserCoreConstants.DEFAULT_PROFILE);
+            //we assume (since id is unique per user) only one user exists for a given id
+            userName = userNames[0];
+            carbonUM.deleteUser(userName);
+            log.info("User: " + userName + " is deleted through SCIM.");
+
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new CharonException("Error in deleting user: " + userName);
+        }
     }
 
     public Group createGroup(Group group) throws CharonException {

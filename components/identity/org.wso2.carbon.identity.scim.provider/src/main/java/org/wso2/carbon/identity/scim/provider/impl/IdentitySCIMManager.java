@@ -22,6 +22,8 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.multitenancy.SuperTenantCarbonContext;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.UserStoreManager;
+import org.wso2.carbon.user.core.claim.ClaimManager;
 import org.wso2.carbon.user.core.service.RealmService;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 import org.wso2.charon.core.encoder.Decoder;
@@ -173,8 +175,10 @@ public class IdentitySCIMManager implements CharonManager {
                     SuperTenantCarbonContext.getCurrentContext().getOSGiService(RealmService.class);
             if (realmService != null) {
                 int tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
+                //get tenant's user realm
                 UserRealm userRealm = realmService.getTenantUserRealm(tenantId);
-
+                //get claim manager for manipulating attributes
+                ClaimManager claimManager = (ClaimManager) userRealm.getClaimManager();
                 if (userRealm != null) {
                     //check whether the user who is trying to obtain the realm is authorized
                     boolean isUserAuthorized = userRealm.getAuthorizationManager().isUserAuthorized(
@@ -184,7 +188,8 @@ public class IdentitySCIMManager implements CharonManager {
                         log.error(error);
                         throw new CharonException(error);
                     }
-                    scimUserManager = new SCIMUserManager(userRealm.getUserStoreManager(), userName);
+                    scimUserManager = new SCIMUserManager((UserStoreManager) userRealm.getUserStoreManager(),
+                                                          userName, claimManager);
                 }
             } else {
                 String error = "Can not obtain carbon realm service..";

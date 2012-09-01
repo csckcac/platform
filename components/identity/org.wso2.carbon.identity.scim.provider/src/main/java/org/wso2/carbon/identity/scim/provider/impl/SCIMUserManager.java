@@ -63,7 +63,7 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
 
     public User createUser(User user) throws CharonException {
         Map<String, String> claimsMap = AttributeMapper.getClaimsMap(user);
-        //TODO: extract the role list as well if exist.
+        //TODO: Do not accept the roles list - it is read only.
         try {
             carbonUM.addUser(user.getUserName(), user.getPassword(), null, claimsMap, null);
             log.info("User: " + user.getUserName() + " is created through SCIM.");
@@ -102,6 +102,17 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
             //obtain user claim values
             Map<String, String> attributes = carbonUM.getUserClaimValues(
                     userName, claimURIList.toArray(new String[claimURIList.size()]), null);
+            //get groups of user and add it as groups attribute
+            String[] roles = carbonUM.getRoleListOfUser(userName);
+            //TODO: for the moment, add groups under roles - change this to groups attribute after group id support is implemented
+            String roleValues = null;
+            for (String role : roles) {
+                if (roleValues != null) {
+                    roleValues += role + ",";
+                } else {
+                    roleValues = role + ",";
+                }
+            }
 
             //construct the SCIM Object from the attributes
             scimUser = (User) AttributeMapper.constructSCIMObjectFromAttributes(attributes,
@@ -138,7 +149,21 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
     }
 
     public User updateUser(User user) throws CharonException {
-        return null;
+
+        try {
+            //get user claim values
+            Map<String, String> claims = AttributeMapper.getClaimsMap(user);
+            //set user claim values
+            carbonUM.setUserClaimValues(user.getUserName(), claims, null);
+            //if password is updated, set it separately
+            if (user.getPassword() != null) {
+                carbonUM.updateCredentialByAdmin(user.getUserName(), user.getPassword());
+            }
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new CharonException("Error while updating attributes of user: " + user.getUserName());
+        }
+
+        return user;
     }
 
     public User updateUser(List<Attribute> attributes) {

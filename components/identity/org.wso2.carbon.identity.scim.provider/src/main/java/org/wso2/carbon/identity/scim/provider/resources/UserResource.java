@@ -287,7 +287,7 @@ public class UserResource extends AbstractResource {
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         }
-    }
+    }*/
 
     @PUT
     @Path("{id}")
@@ -308,9 +308,7 @@ public class UserResource extends AbstractResource {
             }
             //set the format in which the response should be encoded, if not specified in the request,
             // defaults to application/json.
-            if (outputFormat == null) {
-                outputFormat = SCIMConstants.APPLICATION_JSON;
-            }
+            outputFormat = identifyOutputFormat(outputFormat);
             //obtain the encoder at this layer in case exceptions needs to be encoded.
             encoder = identitySCIMManager.getEncoder(SCIMConstants.identifyFormat(outputFormat));
             //perform authentication
@@ -345,7 +343,7 @@ public class UserResource extends AbstractResource {
             return new JAXRSResponseBuilder().buildResponse(
                     AbstractResourceEndpoint.encodeSCIMException(encoder, e));
         }
-    }*/
+    }
 
     /*@PATCH
     public Response patchUser(@HeaderParam(SCIMConstants.CONTENT_TYPE_HEADER) String inputFormat,

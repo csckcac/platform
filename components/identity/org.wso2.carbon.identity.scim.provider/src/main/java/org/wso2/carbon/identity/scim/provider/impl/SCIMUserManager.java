@@ -90,46 +90,33 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
             String[] userNames = carbonUM.getUserList(SCIMConstants.ID_URI, userId,
                                                       UserCoreConstants.DEFAULT_PROFILE);
             //we assume (since id is unique per user) only one user exists for a given id
-            String userName = userNames[0];
+            scimUser = this.getSCIMUser(userNames[0]);
 
-            //get claims related to SCIM claim dialect
-            Claim[] claims = carbonClaimManager.getAllClaims(SCIMCommonConstants.SCIM_CLAIM_DIALECT);
-
-            List<String> claimURIList = new ArrayList<String>();
-            for (Claim claim : claims) {
-                claimURIList.add(claim.getClaimUri());
-            }
-            //obtain user claim values
-            Map<String, String> attributes = carbonUM.getUserClaimValues(
-                    userName, claimURIList.toArray(new String[claimURIList.size()]), null);
-            //get groups of user and add it as groups attribute
-            String[] roles = carbonUM.getRoleListOfUser(userName);
-            //TODO: for the moment, add groups under roles - change this to groups attribute after group id support is implemented
-            String roleValues = null;
-            for (String role : roles) {
-                if (roleValues != null) {
-                    roleValues += role + ",";
-                } else {
-                    roleValues = role + ",";
-                }
-            }
-
-            //construct the SCIM Object from the attributes
-            scimUser = (User) AttributeMapper.constructSCIMObjectFromAttributes(attributes,
-                                                                                SCIMConstants.USER_INT);
             log.info("User: " + scimUser.getUserName() + " is retrieved through SCIM.");
 
         } catch (UserStoreException e) {
             throw new CharonException("Error in getting user information from Carbon User Store for" +
                                       "user: " + userId);
-        } catch (NotFoundException e) {
-            throw new CharonException(e.getDescription());
         }
         return scimUser;
     }
 
     public List<User> listUsers() throws CharonException {
-        return null;
+        List<User> users = new ArrayList();
+        try {
+            String[] userNames = carbonUM.listUsers(null, -1);
+            for (String userName : userNames) {
+                User scimUser = this.getSCIMUser(userName);
+                Map<String, Attribute> attrMap = scimUser.getAttributeList();
+                if (attrMap != null && !attrMap.isEmpty()) {
+                    users.add(this.getSCIMUser(userName));
+                }
+            }
+
+        } catch (org.wso2.carbon.user.core.UserStoreException e) {
+            throw new CharonException("Error while retrieving users from user store..");
+        }
+        return users;
     }
 
     public List<User> listUsersByAttribute(Attribute attribute) {
@@ -149,7 +136,9 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
     }
 
     public User updateUser(User user) throws CharonException {
-
+        if (log.isDebugEnabled()) {
+            log.debug("Updating user: " + user.getUserName());
+        }
         try {
             //get user claim values
             Map<String, String> claims = AttributeMapper.getClaimsMap(user);
@@ -158,6 +147,7 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
             //if password is updated, set it separately
             if (user.getPassword() != null) {
                 carbonUM.updateCredentialByAdmin(user.getUserName(), user.getPassword());
+                log.info("User: " + user.getUserName() + " updated successfully.");
             }
         } catch (org.wso2.carbon.user.core.UserStoreException e) {
             throw new CharonException("Error while updating attributes of user: " + user.getUserName());
@@ -262,5 +252,46 @@ public class SCIMUserManager extends AbstractProvisioningHandler implements User
         //check if providers registered for consumerName
         return ((provisioningManager.isConsumerRegistered(consumerName)) &&
                 (provisioningManager.isAppliedToSCIMOperation(consumerName)));
+    }
+
+    private User getSCIMUser(String userName) throws CharonException {
+        User scimUser = null;
+        try {
+            //get claims related to SCIM claim dialect
+            Claim[] claims = carbonClaimManager.getAllClaims(SCIMCommonConstants.SCIM_CLAIM_DIALECT);
+
+            List<String> claimURIList = new ArrayList<String>();
+            for (Claim claim : claims) {
+                claimURIList.add(claim.getClaimUri());
+            }
+            //obtain user claim values
+            Map<String, String> attributes = carbonUM.getUserClaimValues(
+                    userName, claimURIList.toArray(new String[claimURIList.size()]), null);
+            //get groups of user and add it as groups attribute
+            String[] roles = carbonUM.getRoleListOfUser(userName);
+            //TODO: for the moment, add groups under roles - change this to groups attribute
+            // after group id support is implemented
+            String roleValues = null;
+            for (String role : roles) {
+                if (roleValues != null) {
+                    roleValues += role + ",";
+                } else {
+                    roleValues = role + ",";
+                }
+            }
+            //construct the SCIM Object from the attributes
+            scimUser = (User) AttributeMapper.constructSCIMObjectFromAttributes(
+                    attributes, SCIMConstants.USER_INT);
+        } catch (UserStoreException e) {
+            throw new CharonException("Error in getting user information from Carbon User Store for" +
+                                      "user: " + userName);
+        } catch (CharonException e) {
+            throw new CharonException("Error in getting user information from Carbon User Store for" +
+                                      "user: " + userName);
+        } catch (NotFoundException e) {
+            throw new CharonException("Error in getting user information from Carbon User Store for" +
+                                      "user: " + userName);
+        }
+        return scimUser;
     }
 }

@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.identity.scim.common.utils.IdentitySCIMException;
 import org.wso2.carbon.identity.scim.consumer.utils.SCIMConsumerConstants;
 import org.wso2.carbon.server.admin.privilegedaction.PrivilegedAction;
@@ -58,8 +59,9 @@ public class AddUserExtension extends AbstractPrivilegedActionExtension
         try {
             //TODO:hand it over to a separate thread
             //get the tenant domain from message context
-            String tenantDomain = (String) inMessageContext.getProperty(
-                    SCIMConsumerConstants.TENANT_DOMAIN_ELEMENT_NAME);
+            /*String tenantDomain = (String) inMessageContext.getProperty(
+                    SCIMConsumerConstants.TENANT_DOMAIN_ELEMENT_NAME);*/
+            String tenantDomain = CarbonContext.getCurrentContext().getTenantDomain();
 
             if (isSCIMConsumerEnabled(tenantDomain)) {
                 if (logger.isDebugEnabled()) {

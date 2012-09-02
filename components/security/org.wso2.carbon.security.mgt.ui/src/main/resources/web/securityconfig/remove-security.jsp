@@ -35,13 +35,13 @@
         client.disableSecurityOnService(serviceName);
         //TODO clear session params here
         String message = resourceBundle.getString("security.disable");
-        forwardTo = "index.jsp";
+        forwardTo = "index.jsp?serviceName="+serviceName;
         CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.INFO, request);
     } catch (Exception e) {
 	    String message = MessageFormat.format(resourceBundle.getString("security.cannot.disable"),
                 new Object[]{e.getMessage()});
         
-        forwardTo = "index.jsp";
+	    forwardTo = "index.jsp?serviceName="+serviceName;
         CarbonUIMessage.sendCarbonUIMessage(message, CarbonUIMessage.ERROR, request);
     }
 %>

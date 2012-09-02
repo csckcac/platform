@@ -167,10 +167,19 @@
     function enablePolicyPath() {
         document.getElementById("secPolicyRegText").disabled = false;
     }
+    
+    function setUnsetBackButtion(){
+          if (document.getElementById("securityConfigAction").value == "Yes") {
+   	           document.getElementById('backButton').style.display = 'none';
+          } else if (document.getElementById("securityConfigAction").value == "No") {
+   	           document.getElementById('backButton').style.display = 'block';
+         }       
+   }
 
     function showOptions() {
         var temp = document.getElementById("securityConfiguration");
         if (document.getElementById("securityConfigAction").value == "Yes") {
+        	setUnsetBackButtion();
             temp.style.display = "inline";
         } else if (document.getElementById("securityConfigAction").value == "No") {
             CARBON.showConfirmationDialog("<fmt:message key="disable.security.confirm"/>",
@@ -181,6 +190,7 @@
                         document.getElementById("securityConfigAction").value = "Yes";
                         temp.style.display = "inline";
                     });
+            setUnsetBackButtion();
         }
     }
 
@@ -196,7 +206,7 @@
 
         <table>
             <tr>
-                <td>
+                <td width="">
                     <label for="securityConfigAction">
                         <fmt:message key="enable.security"/>?&nbsp;&nbsp;
                     </label>
@@ -216,10 +226,26 @@
             </tr>
         </table>
         <p>&nbsp;</p>
+        
+        <div id="backButton">
+           <table class="styledLeft">
+               <tr>
+                   <td class="buttonRow">
+                               <input type="button" class="button" value="< <fmt:message key="back"/>" onclick="location.href = '../service-mgt/service_info.jsp?serviceName=<%=serviceName%>'">
+                   </td>
+               </tr>
+           </table>
+           <p>&nbsp;</p>
+       </div>
 
         <div id="securityConfiguration" style="<%=displayStyle%>">
-            <form id="secConfigForm" name="securityForm" method="post" action="ut-ks-advance.jsp"
-                  onsubmit="return doValidation();">
+            <form id="secConfigForm" name="securityForm" method="post" action="ut-ks-advance.jsp?serviceName=<%=serviceName%>"
+                  onsubmit="return doValidation();">    
+                  
+                  <script type="text/javascript">
+                       setUnsetBackButtion();
+                  </script>  
+
                 <table class="styledLeft">
                     <thead>
                     <tr>
@@ -364,6 +390,7 @@
 
                     <tr>
                         <td class="buttonRow" colspan="5">
+                            <input type="button" class="button" value="< <fmt:message key="back"/>" onclick="location.href = '../service-mgt/service_info.jsp?serviceName=<%=serviceName%>'">
                             <input class="button" type="submit"
                                    value="<fmt:message key="next"/> >"/>
                         </td>
@@ -373,7 +400,7 @@
             </form>
         </div>
         <div id="divDeleteSecurity" style="display: none">
-            <form name="deleteSecurity" action="remove-security.jsp">
+            <form name="deleteSecurity" action="remove-security.jsp?serviceName=<%=serviceName%>">
                 <input type="submit" value="<fmt:message key="delete"/>"/>
             </form>
         </div>

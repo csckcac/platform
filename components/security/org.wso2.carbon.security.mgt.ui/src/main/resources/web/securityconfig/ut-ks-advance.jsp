@@ -381,9 +381,11 @@
             <table class="styledLeft">
                 <tr class="buttonRow">
                     <td>
+                         <input class="button" type="button" value="< <fmt:message key="back"/>"
+                               onclick="location.href = 'index.jsp?serviceName=<%=serviceName%>'"/>
                         <input class="button" type="submit" value="<fmt:message key="finish"/>"/>
-                        <input class="button" type="button" value="<fmt:message key="cancel"/>"
-                               onclick="location.href = 'index.jsp?ordinal=2'"/>
+                        <input class="button" type="button" value="<fmt:message key="cancel"/>" 
+                               onclick="location.href = '../service-mgt/service_info.jsp?serviceName=<%=serviceName%>'"/>
                     </td>
                 </tr>
             </table>

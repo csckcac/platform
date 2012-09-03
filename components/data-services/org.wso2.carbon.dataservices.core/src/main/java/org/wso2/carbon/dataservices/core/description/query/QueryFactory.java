@@ -311,7 +311,11 @@ public class QueryFactory {
                         DataSource ds = carbonDSConfig.getDataSource();
                         if (ds != null) {
                             con = ds.getConnection();
-                            connectionURL = con.getMetaData().getURL();
+                            try {
+                                connectionURL = con.getMetaData().getURL();
+                            } catch (Exception ignore) {
+								/* some drivers may not support meta-data lookup */
+							}
                         } else {
                             throw new DataServiceFault("Data source referred by the name '" +
                                     carbonDSConfig.getDataSourceName() + "' does not exist");

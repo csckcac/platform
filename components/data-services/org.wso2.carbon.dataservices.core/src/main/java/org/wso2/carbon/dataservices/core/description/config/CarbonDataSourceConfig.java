@@ -21,8 +21,12 @@ package org.wso2.carbon.dataservices.core.description.config;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.dataservices.common.DBConstants;
+import org.wso2.carbon.dataservices.common.DBConstants.CustomDatasource;
 import org.wso2.carbon.dataservices.common.DBConstants.DataSourceTypes;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
+import org.wso2.carbon.dataservices.core.custom.datasource.CustomDataSource;
+import org.wso2.carbon.dataservices.core.custom.datasource.CustomDataSourceReader;
+import org.wso2.carbon.dataservices.core.description.config.CustomConfig.CustomSQLDataSource;
 import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.dataservices.core.internal.DataServicesDSComponent;
 import org.wso2.carbon.ndatasource.common.DataSourceException;
@@ -71,14 +75,23 @@ public class CarbonDataSourceConfig extends SQLConfig {
 		try {
 			cds = dataSourceService.getDataSource(this.getDataSourceName());
 			if (cds == null) {
-				throw new DataServiceFault("Cannot find data source with the name: " + this.getDataSourceName());
+				throw new DataServiceFault("Cannot find data source with the name: " + 
+						this.getDataSourceName());
 			}
-			Object result = cds.getDSObject();
-			if (!(result instanceof DataSource)) {
-				throw new DataServiceFault("The data source '" + this.getDataSourceName() +
-						"' is not of type RDBMS");
+			String dsType = cds.getDSMInfo().getDefinition().getType();
+			if (RDBMSDataSourceConstants.RDBMS_DATASOURCE_TYPE.equals(dsType)) {
+			    Object result = cds.getDSObject();
+			    if (!(result instanceof DataSource)) {
+				    throw new DataServiceFault("The data source '" + this.getDataSourceName() +
+						    "' is not of type RDBMS");
+			    }
+			    return (DataSource) result;
+			} else if (CustomDataSourceReader.DATA_SOURCE_TYPE.equals(dsType)) {
+				return new CustomSQLDataSource((CustomDataSource) cds.getDSObject());
+			} else {
+				throw new DataServiceFault("The type '" + dsType + "' of data source '" + 
+						this.getDataSourceName() + "' is not supported");
 			}
-			return (DataSource) result;
 		} catch (DataSourceException e) {
 			throw new DataServiceFault(e, "Error in retrieving data source: " + e.getMessage());
 		}        
@@ -94,6 +107,8 @@ public class CarbonDataSourceConfig extends SQLConfig {
 		try {
 		    List<CarbonDataSource> dsList = dataSourceService.getAllDataSourcesForType(
 				    RDBMSDataSourceConstants.RDBMS_DATASOURCE_TYPE);
+		    dsList.addAll(dataSourceService.getAllDataSourcesForType(
+		    		CustomDataSourceReader.DATA_SOURCE_TYPE));
 		    List<String> result = new ArrayList<String>(dsList.size());
 		    for (CarbonDataSource cds : dsList) {
 		    	result.add(cds.getDSMInfo().getName());

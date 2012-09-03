@@ -39,43 +39,96 @@ public class CliTool
     * @param commandLineArguments Command-line arguments to be processed with
     *    Posix-style parser.
     */
-   public void usePosixParser(final String[] commandLineArguments)
-   {
-      final CommandLineParser cmdLinePosixParser = new PosixParser();
-      final Options posixOptions = constructPosixOptions();
-      CommandLine commandLine;
-       CliCommandManager cliCommandManager = new CliCommandManager();
-      try
-      {
-         commandLine = cmdLinePosixParser.parse(posixOptions, commandLineArguments);
-         if ( commandLine.hasOption("upload") )
-         {
-            if(commandLine.hasOption("applications") && commandLine.hasOption("cartridge-type") ){
-                if (cliCommandManager.loggingToRemoteServer (System.getenv("host"),
-                                                             System.getenv("port"),
-                                                             System.getenv("username"),
-                                                             System.getenv("password"),
-                                                             System.getenv("domain") )) {
-                    System.out.println("Successfully logged in");
-                    displayBlankLines(1, System.out);
+    public void usePosixParser(final String[] commandLineArguments) throws CliToolException {
+        final CommandLineParser cmdLinePosixParser = new PosixParser();
+        final Options posixOptions = constructPosixOptions();
+        CommandLine commandLine;
+        CliCommandManager cliCommandManager = new CliCommandManager();
+    try
+    {
+        if (cliCommandManager.loggingToRemoteServer (System.getenv("STRATOS_ADS_HOST"), System.getenv("STRATOS_ADS_PORT"),
+                                                   System.getenv("STRATOS_TENANT_USERNAME"), System.getenv("STRATOS_TENANT_PASSWORD"),
+                                                   System.getenv("STRATOS_TENANT_DOMAIN") )) {
+            System.out.println("Successfully logged in");
+            displayBlankLines(1, System.out);
+            commandLine = cmdLinePosixParser.parse(posixOptions, commandLineArguments);
+
+            //handle application upload when cartridge is already created
+            if ( commandLine.hasOption("upload") )
+            {
+                if(commandLine.hasOption("applications") && commandLine.hasOption("cartridge-type") ){
                     cliCommandManager.uploadApps(commandLine.getOptionValue("applications"),
                                                  commandLine.getOptionValue("cartridge-type"));
+                } else{
+                    System.out.println("Not enough arguments !");
                 }
             }
-         } else if(commandLine.hasOption("help")){
-             printHelp(constructPosixOptions(), 80, "POSIX HELP", "End of POSIX Help", 3, 5, true,
-                                                     System.out);
-         }
-      }
-      catch (ParseException parseException)  // checked exception
-      {
-          printHelp(constructPosixOptions(), 80, "POSIX HELP", "End of POSIX Help", 3, 5, true,
-                                        System.out);
-         System.err.println(
-              "Encountered exception while parsing using PosixParser:\n"
-            + parseException.getMessage() );
-      }
-   }
+
+            //Print available cartridge type that can be used to create a cartridge
+            else if(commandLine.hasOption("list_types")){
+
+                cliCommandManager.getCartridges();
+            }
+
+            //create cartridge with instances, applications (optional) will be uploaded to ADS
+            else if(commandLine.hasOption("create")){
+                //Check for mandatory option create
+
+                int min = 1, max =1; //define default values
+                String optionalCartridgeName = null;
+                boolean attachVolume = false;
+                try{
+                    if(commandLine.hasOption("min")){  //assign min
+                        min = Integer.parseInt(commandLine.getOptionValue("min"));
+                    }
+                    if(commandLine.hasOption("max")){  //assign max
+                        max = Integer.parseInt(commandLine.getOptionValue("max"));
+                    }
+                    if(min < 0 || max < 0){
+                        System.err.println("Enter positive numbers for min and max");
+                    }
+                    if(commandLine.hasOption("cartridge-name")){
+                        optionalCartridgeName = commandLine.getOptionValue("cartridge-name");
+                    } else {
+                        optionalCartridgeName = commandLine.getOptionValue("create");
+                    }
+                    if(commandLine.hasOption("volume")){
+                        attachVolume = Boolean.parseBoolean(commandLine.getOptionValue("volume"));
+                    }
+                }catch (NumberFormatException e){
+                    System.err.println("please enter valid arguments");
+                }
+                if(min < max){
+                    //correctly defined max and min
+
+                    cliCommandManager.register(commandLine.getOptionValue("create"), min, max,
+                                               optionalCartridgeName, attachVolume);
+                    if (commandLine.hasOption("applications") ) {
+                        cliCommandManager.uploadApps(commandLine.getOptionValue("applications"),
+                                                     commandLine.getOptionValue("create"));
+                    }
+                } else {
+                    System.err.println("Minimum is larger than Maximum, please recheck the values passed");
+                }
+
+            } else if(commandLine.hasOption("help")){//if asking for help : display possible options
+
+                printHelp(constructPosixOptions(), 80, "POSIX HELP", "End of POSIX Help", 3, 5, true,
+                          System.out);
+            }
+        } else {
+            System.err.println("Authentication failed !");
+        }
+    }
+    catch (ParseException parseException)  // checked exception
+    {
+      printHelp(constructPosixOptions(), 80, "POSIX HELP", "End of POSIX Help", 3, 5, true,
+                                    System.out);
+     System.err.println(
+             "Encountered exception while parsing using PosixParser:\n"
+             + parseException.getMessage());
+    }
+    }
 
 
    /**
@@ -90,12 +143,21 @@ public class CliTool
        posixOptions.addOption( "upload", false, "Upload the apps.");
        posixOptions.addOption("a", "applications", true, "Apps to be uploaded.");
        posixOptions.addOption("c", "cartridge-type", true, "Type of the cartridge of apps.");
-       posixOptions.addOption("login", false, "login");
        posixOptions.addOption("host", true, "Server host");
        posixOptions.addOption("port", true, "Server port");
        posixOptions.addOption("username", true, "User name of tenant");
        posixOptions.addOption("password", true, "Password of tenant user");
        posixOptions.addOption("domain", true, "Tenant domain");
+       posixOptions.addOption("create", false, "Register the cartridge");
+       posixOptions.addOption("n", "min", false, "Minimum number of instances of the cartridge");
+       posixOptions.addOption("x", "max", false, "Maximum number of instances of the cartridge");
+       posixOptions.addOption("i", "cartridge-name", true, "optional name for the cartridge. default name is " +
+                                                 "same as cartridge type");
+       posixOptions.addOption("v", "volume", true, "Whether to add persistent volume to the instances " +
+                                                 "created. Default is false");
+
+       posixOptions.addOption("l", "list_types", false, "List the cartridge types");
+
 
       return posixOptions;
    }
@@ -181,7 +243,7 @@ public class CliTool
     *
     * @param commandLineArguments Commmand-line arguments.
     */
-    public static void main(final String[] commandLineArguments) {
+    public static void main(final String[] commandLineArguments) throws CliToolException {
 
         System.setProperty("javax.net.ssl.trustStore",
                            "/home/lahiru/work/phpHosting/custom/cartridge/wso2stratos-hosting-1.0.0-SNAPSHOT/repository/resources/security/wso2carbon.jks");

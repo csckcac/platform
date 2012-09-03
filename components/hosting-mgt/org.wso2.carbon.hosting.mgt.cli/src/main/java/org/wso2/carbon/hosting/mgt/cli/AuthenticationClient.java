@@ -1,18 +1,18 @@
 /*
- * Copyright WSO2, Inc. (http://wso2.com)
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright WSO2, Inc. (http://wso2.com)
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package org.wso2.carbon.hosting.mgt.cli;
 
 import org.apache.axis2.AxisFault;
@@ -22,8 +22,6 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.cloud.csg.common.CSGConstant;
-import org.wso2.carbon.cloud.csg.common.CSGException;
 import org.wso2.carbon.cloud.csg.common.CSGUtils;
 
 
@@ -32,7 +30,7 @@ import java.net.SocketException;
 import java.rmi.RemoteException;
 
 public class AuthenticationClient {
-    private static final String AXIS2_XML_FILE = "axis2_client.xml";
+    private static final String AXIS2_XML_FILE = "config/axis2_client.xml";
     /**
      * Returns the session cookie for subsequent invocations
      *
@@ -61,7 +59,7 @@ public class AuthenticationClient {
 
             return (String) serivceContext.getProperty(HTTPConstants.COOKIE_STRING);
 
-        } catch (CSGException ex) {
+        } catch (CliToolException ex) {
             throw new AxisFault(ex.getMessage(), ex);
         }
     }
@@ -76,18 +74,18 @@ public class AuthenticationClient {
      * @param hostName   host name of the remote login server
      * @param domainName tenant domain name
      * @return authentication stub of the logged user
-     * @throws CSGException
+     * @throws CliToolException
      */
     public AuthenticationAdminStub getLoggedAuthAdminStub(String serverUrl,
                                                           String userName,
                                                           String passWord,
                                                           String hostName,
-                                                          String domainName) throws CSGException {
+                                                          String domainName)
+            throws CliToolException {
         AuthenticationAdminStub authenticationAdminStub;
         boolean isLoggedIn;
         String loggingName = CSGUtils.getFullUserName(userName, domainName);
-        System.out.println("logging Name  " + loggingName);
-        System.out.println("server url  " + serverUrl);
+
         try {
             if (isClientAxis2XMLExists()) {
 
@@ -104,19 +102,19 @@ public class AuthenticationClient {
             }
             isLoggedIn = authenticationAdminStub.login(loggingName, passWord, hostName);
         } catch (Exception e) {
-            throw new CSGException(e);
+            throw new CliToolException(e);
         }
 
         if (!isLoggedIn) {
             System.out.println("Login failed !");
-            throw new CSGException("User '" + loggingName + "' cloud not logged into server '" +
+            throw new CliToolException("User '" + loggingName + "' cloud not logged into server '" +
                     hostName + "', using server URL '" + serverUrl + "'");
         }
         return authenticationAdminStub;
     }
 
     /**
-     * Check if we have a client axis2.xml ( for example in ESB)
+     * Check if we have a client axis2.xml
      *
      * @return true if we have client axis2.xml, false otherwise
      */

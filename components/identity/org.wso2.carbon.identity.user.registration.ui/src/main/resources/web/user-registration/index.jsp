@@ -157,13 +157,6 @@
         }
     %>
 
-    <style type="text/css">
-        /* styles for Information Card support. */
-        .openid-url {
-            background: #FFFFFF url( images/openid-input.gif ) no-repeat scroll 0pt 50%;
-            padding-left: 18px;
-        }
-    </style>
     <div id="middle">
         <%
             String user = null;
@@ -220,24 +213,6 @@
                         }
                     }
                 %>
-                    <td>
-                        <div id="loginbox" class="identity-box">
-                            <strong><fmt:message key='signup.with.selfissued.infocard'/></strong>
-
-                            <h2></h2>
-                            <%
-                                String infocardSignupLink = "infocard_signup.jsp";
-                                if (cssLocation != null) {
-                                    infocardSignupLink = "infocard_signup.jsp?css=" +
-                                            URLEncoder.encode(cssLocation, "UTF-8") + "&title=" +
-                                            pageTitle + "&forwardPage=" +
-                                            URLEncoder.encode(forwardPage, "UTF-8");
-                                }
-                            %>
-                            <a href="<%=infocardSignupLink%>"><img src="images/infocard-logo.png"
-                                                                   border="0"></a>
-                        </div>
-                    </td>
                 </tr>
             </table>
 

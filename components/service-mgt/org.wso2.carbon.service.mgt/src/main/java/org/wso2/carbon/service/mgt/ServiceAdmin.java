@@ -648,7 +648,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         Map<String, AxisService> services = getAxisConfig().getServices();
         for (AxisService service : services.values()) {
             if (!SystemFilter.isFilteredOutService((AxisServiceGroup) service.getParent()) &&
-                service.isActive()) {
+                !service. isClientSide() && service.isActive()) {
                 activeList.add(service.getName());
             }
         }

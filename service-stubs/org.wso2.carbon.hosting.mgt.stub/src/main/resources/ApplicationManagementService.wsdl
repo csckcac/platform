@@ -12,7 +12,6 @@
                 <xs:sequence>
                     <xs:element maxOccurs="unbounded" minOccurs="0" name="apps" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="appsDir" nillable="true" type="xs:string" />
-                    <xs:element maxOccurs="unbounded" minOccurs="0" name="endPoints" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="hostName" nillable="true" type="xs:string" />
                     <xs:element minOccurs="0" name="numberOfApps" type="xs:int" />
                     <xs:element minOccurs="0" name="numberOfPages" type="xs:int" />
@@ -33,6 +32,17 @@
                 <xs:complexType>
                     <xs:sequence>
                         <xs:element minOccurs="0" name="return" type="xs:boolean" />
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="registerCartridge">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="cartridgeType" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="min" type="xs:int" />
+                        <xs:element minOccurs="0" name="max" type="xs:int" />
+                        <xs:element minOccurs="0" name="optionalName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="attachVolume" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>
             </xs:element>
@@ -103,6 +113,9 @@
     <wsdl:message name="deleteAppsRequest">
         <wsdl:part name="parameters" element="ns1:deleteApps" />
     </wsdl:message>
+    <wsdl:message name="registerCartridgeRequest">
+        <wsdl:part name="parameters" element="ns1:registerCartridge" />
+    </wsdl:message>
     <wsdl:portType name="ApplicationManagementServicePortType">
         <wsdl:operation name="getPagedAppsSummary">
             <wsdl:input message="tns:getPagedAppsSummaryRequest" wsaw:Action="urn:getPagedAppsSummary" />
@@ -121,6 +134,9 @@
         </wsdl:operation>
         <wsdl:operation name="deleteApps">
             <wsdl:input message="tns:deleteAppsRequest" wsaw:Action="urn:deleteApps" />
+        </wsdl:operation>
+        <wsdl:operation name="registerCartridge">
+            <wsdl:input message="tns:registerCartridgeRequest" wsaw:Action="urn:registerCartridge" />
         </wsdl:operation>
     </wsdl:portType>
     <wsdl:binding name="ApplicationManagementServiceSoap11Binding" type="tns:ApplicationManagementServicePortType">
@@ -160,6 +176,12 @@
         </wsdl:operation>
         <wsdl:operation name="deleteApps">
             <soap:operation soapAction="urn:deleteApps" style="document" />
+            <wsdl:input>
+                <soap:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="registerCartridge">
+            <soap:operation soapAction="urn:registerCartridge" style="document" />
             <wsdl:input>
                 <soap:body use="literal" />
             </wsdl:input>
@@ -206,6 +228,12 @@
                 <soap12:body use="literal" />
             </wsdl:input>
         </wsdl:operation>
+        <wsdl:operation name="registerCartridge">
+            <soap12:operation soapAction="urn:registerCartridge" style="document" />
+            <wsdl:input>
+                <soap12:body use="literal" />
+            </wsdl:input>
+        </wsdl:operation>
     </wsdl:binding>
     <wsdl:binding name="ApplicationManagementServiceHttpBinding" type="tns:ApplicationManagementServicePortType">
         <http:binding verb="POST" />
@@ -244,6 +272,12 @@
         </wsdl:operation>
         <wsdl:operation name="deleteApps">
             <http:operation location="deleteApps" />
+            <wsdl:input>
+                <mime:content type="text/xml" part="parameters" />
+            </wsdl:input>
+        </wsdl:operation>
+        <wsdl:operation name="registerCartridge">
+            <http:operation location="registerCartridge" />
             <wsdl:input>
                 <mime:content type="text/xml" part="parameters" />
             </wsdl:input>

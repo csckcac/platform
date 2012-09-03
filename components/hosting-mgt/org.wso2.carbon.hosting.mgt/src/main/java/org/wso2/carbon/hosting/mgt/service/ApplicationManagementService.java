@@ -5,6 +5,7 @@ package org.wso2.carbon.hosting.mgt.service;
 
 
 import org.apache.axis2.AxisFault;
+import org.wso2.carbon.hosting.mgt.client.AutoscaleServiceClient;
 import org.wso2.carbon.hosting.mgt.utils.CartridgeConstants;
 import org.wso2.carbon.hosting.mgt.utils.FileUploadData;
 import org.apache.commons.logging.Log;
@@ -14,12 +15,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.utils.AppsWrapper;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 
 /**
@@ -32,12 +30,12 @@ public class ApplicationManagementService extends AbstractAdmin{
 
 
     /**
-         * Upload apps passed to method. Will be uploaded to the directory relevant to tenant
-         *
-         * @param fileUploadDataList Array of data representing the apps(.zip) that are to be uploaded
-         * @return true - if upload was successful
-         * @throws org.apache.axis2.AxisFault If an error occurs while uploading
-         */
+     * Upload apps passed to method. Will be uploaded to the directory relevant to tenant
+     *
+     * @param fileUploadDataList Array of data representing the apps(.zip) that are to be uploaded
+     * @return true - if upload was successful
+     * @throws org.apache.axis2.AxisFault If an error occurs while uploading
+     */
     public boolean uploadApp(FileUploadData[] fileUploadDataList, String cartridge) throws AxisFault {
         File appsDir = new File(getAppDeploymentDirPath(cartridge));
 
@@ -144,6 +142,15 @@ public class ApplicationManagementService extends AbstractAdmin{
         return cartridgeTitles;
     }
 
-         
+    public void registerCartridge(String cartridgeType, int min, int max, String optionalName, boolean attachVolume) {
+        try{
+            AutoscaleServiceClient autoscaleServiceClient = new AutoscaleServiceClient(CartridgeConstants.AUTOSCALER_SERVICE_URL);
+            autoscaleServiceClient.init(false);
+            autoscaleServiceClient.startInstance("wso2.php.domain");
+        }catch (Exception e){
+            String msg = "Error while calling autoscaler to start instance";
+            log.error(msg);
+        }
+    }
 
 }

@@ -18,25 +18,58 @@
  */
 package org.wso2.carbon.identity.entitlement.proxy;
 
+import org.wso2.carbon.identity.entitlement.proxy.exception.EntitlementProxyException;
 import org.wso2.carbon.identity.entitlement.proxy.soap.SOAPProxy;
+import org.wso2.carbon.identity.entitlement.proxy.thrift.ThriftProxy;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class PDPFactory {
 
-    public static AbstractPDPProxy getPDPProxy(PDPConfig config) throws Exception {
+    public static Map<String, AbstractPDPProxy> getAppToPDPProxyMap(PDPConfig config) throws Exception {
+        Map<String, AbstractPDPProxy> appToProxyMap = new HashMap<String, AbstractPDPProxy>();
+        Set<String> appList = config.getAppToPDPMap().keySet();
+        Iterator appListItr = appList.iterator();
+        while (appListItr.hasNext()) {
+            String appId = (String) appListItr.next();
+            String[] appConfig = config.getAppToPDPMap().get(appId);
 
-        String messageFormat = config.getMessageFormat();
-        AbstractPDPProxy proxy = null;
+            //Check for the necessary data per appId
+            if (appConfig.length < 4) {
+                throw new EntitlementProxyException("Arguments are missing in the appConfig Array for appId :" + appId);
+            }
 
-        if (ProxyConstants.SOAP.equals(messageFormat)) {
-            proxy = new SOAPProxy();
-            proxy.setPDPConfig(config);
-        } else if (ProxyConstants.JSON.equals(messageFormat)) {
+            String messageFormat = appConfig[3];
+            if (messageFormat == null || messageFormat.trim().length() == 0) {
+                throw new IllegalArgumentException("Message format cannot be null or empty");
+            }
+            if (!ProxyConstants.JSON.equals(messageFormat)
+                    && !ProxyConstants.SOAP.equals(messageFormat)
+                    && !ProxyConstants.THRIFT.equals(messageFormat)) {
+                throw new IllegalArgumentException(
+                        "Invalid message format. Should be json, soap or thrift");
+            }
 
-        } else if (ProxyConstants.THRIFT.equals(messageFormat)) {
+            AbstractPDPProxy proxy = null;
 
+            if (ProxyConstants.SOAP.equals(messageFormat)) {
+                proxy = new SOAPProxy();
+                proxy.setPDPConfig(config);
+            } else if (ProxyConstants.JSON.equals(messageFormat)) {
+
+            } else if (ProxyConstants.THRIFT.equals(messageFormat)) {
+                proxy = new ThriftProxy();
+                proxy.setPDPConfig(config);
+            }
+
+            appToProxyMap.put(appId, proxy);
         }
 
-        return proxy;
+
+        return appToProxyMap;
     }
 
 }

@@ -22,47 +22,35 @@ import java.util.Map;
 
 public class PDPConfig {
 
-    private String messageFormat;
     private Map<String, String[]> appToPDPMap;
-    private String appId;
-    private String userName;
-    private String password;
-    private boolean enableCaching=false;
-    private int maxCacheEntries=1;
+    private String defaultAppId;
+    private boolean enableCaching = false;
+    private int maxCacheEntries = 1;
 
-    public PDPConfig(String userName,String password,Map<String, String[]> appToPDPMap,String appId,String messageFormat,boolean enableCaching,int maxCacheEntries){
-        this.appId=appId;
-        this.userName=userName;
-        this.password=password;
-        this.messageFormat=messageFormat;
-        this.appToPDPMap=appToPDPMap;
-        this.enableCaching=enableCaching;
-        if(maxCacheEntries>=1){
-            this.maxCacheEntries=maxCacheEntries;
+    public PDPConfig(Map<String, String[]> appToPDPMap, String defaultAppId, boolean enableCaching, int maxCacheEntries) {
+        this.defaultAppId = defaultAppId;
+        this.appToPDPMap = appToPDPMap;
+        this.enableCaching = enableCaching;
+        if (maxCacheEntries >= 1) {
+            this.maxCacheEntries = maxCacheEntries;
         }
 
     }
+
+    public String getDefaultAppId() {
+        return defaultAppId;
+    }
+
+    public void setDefaultAppId(String defaultAppId) {
+        this.defaultAppId = defaultAppId;
+    }
+
     public boolean isEnableCaching() {
         return enableCaching;
     }
 
     public void setEnableCaching(boolean enableCaching) {
         this.enableCaching = enableCaching;
-    }
-    public String getAppId() {
-        return appId;
-    }
-
-    public void setAppId(String appId) {
-        this.appId = appId;
-    }
-
-    public String getMessageFormat() {
-        return messageFormat;
-    }
-
-    public void setMessageFormat(String messageFormat) {
-        this.messageFormat = messageFormat;
     }
 
     public Map<String, String[]> getAppToPDPMap() {
@@ -73,22 +61,6 @@ public class PDPConfig {
         this.appToPDPMap = appToPDPMap;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
     public int getMaxCacheEntries() {
         return maxCacheEntries;
     }
@@ -96,5 +68,4 @@ public class PDPConfig {
     public void setMaxCacheEntries(int maxCacheEntries) {
         this.maxCacheEntries = maxCacheEntries;
     }
-
 }

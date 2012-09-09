@@ -19,7 +19,6 @@
 package org.wso2.carbon.identity.entitlement.proxy.json;
 
 
-
 import org.wso2.carbon.identity.entitlement.proxy.AbstractPDPProxy;
 import org.wso2.carbon.identity.entitlement.proxy.Attribute;
 import org.wso2.carbon.identity.entitlement.proxy.PDPConfig;
@@ -32,6 +31,16 @@ public class JSONProxy extends AbstractPDPProxy {
     public void setPDPConfig(PDPConfig config) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public boolean getDecision(Attribute[] attributes, String appId) throws Exception {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getActualDecision(Attribute[] attributes, String appId) throws Exception {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
@@ -69,39 +78,10 @@ public class JSONProxy extends AbstractPDPProxy {
     }
 
     @Override
-    public boolean getDecision(Attribute[] subjectAttrs, Attribute[] rescAttrs,
-                               Attribute[] actionAttrs, Attribute[] envAttrs, String appId)
-            throws Exception {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    @Override
-    public String getActualDecision(Attribute[] subjectAttrs, Attribute[] rescAttrs,
-                                    Attribute[] actionAttrs, Attribute[] envAttrs, String appId)
-            throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
     public List<String> getActionableChidResourcesForAlias(String alias, String parentResource,
                                                            String action, String appId) throws Exception {
         // TODO Auto-generated method stub
         return null;
-    }
-
-    @Override
-    public boolean  getDecisionByAttributes(String subjectAttr, String rescAttrs,
-                                            String actionAttrs, String [] envAttrs, String appId)
-            throws Exception{
-        return false;
-    }
-
-    @Override
-    public String getActualDecisionByAttributes(String subjectAttr, String rescAttr,
-                                                String actionAttr, String[] envAttrs, String appId)
-            throws Exception {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }

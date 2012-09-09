@@ -24,10 +24,13 @@ public final class ProxyConstants {
     public static final String SOAP = "soap";
     public static final String THRIFT = "thrift";
 
-    public static final String ACTION_ID = "urn:oasis:names:tc:xacml:1.0:action:action-id";
     public static final String SUBJECT_ID = "urn:oasis:names:tc:xacml:1.0:subject:subject-id";
-    public static final String RESOURCE_ID = "urn:oasis:names:tc:xacml:1.0:resource:resource-id";
-    public static final String ROLE_ID = "http://wso2.org/claims/role";
-    public static final String ENV_ID = "urn:oasis:names:tc:xacml:1.0:environment:environment-id";
+
+    public final static String TRUST_STORE = "javax.net.ssl.trustStore";
+    public final static String TRUST_STORE_PASSWORD = "javax.net.ssl.trustStorePassword";
+    public static final int THRIFT_TIME_OUT = 30000;
+    public static final int DEFAULT_THRIFT_PORT = 10500;
+
+    public static final String DEFAULT_DATA_TYPE = "string";
 
 }

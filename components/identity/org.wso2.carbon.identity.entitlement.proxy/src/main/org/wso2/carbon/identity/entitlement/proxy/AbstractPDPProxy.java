@@ -24,23 +24,9 @@ public abstract class AbstractPDPProxy {
 
     public abstract void setPDPConfig(PDPConfig config);
 
-    public abstract boolean getDecision(Attribute[] subjectAttrs, Attribute[] rescAttrs,
-                                        Attribute[] actionAttrs, Attribute[] envAttrs,String appId)
-            throws Exception;
+    public abstract boolean getDecision(Attribute[] attributes, String appId) throws Exception;
 
-    public abstract String getActualDecision(Attribute[] subjectAttrs, Attribute[] rescAttrs,
-                                             Attribute[] actionAttrs, Attribute[] envAttrs,
-                                             String appId)
-            throws Exception;
-
-    public abstract boolean  getDecisionByAttributes(String subjectAttr, String rescAttr,
-                                                     String actionAttr, String[] envAttrs, String appId)
-            throws Exception;
-
-    public abstract String getActualDecisionByAttributes(String subjectAttr, String rescAttr,
-                                                         String actionAttr, String[] envAttrs,
-                                                         String appId)
-            throws Exception;
+    public abstract String getActualDecision(Attribute[] attributes, String appId) throws Exception;
 
     public abstract boolean subjectCanActOnResource(String subjectType, String alias,
                                                     String actionId, String resourceId, String domainId, String appId) throws Exception;

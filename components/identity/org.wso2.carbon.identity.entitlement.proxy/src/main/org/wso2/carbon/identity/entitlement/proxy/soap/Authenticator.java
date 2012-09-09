@@ -18,13 +18,13 @@
  */
 package org.wso2.carbon.identity.entitlement.proxy.soap;
 
-import java.util.HashMap;
-
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
+
+import java.util.HashMap;
 
 public class Authenticator {
 
@@ -52,7 +52,7 @@ public class Authenticator {
             transportOutDescription.getSender().init(configurationContext, transportOutDescription);
         }
         AuthenticationAdminStub authAdmin = new AuthenticationAdminStub(configurationContext,
-                                                                        serverUrl);
+                serverUrl);
         boolean isAuthenticated = authAdmin.login(userName, password, "localhost");
         cookie = (String) authAdmin._getServiceClient().getServiceContext()
                 .getProperty(HTTPConstants.COOKIE_STRING);

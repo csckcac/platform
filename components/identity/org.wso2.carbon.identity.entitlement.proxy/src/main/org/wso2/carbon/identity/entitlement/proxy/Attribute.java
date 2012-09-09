@@ -23,6 +23,24 @@ public class Attribute {
     private String type;
     private String id;
     private String value;
+    private String category;
+
+    public Attribute(String category, String id, String type, String value) {
+        this.category = category;
+        this.id = id;
+        this.type = type;
+        this.value = value;
+    }
+
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
 
     public String getType() {
         return type;
@@ -54,7 +72,7 @@ public class Attribute {
         result = 7 * result+ ((type == null) ? 0 : type.hashCode());
         result = 17 * result+ ((id == null) ? 0 : id.hashCode());
         result = 37 * result+ ((value == null) ? 0 : value.hashCode());
-
+        result = 57 * result + ((category == null) ? 0 : category.hashCode());
         return result;
     }
 

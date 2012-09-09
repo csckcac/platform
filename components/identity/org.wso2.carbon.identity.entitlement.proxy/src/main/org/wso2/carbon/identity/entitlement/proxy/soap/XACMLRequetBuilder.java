@@ -16,119 +16,108 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.wso2.carbon.identity.entitlement.proxy.soap;
+package org.wso2.carbon.identity.entitlement.proxy;
 
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashSet;
-import java.util.Set;
-
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.balana.XACMLConstants;
-import org.wso2.balana.attr.AttributeValue;
-import org.wso2.balana.ctx.Attribute;
-import org.wso2.balana.ctx.xacml2.RequestCtx;
-import org.wso2.balana.ctx.xacml2.Subject;
 
-
+import javax.xml.namespace.QName;
+import java.util.HashSet;
+import java.util.Iterator;
 
 
 public class XACMLRequetBuilder {
 
     private static Log log = LogFactory.getLog(XACMLRequetBuilder.class);
 
+    public static String buildXACML3Request(org.wso2.carbon.identity.entitlement.proxy.Attribute[] attributes) {
 
-    public static String buildXACMLRequest(RequestAttribute[] subjectAttrs,
-                                           RequestAttribute[] resourceAttrs, RequestAttribute[] actionAttrs,
-                                           RequestAttribute[] envAttrs) throws Exception {
+        OMFactory factory = OMAbstractFactory.getOMFactory();
 
-        Set<Subject> subjects = null;
-        Set<Attribute> resources = null;
-        Set<Attribute> actions = null;
-        Set<Attribute> environment = null;
+        OMElement requestXML = factory.createOMElement("Request", null);
+        requestXML.addAttribute("xlmns", "urn:oasis:names:tc:xacml:3.0:core:schema:wd-17", null);
+        requestXML.addAttribute("CombinedDecision", "false", null);
+        requestXML.addAttribute("ReturnPolicyIdList", "false", null);
 
-        try {
-            subjects = new HashSet<Subject>();
-            resources = new HashSet<Attribute>();
-            actions = new HashSet<Attribute>();
-            environment = new HashSet<Attribute>();
+        HashSet<String> catagorySet = new HashSet<String>();
+        for (org.wso2.carbon.identity.entitlement.proxy.Attribute attribute : attributes) {
+            if (!catagorySet.contains(attribute.getCategory())) {
+                catagorySet.add(attribute.getCategory());
+                OMElement attributesXML = factory.createOMElement("Attributes", null);
+                attributesXML.addAttribute("Category", attribute.getCategory(), null);
 
-            if (subjectAttrs != null) {
-                for (int i = 0; i < subjectAttrs.length; i++) {
-                    subjects.add(new Subject(getAttributes(subjectAttrs[i].getId(),
-                                                           subjectAttrs[i].getType(), subjectAttrs[i].getValue())));
+                HashSet<String> attributeSet = new HashSet<String>();
+                if (!attributeSet.contains(attribute.getId())) {
+                    attributeSet.add(attribute.getId());
+                    OMElement attributeXML = factory.createOMElement("Attribute", null);
+                    attributeXML.addAttribute("AttributeId", attribute.getId(), null);
+                    attributeXML.addAttribute("IncludeInResult", "false", null);
+
+                    OMElement attributeValueXML = factory.createOMElement("AttributeValue", null);
+                    attributeValueXML.addAttribute("DataType", "http://www.w3.org/2001/XMLSchema#" + attribute.getType(), null);
+                    attributeValueXML.setText(attribute.getValue());
+                    attributeXML.addChild(attributeValueXML);
+                    attributesXML.addChild(attributeXML);
+                } else {
+                    Iterator itr = attributesXML.getChildElements();
+                    while (itr.hasNext()) {
+                        OMElement attributeXML = (OMElement) itr.next();
+                        if (attribute.getId().equals(attributeXML.getAttributeValue(new QName("AttributeId")))) {
+                            OMElement attributeValueXML = factory.createOMElement("AttributeValue", null);
+                            attributeValueXML.addAttribute("DataType", "http://www.w3.org/2001/XMLSchema#" + attribute.getType(), null);
+                            attributeValueXML.setText(attribute.getValue());
+                            attributeXML.addChild(attributeValueXML);
+                            break;
+                        }
+                    }
+                }
+                requestXML.addChild(attributesXML);
+            } else {
+                Iterator itr = requestXML.getChildElements();
+                while (itr.hasNext()) {
+                    OMElement attributesXML = (OMElement) itr.next();
+                    if (attribute.getCategory().equals(attributesXML.getAttributeValue(new QName("Category")))) {
+                        HashSet<String> attributeSet = new HashSet<String>();
+                        Iterator itr1 = attributesXML.getChildElements();
+                        while (itr1.hasNext()) {
+                            attributeSet.add(((OMElement) itr1.next()).getAttributeValue(new QName("AttributeId")));
+                        }
+
+                        if (!attributeSet.contains(attribute.getId())) {
+                            attributeSet.add(attribute.getId());
+                            OMElement attributeXML = factory.createOMElement("Attribute", null);
+                            attributeXML.addAttribute("AttributeId", attribute.getId(), null);
+                            attributeXML.addAttribute("IncludeInResult", "false", null);
+
+                            OMElement attributeValueXML = factory.createOMElement("AttributeValue", null);
+                            attributeValueXML.addAttribute("DataType", "http://www.w3.org/2001/XMLSchema#" + attribute.getType(), null);
+                            attributeValueXML.setText(attribute.getValue());
+                            attributeXML.addChild(attributeValueXML);
+                            attributesXML.addChild(attributeXML);
+                        } else {
+                            Iterator itr2 = attributesXML.getChildElements();
+                            while (itr2.hasNext()) {
+                                OMElement attributeXML = (OMElement) itr2.next();
+                                if (attribute.getId().equals(attributeXML.getAttributeValue(new QName("AttributeId")))) {
+                                    OMElement attributeValueXML = factory.createOMElement("AttributeValue", null);
+                                    attributeValueXML.addAttribute("DataType", "http://www.w3.org/2001/XMLSchema#" + attribute.getType(), null);
+                                    attributeValueXML.setText(attribute.getValue());
+                                    attributeXML.addChild(attributeValueXML);
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
+
                 }
             }
 
-            if (resourceAttrs != null) {
-                for (int i = 0; i < resourceAttrs.length; i++) {
-                    resources.add(getAttribute(resourceAttrs[i].getId(), resourceAttrs[i].getType(),
-                                               resourceAttrs[i].getValue()));
-                }
-            }
-
-            if (actionAttrs != null) {
-                for (int i = 0; i < actionAttrs.length; i++) {
-                    actions.add(getAttribute(actionAttrs[i].getId(), actionAttrs[i].getType(),
-                                             actionAttrs[i].getValue()));
-                }
-            }
-
-            if (envAttrs != null) {
-                for (int i = 0; i < envAttrs.length; i++) {
-                    environment.add(getAttribute(envAttrs[i].getId(), envAttrs[i].getType(),
-                                                 envAttrs[i].getValue()));
-                }
-            }
-
-            RequestCtx request = new RequestCtx(subjects, resources, actions, environment);
-            ByteArrayOutputStream requestOut = new ByteArrayOutputStream();
-            request.encode(requestOut);
-            return requestOut.toString();
-        } catch (Exception e) {
-            log.error("Error occured while building XACML request", e);
-            throw new Exception("Error occured while building XACML request"+e);
         }
+        return requestXML.toString();
     }
 
-    /**
-     * @param uri
-     * @param value
-     * @return
-     * @throws URISyntaxException
-     */
-    private static Set<Attribute> getAttributes(String uri, String type, final String value)
-            throws URISyntaxException {
-        Set<Attribute> attrs = new HashSet<Attribute>();
-
-        AttributeValue attrValues = new AttributeValue(new URI(type)) {
-            @Override
-            public String encode() {
-                return value;
-            }
-        };
-        Attribute attribute = new Attribute(new URI(uri), null, null, attrValues, XACMLConstants.XACML_VERSION_2_0);
-        attrs.add(attribute);
-        return attrs;
-    }
-
-    /**
-     * @param uri
-     * @param value
-     * @return
-     * @throws URISyntaxException
-     */
-    private static Attribute getAttribute(String uri, String type, final String value)
-            throws URISyntaxException {
-
-        AttributeValue attrValues = new AttributeValue(new URI(type)) {
-            @Override
-            public String encode() {
-                return value;
-            }
-        };
-        return new Attribute(new URI(uri), null, null, attrValues,XACMLConstants.XACML_VERSION_2_0);
-    }
 }

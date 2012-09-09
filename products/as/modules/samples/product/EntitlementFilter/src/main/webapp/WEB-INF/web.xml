@@ -35,13 +35,15 @@
     </context-param>
 
     <!-- The URL to perform EntitlementService query-->
-    <!-- This param is Mandatory. Should be provided -->
+    <!-- This param is Mandatory. Should be provided in this format -->
+    <!--If the transport type is SOAP give the url like https://localhost:9443/services/-->
+    <!--If the transport type is Thrift give the url like https://localhost:9443/-->
     <context-param>
         <param-name>remoteServiceURL</param-name>
         <param-value>http://localhost:9443/services/</param-value>
     </context-param>
 
-    <!-- The transport you use for query Entitlement Service. Legal values are json,soap,thrift -->
+    <!-- The transport you use for query Entitlement Service. Legal values are soap,thrift -->
     <!-- This param is optional. If not provided would be set to default value -->
     <context-param>
         <param-name>transportType</param-name>
@@ -74,6 +76,17 @@
             <param-value>/index.jsp</param-value>
         </init-param>
 
+	<!-- This will be used if the transport type is thrift. This is mandatory -->
+        <init-param>
+            <param-name>thriftHost</param-name>
+            <param-value>10.100.3.109</param-value>
+        </init-param>
+
+        <!-- This will be used if the transport type is thrift. This is optional. If not provided would be set to default value -->
+        <init-param>
+            <param-name>thriftPort</param-name>
+            <param-value>10500</param-value>
+        </init-param>
 
     </filter>
 

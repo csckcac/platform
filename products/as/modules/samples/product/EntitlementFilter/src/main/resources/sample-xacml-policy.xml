@@ -1,45 +1,22 @@
-<Policy PolicyId="urn:sample:xacml:2.0:entitlement_servlet_sample_policy" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os">
-  <Description>Sample XACML Authorization Policy To Test Entitlement Servlet Filter</Description>
-  <Target>
-    <Subjects>
-      <AnySubject/>
-    </Subjects>
-    <Actions>
-      <AnyAction/>
-    </Actions>
-    <Resources>
-      <Resource>
-        <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-regexp-match">
-          <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/Entitlement_Sample_WebApp/protected.jsp</AttributeValue>
-          <ResourceAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-        </ResourceMatch>
-      </Resource>
-    </Resources>
-  </Target>
-  <Rule Effect="Permit" RuleId="primary-group-rule">
+<Policy xmlns="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17"  PolicyId="Entitlement_Filter_Sample_Policy" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable" Version="1.0">
+  <Target/>
+  <Rule Effect="Permit" RuleId="Rule1">
     <Target>
-      <Subjects>
-        <AnySubject/>
-      </Subjects>
-      <Resources>
-        <AnyResource/>
-      </Resources>
-      <Actions>
-        <Action>
-          <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+      <AnyOf>
+        <AllOf>
+          <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+            <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">/Entitlement_Sample_WebApp/protected.jsp</AttributeValue>
+            <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:resource" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+          </Match>
+          <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
             <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">GET</AttributeValue>
-            <ActionAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-          </ActionMatch>
-        </Action>
-      </Actions>
+            <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" Category="urn:oasis:names:tc:xacml:3.0:attribute-category:action" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
++         </Match>
++         <Match MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+            <AttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:subject:subject-id" Category="urn:oasis:names:tc:xacml:1.0:subject-category:access-subject" DataType="http://www.w3.org/2001/XMLSchema#string" MustBePresent="true"></AttributeDesignator>
+          </Match>
+        </AllOf>
+      </AnyOf>
     </Target>
-    <Condition>
-      <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:any-of">
-        <Function FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal"/>
-        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">admin</AttributeValue>
-        <SubjectAttributeDesignator AttributeId="http://wso2.org/claims/role" DataType="http://www.w3.org/2001/XMLSchema#string"/>
-      </Apply>
-    </Condition>
   </Rule>
-  <Rule Effect="Deny" RuleId="deny-rule"/>
 </Policy>

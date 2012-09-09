@@ -99,6 +99,9 @@
                                 </goals>
                                 <configuration>
                                     <mainClass>org.wso2.carbon.entitlement.filter.client.Client</mainClass>
+                                    <arguments>
+                                        <argument>http://localhost:9764/</argument>
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>

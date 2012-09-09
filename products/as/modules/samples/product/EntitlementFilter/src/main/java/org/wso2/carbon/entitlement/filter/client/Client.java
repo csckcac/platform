@@ -25,7 +25,7 @@ public class Client{
             System.out.println();
 
             System.out.println("Sending Request For a Web Page Which Requires Authorization");
-            String webPage = "http://localhost:9764/Entitlement_Sample_WebApp/protected.jsp";
+            String webPage = args[0]+"Entitlement_Sample_WebApp/protected.jsp";
             url = new URL(webPage);
             urlConnection = (HttpURLConnection)url.openConnection();
             String authorizationString = "Basic " + new String(encoder.encode("admin:admin".getBytes()));
@@ -53,7 +53,7 @@ public class Client{
 
             System.out.println();
             System.out.println("Sending Request For a Web Page Which Not Requires Authorization");
-            webPage = "http://localhost:9764/Entitlement_Sample_WebApp/index.jsp";
+            webPage = args[0]+"Entitlement_Sample_WebApp/index.jsp";
             url = new URL(webPage);
             urlConnection = (HttpURLConnection)url.openConnection();
             urlConnection.addRequestProperty("Authorization",authorizationString);
@@ -79,7 +79,7 @@ public class Client{
 
             System.out.println();
             System.out.println("Sending Request For a Web Page Which Requires Authorization with False Subject NAME");
-            webPage = "http://localhost:9764/Entitlement_Sample_WebApp/protected.jsp";
+            webPage = args[0]+"Entitlement_Sample_WebApp/protected.jsp";
             url = new URL(webPage);
             urlConnection = (HttpURLConnection)url.openConnection();
             authorizationString = "Basic " + new String(encoder.encode("andunslg:admin".getBytes()));
@@ -107,7 +107,7 @@ public class Client{
 
             System.out.println();
             System.out.println("Sending Request For a Web Page Which Requires Authorization with False Action");
-            webPage = "http://localhost:9764/Entitlement_Sample_WebApp/protected.jsp";
+            webPage = args[0]+"Entitlement_Sample_WebApp/protected.jsp";
             url = new URL(webPage);
             urlConnection = (HttpURLConnection)url.openConnection();
             authorizationString = "Basic " + new String(encoder.encode("admin:admin".getBytes()));
@@ -137,7 +137,7 @@ public class Client{
 
             System.out.println();
             System.out.println("Sending Request For a Web Page Which Requires Authorization But Policy is not defined");
-            webPage = "http://localhost:9764/Entitlement_Sample_WebApp/other.jsp";
+            webPage = args[0]+"Entitlement_Sample_WebApp/other.jsp";
             url = new URL(webPage);
             urlConnection = (HttpURLConnection)url.openConnection();
             authorizationString = "Basic " + new String(encoder.encode("admin:admin".getBytes()));
@@ -167,6 +167,7 @@ public class Client{
 
             System.out.println();
             System.out.println("***********Ending the Entitlement Servlet Filter Sample************");
+            System.out.println();
 
         } catch (MalformedURLException e) {
 

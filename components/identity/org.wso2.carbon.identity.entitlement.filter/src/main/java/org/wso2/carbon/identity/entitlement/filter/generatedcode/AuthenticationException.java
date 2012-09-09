@@ -7,11 +7,7 @@ package org.wso2.carbon.identity.entitlement.filter.generatedcode;
 
 import org.apache.thrift.meta_data.FieldMetaData;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public class AuthenticationException extends Exception implements

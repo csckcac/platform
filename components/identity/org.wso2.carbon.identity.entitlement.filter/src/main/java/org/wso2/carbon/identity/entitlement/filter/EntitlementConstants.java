@@ -63,22 +63,18 @@ public class EntitlementConstants {
 
     public static final String AUTHENTICATION_PAGE_URL = "authenticationPageUrl";
 
-    public static final String defaultRemoteServiceUserName = "admin";
-
-    public static final String defaultRemoteServicePassword = "admin";
-
-    public static final String defaultRemoteServiceHost = "localhost";
-
-    public static final String defaultRemoteServicePort = "9443";
-
     public static final String defaultTransportType = "soap";
 
     public static final String defaultSubjectScope = "basic-auth";
 
-    public static final String defaultSubjectAttributeName = "username";
-
     public static final String defaultDecisionCaching = "disable";
 
     public static final String defaultMaxCacheEntries = "100";
+
+    public static final String THRIFT_HOST = "thriftHost";
+
+    public static final String THRIFT_PORT = "thriftPort";
+
+    public static final String DEFAULT_THRIFT_PORT = "10500";
 
 }

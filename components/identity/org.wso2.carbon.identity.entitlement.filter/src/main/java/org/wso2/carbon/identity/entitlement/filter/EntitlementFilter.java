@@ -20,18 +20,13 @@ package org.wso2.carbon.identity.entitlement.filter;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import org.wso2.carbon.identity.entitlement.filter.callback.BasicAuthCallBackHandler;
 import org.wso2.carbon.identity.entitlement.filter.callback.EntitlementFilterCallBackHandler;
 import org.wso2.carbon.identity.entitlement.filter.exception.EntitlementFilterException;
 import org.wso2.carbon.identity.entitlement.proxy.PDPConfig;
 import org.wso2.carbon.identity.entitlement.proxy.PDPProxy;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
@@ -54,6 +49,8 @@ public class EntitlementFilter implements Filter {
     private FilterConfig filterConfig = null;
     private PDPProxy pClient;
     private int maxCacheEntries;
+    private String thriftHost;
+    private String thriftPort;
 
     @Override
     /**
@@ -73,7 +70,7 @@ public class EntitlementFilter implements Filter {
         }
         subjectScope = filterConfig.getServletContext().getInitParameter(EntitlementConstants.SUBJECT_SCOPE);
         if(subjectScope==null){
-           subjectScope=EntitlementConstants.defaultSubjectScope;
+            subjectScope=EntitlementConstants.defaultSubjectScope;
         }
         subjectAttributeName = filterConfig.getServletContext().getInitParameter(EntitlementConstants.SUBJECT_ATTRIBUTE_NAME);
         decisionCaching = filterConfig.getInitParameter(EntitlementConstants.DECISION_CACHING);
@@ -94,21 +91,44 @@ public class EntitlementFilter implements Filter {
         //System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
 
         pClient= PDPProxy.getInstance();
-        Map<String, String[]> config=new HashMap<String, String[]>();
-        String tempArr[]={remoteServiceURL};
-        config.put("EntitlementFilter",tempArr) ;
-        PDPConfig pConfig=new PDPConfig(remoteServiceUserName,remoteServicePassword,config,"EntitlementFilter",transportType,"enable".equals(decisionCaching),maxCacheEntries);
-        pConfig.setAppToPDPMap(config);
+        Map<String, String[]> appToPDPMap=new HashMap<String, String[]>();
+
+        String configArr[];
+
+        if("thrift".equals(transportType)){
+            thriftHost = filterConfig.getInitParameter(EntitlementConstants.THRIFT_HOST);
+            thriftPort = filterConfig.getInitParameter(EntitlementConstants.THRIFT_PORT);
+
+            if(thriftPort==null){
+                thriftPort=EntitlementConstants.DEFAULT_THRIFT_PORT;
+            }
+
+            configArr=new String[6];
+            configArr[0] = remoteServiceURL;
+            configArr[1] = remoteServiceUserName;
+            configArr[2] = remoteServicePassword;
+            configArr[3] = transportType;
+            configArr[4] = thriftHost;
+            configArr[5] = thriftPort;
+
+        }else{
+            configArr=new String[4];
+            configArr[0] = remoteServiceURL;
+            configArr[1] = remoteServiceUserName;
+            configArr[2] = remoteServicePassword;
+            configArr[3] = transportType;
+        }
+
+        appToPDPMap.put("EntitlementFilter", configArr) ;
+        PDPConfig pConfig=new PDPConfig(appToPDPMap,"EntitlementFilter","enable".equals(decisionCaching),maxCacheEntries);
+        pConfig.setAppToPDPMap(appToPDPMap);
 
         try {
             pClient.init(pConfig);
         } catch (Exception e) {
             log.error("Error while initializing the PDP Proxy" + e);
             throw new EntitlementFilterException("Error while initializing the PDP Proxy", e);
-
         }
-
-
     }
 
     @Override
@@ -119,14 +139,13 @@ public class EntitlementFilter implements Filter {
         String userName;
         String action;
         String resource;
-        String[] env = new String[0];
+        String env = "";
 
         userName = findUserName((HttpServletRequest) servletRequest, subjectScope, subjectAttributeName);
         resource = findResource((HttpServletRequest) servletRequest);
         action = findAction((HttpServletRequest) servletRequest);
 
         if(((HttpServletRequest) servletRequest).getRequestURI().contains("/updateCacheAuth.do")) {
-
             try {
                 pClient.cleanCache();
             } catch (Exception e) {
@@ -135,7 +154,7 @@ public class EntitlementFilter implements Filter {
 
         } else {
             try {
-                decision=pClient.getActualDecisionByAttributes(userName, resource, action, env,domainID);
+                decision=pClient.getActualDecision(userName, resource, action, env,domainID);
             } catch (Exception e) {
                 e.printStackTrace();
                 throw new EntitlementFilterException("Exception while making the decision : " + e);
@@ -149,6 +168,8 @@ public class EntitlementFilter implements Filter {
     @Override
     public void destroy() {
         decisionCaching = null;
+        pClient.cleanCache();
+        pClient=null;
     }
 
     private String findUserName(HttpServletRequest request, String subjectScope,
@@ -165,19 +186,19 @@ public class EntitlementFilter implements Filter {
             subject=callBackHandler.getUserName();
         } else {
             log.error(subjectScope + " is an invalid"
-                      + " configuration for subjectScope parameter in web.xml. Valid configurations are"
-                      + " \'" + EntitlementConstants.REQUEST_PARAM + "\', " + EntitlementConstants.REQUEST_ATTIBUTE + "\' and \'"
-                      + EntitlementConstants.SESSION + "\'");
+                    + " configuration for subjectScope parameter in web.xml. Valid configurations are"
+                    + " \'" + EntitlementConstants.REQUEST_PARAM + "\', " + EntitlementConstants.REQUEST_ATTIBUTE + "\' and \'"
+                    + EntitlementConstants.SESSION + "\'");
 
             throw new EntitlementFilterException(subjectScope + " is an invalid"
-                                                 + " configuration for subjectScope parameter in web.xml. Valid configurations are"
-                                                 + " \'" + EntitlementConstants.REQUEST_PARAM + "\', " + EntitlementConstants.REQUEST_ATTIBUTE + "\' and \'"
-                                                 + EntitlementConstants.SESSION + "\'");
+                    + " configuration for subjectScope parameter in web.xml. Valid configurations are"
+                    + " \'" + EntitlementConstants.REQUEST_PARAM + "\', " + EntitlementConstants.REQUEST_ATTIBUTE + "\' and \'"
+                    + EntitlementConstants.SESSION + "\'");
         }
         if (subject == null || subject.equals("null")) {
             log.error("Username not provided in " + subjectScope);
             throw new EntitlementFilterException("Username not provided in " + subjectScope);
-        };
+        }
         return subject;
     }
 

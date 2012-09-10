@@ -22,8 +22,6 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.hosting.mgt.stub.ApplicationManagementServiceStub;
 import org.wso2.carbon.hosting.mgt.stub.types.carbon.FileUploadData;
 import org.wso2.carbon.hosting.mgt.stub.types.carbon.AppsWrapper;
@@ -34,18 +32,18 @@ import java.rmi.RemoteException;
  * Client which communicates with the Backend service at ADS(Artifact Deployment Server)
  */
 public class HostingAdminClient {
-    private static final Log log = LogFactory.getLog(HostingAdminClient.class);
     public ApplicationManagementServiceStub stub;
 
     public HostingAdminClient(String cookie,
                               ConfigurationContext configCtx,
                               String backendServerURL) {
-
+        
         try {
         String serviceURL = backendServerURL + "/services/ApplicationManagementService";
             stub = new ApplicationManagementServiceStub(configCtx, serviceURL);
         } catch (AxisFault axisFault) {
-            log.error("Error while connecting to Back end service ");
+            String msg = "Error while connecting to Back end service ";
+            System.err.println(msg);
         }
         ServiceClient client = stub._getServiceClient();
         Options option = client.getOptions();
@@ -70,7 +68,6 @@ public class HostingAdminClient {
             throws AxisFault {
 //        tenantId = MultitenantUtils.getTenantId()
         try {
-            log.info("Going to upload apps");
             stub.uploadApp(fileUploadDataList, cartridge);
         } catch (RemoteException e) {
             handleException("Cannot upload Web application.", e);
@@ -96,6 +93,7 @@ public class HostingAdminClient {
             String cartridges[] =  stub.getCartridgeTitles();
             return cartridges;
         } catch (RemoteException e) {
+
             handleException("Error while retrieving cartridges.", e);
         }
         return null;
@@ -103,19 +101,15 @@ public class HostingAdminClient {
 
 
     private void handleException(String msg, Exception e) throws AxisFault {
-        log.error(msg, e);
         throw new AxisFault(msg, e);
     }
 
-    public AppsWrapper getPagedAppsSummary(String cartridge)
+    public AppsWrapper getAppsSummary(String cartridge)
             throws AxisFault {
         AppsWrapper appsWrapper = null;
         try {
             appsWrapper = stub.getPagedAppsSummary(cartridge);
-            String[] phpApps = appsWrapper.getApps(); //For testing whether the apps are null
-            if((phpApps != null && phpApps[0] == null) || phpApps == null){
-                appsWrapper.setApps(null);
-            }
+
         } catch (RemoteException e) {
             handleException("Cannot retrieve application data. Backend service may be unavailable.", e);
         }
@@ -140,10 +134,11 @@ public class HostingAdminClient {
     }
 
 
-    public void register(String cartridgeType, int min, int max, String optionalName, boolean attachVolume)
+    public void register(String cartridgeType, int min, int max, String svnPassword,
+                         boolean attachVolume )
             throws AxisFault {
         try {
-            stub.registerCartridge(cartridgeType, min, max, optionalName, attachVolume);
+            stub.registerCartridge(cartridgeType, min, max, svnPassword, attachVolume);
         } catch (RemoteException e) {
             handleException("Cartridge regiter failure ", e);
         }

@@ -20,9 +20,7 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.ConfigurationContextFactory;
 import org.apache.commons.fileupload.FileUploadException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.hosting.mgt.stub.types.carbon.AppsWrapper;
 import org.wso2.carbon.hosting.mgt.stub.types.carbon.FileUploadData;
 
 import javax.activation.DataHandler;
@@ -30,25 +28,17 @@ import javax.activation.FileDataSource;
 import java.io.File;
 import java.net.SocketException;
 import java.rmi.RemoteException;
+import java.util.Arrays;
+import java.util.List;
 
 public class CliCommandManager {
-    static String session = null;
-    static ConfigurationContext configurationContext;
-    static String backEndServerUrl = null;
 
     private static final String[] ALLOWED_FILE_EXTENSIONS = new String[]{".zip"};
 
-    private static final String AXIS2_XML_FILE = "conf/axis2_client.xml";
-    protected static final Log log = LogFactory.getLog(CliCommandManager.class);
+    private static final String AXIS2_XML_FILE = "axis2_client.xml";
+
 
     HostingAdminClient client;
-
-    public CliCommandManager(){
-
-        client = new HostingAdminClient(CliCommandManager.session,
-                                                           CliCommandManager.configurationContext,
-                                                           CliCommandManager.backEndServerUrl);
-    }
 
     /**
      * Call to authenticate against ADS (Artifact Deployment Server)
@@ -60,41 +50,37 @@ public class CliCommandManager {
      * @return true if authentication successful
      */
     public boolean loggingToRemoteServer(String host, String port, String userName, String passWord,
-                                       String domainName) throws CliToolException {
+                                       String domainName) {
 
         boolean successfullyLoggedIn = false;
-        backEndServerUrl = "https://" + host + ":" + port;
+        String backEndServerUrl = "https://" + host + ":" + port;
         String serverUrl =  backEndServerUrl + "/services/AuthenticationAdmin";
         AuthenticationClient authClient = new AuthenticationClient();
 
         try {
-            CliCommandManager.session = authClient.getSessionCookie(serverUrl, userName, passWord,
+            String session = authClient.getSessionCookie(serverUrl, userName, passWord,
                                                                     host, domainName);
-            CliCommandManager.configurationContext = ConfigurationContextFactory
+            ConfigurationContext configurationContext = ConfigurationContextFactory
                     .createConfigurationContextFromFileSystem(null, AXIS2_XML_FILE);
             successfullyLoggedIn = true;
 
+            //initialize the client using authenticated details
+            client = new HostingAdminClient(session,
+                                            configurationContext,
+                                            backEndServerUrl);
         } catch (Exception e) {
-            handleException("Authentication error " , e);
+            String msg = "Error while Authenticating ";
+            System.err.println(msg);
         }
 
         return successfullyLoggedIn;
     }
 
 
-    private void handleException(String msg, Exception e) throws CliToolException {
-        log.error(msg, e);
-        throw new CliToolException(msg, e);
-    }
-
-    public void uploadApps(String apps, String cartridgeType) throws CliToolException {
+    public void uploadApps(String apps, String cartridgeType) {
         System.out.println("Uploading apps! " + apps + " for cartridge " + cartridgeType);
         String[] applicationPaths = getApplicationPathsArray(apps);
         try {
-            HostingAdminClient client = new HostingAdminClient(CliCommandManager.session,
-                                                               CliCommandManager.configurationContext,
-                                                               CliCommandManager.backEndServerUrl);
-
 
             if(applicationPaths != null){
                 FileUploadData[] fileUploadData = new FileUploadData[applicationPaths.length];
@@ -115,9 +101,9 @@ public class CliCommandManager {
             
 
         } catch (AxisFault axisFault) {
-            handleException("Error while calling backend service",  axisFault);
+            System.err.println("Error while calling backend service");
         }catch (FileUploadException e) {
-            handleException("Error while uploading files " , e);
+            System.err.println("Error while uploading files ");
         }
 
     }
@@ -170,27 +156,114 @@ public class CliCommandManager {
 
 
 
-    public void getCartridges() throws CliToolException {
+    public void getCartridges() {
         try {
-
+            System.out.println("Available cartridge types : ");
             String cartridges[] = client.getCartridges();
             for(String cartridge:cartridges ){
                 System.out.println(cartridge);
             }
         } catch (AxisFault axisFault) {
-            handleException("Error while calling backend serice " , axisFault);
+            String msg = "Error while calling backend service ";
+            System.err.println(msg);
         }
 
     }
 
-    public void register(String cartridgeType, int min, int max, String optionalName, boolean attachVolume) {
+    public void register(String cartridgeType, String min, String max, String svnPassword,
+                         String volume ) {
+        try{
+
+            int minimum = 1, maximum =1; //define default values
+            boolean isAttachVolume = false;
             try{
-                client.register(cartridgeType, min, max, optionalName, attachVolume);
-            }catch (Exception e){
-                String msg = "Error while calling auto scaler to start instance";
-                log.error(msg);
+                minimum = Integer.parseInt(min);
+                maximum = Integer.parseInt(max);
+                if(minimum < 0 || maximum < 0){
+                    System.err.println("Enter positive numbers for min and max");
+                }
+                isAttachVolume = Boolean.parseBoolean(volume);
+            }catch (NumberFormatException e){
+                System.err.println("please enter valid arguments");
+            }
+            if(minimum <= maximum){
+                //correctly defined max and min
+                System.out.println("type  " + cartridgeType + " min " + min + " max " + max + " svnp "
+                    + svnPassword + " isatavol " + isAttachVolume);
+                client.register(cartridgeType, minimum, maximum, svnPassword, isAttachVolume );
+            } else {
+                System.err.println("Minimum is larger than Maximum, please recheck the values passed");
             }
 
+        }catch (Exception e){
+            String msg = "Error while calling auto scaler to start instance";
+            System.err.println(msg);
+        }
 
+
+    }
+
+    public void listApps(String cartridge) {
+        try{
+            AppsWrapper appsWrapper = client.getAppsSummary(cartridge);
+
+            String apps[] = appsWrapper.getApps();
+
+            if(apps == null){
+                System.out.println("No Applications available in " + cartridge + " cartridge");
+                return;
+            }
+            else if(apps[0] == null){
+                System.out.println("No Applications available in " + cartridge + " cartridge");
+                return;
+            }
+            else {
+                System.out.println("Applications available in " + cartridge + " cartridge");
+            }
+            for(int i = 0; i < apps.length; i++){
+
+                System.out.println(apps[i]);
+            }
+        }catch (Exception e){
+            String msg = "Error while calling backend service";
+            System.err.println(msg);
+        }
+    }
+    
+    public void deleteAllApps(String cartridge){
+        try{
+            System.out.println("Deleting all the apps deployed in " + cartridge + " cartridge");
+            client.deleteAllApps(cartridge);
+
+        }catch (Exception e){
+            String msg = "Error while calling backend service";
+            System.err.println(msg);
+        }
+    }
+    
+    public void deleteApps(String apps, String cartridge){
+        try{
+            System.out.println("Deleting the following apps deployed in " + cartridge + "cartridge");
+
+            String appsList[] = apps.split(",");   //deleting list
+
+            AppsWrapper appsWrapper = client.getAppsSummary(cartridge);
+            List<String> availableAppsList = Arrays.asList(appsWrapper.getApps()); //available list
+
+            for(String app: appsList){
+                System.out.println(app);
+                if(!availableAppsList.contains(app)){
+                    String msg = "At least one application name is wrong, cancelled deleting action";
+                    System.err.println(msg);
+                    return;
+                }
+            }
+            client.deleteApps(appsList, cartridge);
+            System.out.println();
+            listApps(cartridge);
+        }catch (Exception e){
+            String msg = "Error while calling backend service";
+            System.err.println(msg);
+        }
     }
 }

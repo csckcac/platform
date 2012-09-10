@@ -69,9 +69,4 @@ public class AutoscaleServiceClient {
     }
 
 
-    public boolean terminateSpiInstance(String ip) throws Exception {
-        
-        return stub.terminateSpiInstance(ip);
-    }
-
 }

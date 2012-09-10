@@ -22,7 +22,6 @@ import org.apache.axis2.context.ServiceContext;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.authenticator.stub.AuthenticationAdminStub;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.cloud.csg.common.CSGUtils;
 
 
 import java.io.File;
@@ -30,7 +29,7 @@ import java.net.SocketException;
 import java.rmi.RemoteException;
 
 public class AuthenticationClient {
-    private static final String AXIS2_XML_FILE = "config/axis2_client.xml";
+    private static final String AXIS2_XML_FILE = "axis2_client.xml";
     /**
      * Returns the session cookie for subsequent invocations
      *
@@ -84,7 +83,7 @@ public class AuthenticationClient {
             throws CliToolException {
         AuthenticationAdminStub authenticationAdminStub;
         boolean isLoggedIn;
-        String loggingName = CSGUtils.getFullUserName(userName, domainName);
+        String loggingName = getFullUserName(userName, domainName);
 
         try {
             if (isClientAxis2XMLExists()) {
@@ -121,6 +120,10 @@ public class AuthenticationClient {
     public static boolean isClientAxis2XMLExists() {
         File f = new File(AXIS2_XML_FILE);
         return f.exists();
+    }
+
+    public static String getFullUserName(String userName, String domainName) {
+        return domainName == null || "".equals(domainName) ? userName : userName + "@" + domainName;
     }
 
 }

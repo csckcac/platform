@@ -81,7 +81,6 @@ public class HostingAdminClient {
             String[] phpApps = appsWrapper.getApps(); //For testing whether the apps are null
             if((phpApps != null && phpApps[0] == null) || phpApps == null){
                 appsWrapper.setApps(null);
-                appsWrapper.setEndPoints(null);
             }
         } catch (RemoteException e) {
             handleException("Cannot retrieve application data. Backend service may be unavailable.", e);

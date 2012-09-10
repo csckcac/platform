@@ -18,10 +18,10 @@ import java.io.IOException;
 
 import org.wso2.carbon.core.AbstractAdmin;
 import org.wso2.carbon.hosting.mgt.utils.AppsWrapper;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 
 /**
- * @author wso2
  *
  */
 public class ApplicationManagementService extends AbstractAdmin{
@@ -142,11 +142,16 @@ public class ApplicationManagementService extends AbstractAdmin{
         return cartridgeTitles;
     }
 
-    public void registerCartridge(String cartridgeType, int min, int max, String optionalName, boolean attachVolume) {
+    public void registerCartridge(String cartridgeType, int min, int max, String svnPassword,
+                                  boolean attachVolume ) {
         try{
-            AutoscaleServiceClient autoscaleServiceClient = new AutoscaleServiceClient(CartridgeConstants.AUTOSCALER_SERVICE_URL);
-            autoscaleServiceClient.init(false);
-            autoscaleServiceClient.startInstance("wso2.php.domain");
+            int tenantId = MultitenantUtils.getTenantId(configurationContext);
+
+            String msg = "Registering " + cartridgeType + " cartridge with min and max instances, " + min + ", "
+                         + max + " for tenant " + tenantId;
+
+            log.debug(msg);
+            //TODO call new autoscaler register service
         }catch (Exception e){
             String msg = "Error while calling autoscaler to start instance";
             log.error(msg);

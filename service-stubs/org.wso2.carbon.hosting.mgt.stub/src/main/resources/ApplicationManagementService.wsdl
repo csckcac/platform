@@ -41,7 +41,7 @@
                         <xs:element minOccurs="0" name="cartridgeType" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="min" type="xs:int" />
                         <xs:element minOccurs="0" name="max" type="xs:int" />
-                        <xs:element minOccurs="0" name="optionalName" nillable="true" type="xs:string" />
+                        <xs:element minOccurs="0" name="svnPassword" nillable="true" type="xs:string" />
                         <xs:element minOccurs="0" name="attachVolume" type="xs:boolean" />
                     </xs:sequence>
                 </xs:complexType>

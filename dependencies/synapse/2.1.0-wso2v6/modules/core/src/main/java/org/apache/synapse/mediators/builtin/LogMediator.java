@@ -189,7 +189,7 @@ public class LogMediator extends AbstractMediator {
         if (properties != null && !properties.isEmpty()) {
             for (MediatorProperty property : properties) {
                 if(property != null){
-                sb.append(separator).append(property.getName()).append(" = ").append(property.getValue()
+                sb.append(separator).append(property.getName()).append("=").append(property.getValue()
                         != null ? property.getValue() :
                         property.getEvaluatedExpression(synCtx));
                 }

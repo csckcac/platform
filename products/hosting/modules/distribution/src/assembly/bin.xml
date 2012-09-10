@@ -298,7 +298,7 @@
             <fileMode>755</fileMode>
         </file>
         <file>
-            <source>repository/conf/php-cartridge-config.properties</source>
+            <source>repository/conf/cartridge-config.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <filtered>false</filtered>
             <fileMode>644</fileMode>

@@ -169,6 +169,17 @@
 				<featureArtifactDef>
 				    org.wso2.carbon:org.wso2.carbon.hosting.mgt.feature:1.0.0-SNAPSHOT
 				</featureArtifactDef>
+				<!--MB feature for JMS queue usecase-->
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.andes.feature:${carbon.version}
+                                </featureArtifactDef>
+				<featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.cassandra.server.feature:${carbon.version}
+                                </featureArtifactDef>
+                                 <featureArtifactDef>
+                                    org.wso2.carbon:org.wso2.carbon.coordination.server.feature:${carbon.version}
+                                </featureArtifactDef>
+
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -292,6 +303,19 @@
 				<feature>
                                     <id>org.wso2.carbon.hosting.mgt.feature.group</id>
                                     <version>1.0.0-SNAPSHOT</version>
+                                </feature>
+				<!--MB feature for JMS queue usecase-->
+				<feature>
+                                    <id>org.wso2.carbon.andes.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.cassandra.server.feature.group</id>
+                                    <version>${carbon.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.coordination.server.feature.group</id>
+                                    <version>${carbon.version}</version>
                                 </feature>
                             </features>
                         </configuration>

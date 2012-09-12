@@ -21,7 +21,6 @@ package org.wso2.carbon.dataservices.core.description.config;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.dataservices.common.DBConstants;
-import org.wso2.carbon.dataservices.common.DBConstants.CustomDatasource;
 import org.wso2.carbon.dataservices.common.DBConstants.DataSourceTypes;
 import org.wso2.carbon.dataservices.core.DataServiceFault;
 import org.wso2.carbon.dataservices.core.custom.datasource.CustomDataSource;

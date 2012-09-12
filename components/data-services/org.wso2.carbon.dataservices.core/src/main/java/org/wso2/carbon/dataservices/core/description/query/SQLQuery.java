@@ -523,8 +523,24 @@ public class SQLQuery extends Query implements BatchRequestParticipant {
         }
     }
 
+    private void sortStringsByLength(List<String> values) {
+    	Collections.sort(values, new Comparator<String>() {
+			@Override
+			public int compare(String lhs, String rhs) {
+				return lhs.length() - rhs.length();
+			}
+		});
+    }
+    
     private String createSqlFromQueryString(String query) {
-        List<String> values = this.getNamedParamNames();
+    	/* get a copy of the param names */
+        List<String> values = new ArrayList<String>(this.getNamedParamNames());
+        /* sort the strings */
+        this.sortStringsByLength(values);
+        /* make it from largest to smallest, this is done to make sure, if there are params like,
+         * :abcd,:abc, then the step of replacing :abc doesn't also initially replace :abcd's
+         * substring as well */
+        Collections.reverse(values);
         for (String val : values) {
             /* replace named params with ?'s */
             query = query.replaceAll(":" + val, "?");

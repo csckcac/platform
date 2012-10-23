@@ -1,0 +1,233 @@
+#/bin/bash
+
+action=""
+cartridge_type=""
+app_list=""
+min_instances=""
+max_instances=""
+attach_volume=""
+activate=""
+
+function help {
+    echo "Usage: stratos-cartridge [optional arguments] <action> <mandatory arguments>"
+    echo "    Action can be one of the following"
+    echo "        list-types : List the available cartridge types."
+    echo "        subscribe : Subscribe to a cartridge."
+    echo "        activate : Activate a cartridge means creating instances of the cartridge."
+    echo "        list : List the subscribed cartridges"
+    echo "        info : Give information of a cartridge."
+    echo "        upload-apps : Upload applications to a cartridge"
+    echo "        list-apps : List the applications deployed to a cartridge"
+    echo "        remove-apps : Remove the applications deployed to a cartridge"
+    echo ""
+    echo "    Mandatory and optional arguments depend on the action. Following is the list of usages for each action"     
+    echo ""
+    echo "    Usage for action list-types:"
+    echo "        stratos-cartridge list-types"
+    echo ""
+    echo "    Usage for action subscribe:"
+    echo "        stratos-cartridge -a <application list> -n <min instances> -x <max instances> -v <attach volume> -i <true/false> subscribe <cartridge type>"
+    echo "            -a : comma separated, path prefixed application list to upload"
+    echo "            -n : minimum number of instances. Default is 1"
+    echo "            -x : maximum number of instances. Default is 1"
+    echo "            -v : whether to attach persistent volume. Default is no."
+    echo "            -i : whether to activate the cartridge at the time of subscribing. Default is false"
+    echo ""
+    echo "    Usage for action activate:"
+    echo "        stratos-cartridge -a <application list> -n <min instances> -x <max instances> -v <attach volume> activate <cartridge type>"
+    echo "            -a : comma separated, path prefixed application list to upload"
+    echo "            -n : minimum number of instances. Default is 1"
+    echo "            -x : maximum number of instances. Default is 1"
+    echo "            -v : whether to attach persistent volume. Default is no."
+    echo ""
+    echo "    Usage for action list:"
+    echo "        stratos-cartridge list"
+    echo ""
+    echo "    Usage for action info:"
+    echo "        stratos-cartridge info <cartridge type>"
+    echo ""
+    echo "    Usage for action list-apps:"
+    echo "        stratos-cartridge list-apps <cartridge type>"
+    echo ""
+    echo "    Usage for action upload-apps:"
+    echo "        stratos-cartridge upload-apps <cartridge type> <comma separated, path prefixed list of applications>"
+    echo ""
+    echo "    Usage for action remove-apps:"
+    echo "        stratos-cartridge remove-apps <cartridge type> <comma separated list of applications>"
+    echo ""
+}
+
+function image_validate {
+
+if [[ ( -z $action || ( -n $action && $action == "help" ) ) ]]; then
+    help
+    exit 1
+fi
+
+
+if [[ ( -z $action || ( -n $action && !( $action == "list-types" || $action == "subscribe" || $action == "activate" || $action == "list" || $action == "info" || 
+            $action == "upload-apps" || $action == "list-apps" || $action == "remove-apps" ) ) ) ]]; then
+        echo "Mandatory parameter action with one of the following values should be provided"
+        echo "    list-types : List the available cartridge types."
+        echo "    subscribe : Subscribe to a cartridge."
+        echo "    activate : Activate a cartridge means creating instances of the cartridge."
+        echo "    list : List the subscribed cartridges."
+        echo "    info : Give information of a cartridge."
+        echo "    upload-apps : Upload applications to a cartridge"
+        echo "    list-apps : List the applications deployed to a cartridge"
+        echo "    remove-apps : Remove the applications deployed to a cartridge"
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "subscribe" && -z $cartridge_type ) ]]; then
+        echo "Usage: stratos-cartridge -a <application list> -n <min instances> -x <max instances> -v <attach volume> -i <true/false> subscribe <cartridge type>"
+        echo "    -a : comma separated, path prefixed application list to upload"
+        echo "    -n : minimum number of instances. Default is 1"
+        echo "    -x : maximum number of instances. Default is 1"
+        echo "    -v : whether to attach persistent volume. Default is no."
+        echo "    -i : whether to activate the cartridge at the time of subscribing. Default is false"
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "activate" && -z $cartridge_type ) ]]; then
+        echo "Usage: stratos-cartridge -a <application list> -n <min instances> -x <max instances> -v <attach volume> activate <cartridge type>"
+        echo "    -a : comma separated, path prefixed application list to upload"
+        echo "    -n : minimum number of instances. Default is 1"
+        echo "    -x : maximum number of instances. Default is 1"
+        echo "    -v : whether to attach persistent volume. Default is no."
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "list" ) ]]; then
+        echo "Usage: stratos-cartridge list"
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "info" && -z $cartridge_type ) ]]; then
+        echo "Usage: stratos-cartridge info <cartridge type>"
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "list-apps" && -z $cartridge_type ) ]]; then
+        echo "Usage: stratos-cartridge list-apps <cartridge type>"
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "upload-apps" && ( -z $cartridge_type || -z $app_list ) ) ]]; then
+        echo "Usage: stratos-cartridge upload-apps <comma separated, path prefixed list of applications>"
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "remove-apps" && ( -z $cartridge_type || -z $app_list ) ) ]]; then
+        echo "usage: stratos-cartridge remove-apps <comma separated list of applications>"
+        echo ""
+        echo "    For help:"
+        echo "    stratos-cartridge help"
+        echo ""
+        exit 1
+fi
+
+}
+while getopts a:n:x:v:i: opts
+do
+  case $opts in
+    a)
+        app_list=${OPTARG}
+        ;;
+    n)
+        min_instances=${OPTARG}
+        ;;
+    x)
+        max_instances=${OPTARG}
+        ;;
+    v)
+        attach_volume=${OPTARG}
+        ;;
+    i)
+        activate=${OPTARG}
+        ;;
+    *)
+        help
+        exit 1
+        ;;
+  esac
+done
+shift $((OPTIND-1))
+action=$1
+
+if [[ $action == "subscribe" || $action == "activate" || $action == "info" || $action == "list-apps" ]]; then
+    cartridge_type=$2
+elif [[ $action == "upload-apps" || $action == "remove-apps" ]]; then
+    cartridge_type=$2
+    app_list=$3
+fi
+
+image_validate
+
+if [[ $action == "list-types" ]]; then
+    echo "list available cartridge types"
+fi
+
+if [[ $action == "subscribe" ]]; then
+    echo "subscribing with options:app_list:$app_list, min_instances=$min_instances, max_instances=$max_instances, attach_volume=$attach_volume, activate=$activate"
+
+fi
+
+if [[ $action == "activate" ]]; then
+    echo "activating with options:app_list:$app_list, min_instances=$min_instances, max_instances=$max_instances, attach_volume=$attach_volume"
+fi
+
+if [[ $action == "list" ]]; then
+    echo "list available cartridge types"
+fi
+
+if [[ $action == "info" ]]; then
+    echo "information of the cartridge $cartridge_type"
+
+fi
+
+if [[ $action == "list-apps" ]]; then
+    echo "list applications deployed in the cartridge $cartridge_type"
+
+fi
+
+if [[ $action == "upload-apps" ]]; then
+    echo "upload app list $app_list to cartridge:$cartridge_type"
+
+fi
+
+if [[ $action == "remove-apps" ]]; then
+    echo "remove app list $app_list from cartridge:$cartridge_type"
+
+fi
+
+echo "Done"
+

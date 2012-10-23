@@ -1,0 +1,99 @@
+Scripts contained in this folder structure can be used to create openstack nova cloud Iaas environment.
+
+Installing a Controller
+-----------------------
+- Log into the machine you want to install the Openstack Nova Controller. This machine should have two network
+  interfaces configured.
+
+- Log in as root user
+  sudo -i
+
+- Change the /etc/network/interfaces look like following
+
+--------------------------------------------------------
+auto lo
+iface lo inet loopback
+
+auto eth0
+iface eth0 inet dhcp
+
+auto eth1
+iface eth1 inet static
+address 172.15.0.1
+netmask 255.255.0.0
+network 172.15.0.0
+broadcast 172.15.255.255
+
+auto eth2
+iface eth2 inet manual
+up ifconfig eth2 up
+
+--------------------------------------------------------
+
+You can change the ip address etc according to your network requirements
+
+- apt-get update
+
+- Install git
+
+- Copy the openStack-lxc-ubuntu-precise, client and upload folder into /root
+
+- Download openstack installer scripts from git
+  git clone https://github.com/uksysadmin/OpenStackInstaller.git
+
+- cd OpenStackInstaller
+
+- git checkout essex
+
+- Copy all scripts from openStack-lxc-ubuntu-precise folder into the newly created OpenStackInstaller folder
+
+- Modify oscontrollerinstall.sh as per your requirements and execute
+
+Once the installation complete, upload an image to the glance server as following
+
+- Download uec cloud image and copy it into /root/upload folder.
+
+- modify uploadimage.sh and execute
+
+To create an new lxc instance in Openstack
+
+cd into /root/client folder
+./init.sh
+
+Modify and execute create_instance.sh
+
+Installing a Compute node
+-------------------------
+
+You can add additional compute nodes to a new machines
+
+- Log into the machine you want to install the Openstack Nova Compute node. This machine should have at least one network
+  interfaces configured. If you need to access it publicly then add another interface card.
+
+- Log in as root user
+  sudo -i
+
+- Copy the openStack-lxc-ubuntu-precise folder into /root
+
+- Download openstack installer scripts from git
+  git clone https://github.com/uksysadmin/OpenStackInstaller.git
+
+- cd OpenStackInstaller
+
+- git checkout essex
+
+- Copy all scripts from openStack-lxc-ubuntu-precise folder into the newly created OpenStackInstaller folder
+
+- Modify oscomputeinstall.sh as per your requirements and execute
+
+
+Troubleshooting
+-------------------------
+When you install the controller or compute node, if any error is indicated, please retry running
+osreinstall.sh script. Note that before running, open it and see if it need any changes to adapt to your environment.
+
+IMPORTANT:
+When installing the compute node OSinstall.sh script should be changed as following
+
+       #nova-manage network create ${VMNET} ${NUM_NETWORKS} ${NETWORK_SIZE}
+       nova-manage network create vmnet --fixed_range_v4=${VMNET} --network_size=${NETWORK_SIZE} --bridge_interface=${PRIVATE_INTERFACE}

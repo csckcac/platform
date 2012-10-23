@@ -1,0 +1,3 @@
+sudo apt-get install librabbitmq-dev
+gcc -lrabbitmq -o ads_listener ./ads_listener.c ./ads_utils.c
+./ads_listener localhost 5672 sajith_queue_test

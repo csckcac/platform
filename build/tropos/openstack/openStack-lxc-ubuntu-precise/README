@@ -1,0 +1,32 @@
+This folder contain some usage scripts to invoke nova scripts to install and manage openstack installation
+Scripts are only tested for Ubnutu Precise 12.04 LTS.
+Steps:
+Download openstack installer scripts from git
+git clone https://github.com/uksysadmin/OpenStackInstaller.git
+
+cd OpenStackInstaller
+
+git checkout essex
+
+Copy all scripts from this folder into the newly created OpenStackInstaller folder
+
+To install a new controller modify oscontrollerinstall.sh and execute
+
+To install a new compute node modify oscomputeinstall.sh and execute
+
+To uninstall a controller/compute node modify osuninstall.sh and execute
+
+To restart services in the controller/compute node execute restartservices.sh
+
+To upload an image to glance serve
+Copy the image to /root/upload folder, modify uploadimage.sh and execute
+
+IMPORTANT:
+When installing the compute node OSinstall.sh script should be changed as following
+
+       #nova-manage network create ${VMNET} ${NUM_NETWORKS} ${NETWORK_SIZE}
+       nova-manage network create vmnet --fixed_range_v4=${VMNET} --network_size=${NETWORK_SIZE} --bridge_interface=${PRIVATE_INTERFACE}
+
+Also replace nova-compute-kvm with nova-compute-lxc(This is to specifically install lxc support instead of default kvm)
+
+If you use a single machine to install openstack you need to install controller. Then in the same machine a compute node is installed as well. To add new compute nodes to the system you need to install compute nodes in to newly added machines.

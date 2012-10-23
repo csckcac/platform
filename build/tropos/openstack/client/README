@@ -1,0 +1,10 @@
+To create an instance execute
+
+init.sh
+
+then modify and execute
+
+create_instance.sh
+
+or 
+boot_tenant_instance.sh <nova image id> <tenant id> <cartridge type>

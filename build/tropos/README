@@ -1,0 +1,6 @@
+This folder contain the tools and scripts needed to manage the Stratos infrastructure which uses new Autoscaler
+component and Elastic Load Balancer.
+
+openstack/openStack-lxc-ubuntu-precise contain instructions and scripts on how to install openstack controller and compute nodes.
+
+image_create folder contain scripts to create openstack instance images. Templates are provided to create lamp, jetty  and wso2 carbon server images.

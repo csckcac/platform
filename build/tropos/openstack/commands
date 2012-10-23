@@ -1,0 +1,18 @@
+Nova commands
+
+To create new instance type:
+nova-manage flavor create --name=m1.wso2 --memory=1024 --cpu=1 --root_gb=2 --ephemeral_gb=0 --flavor=6 --swap=0 --rxtx_factor=1
+
+To delete instance type
+
+nova-manage instance_type delete m1.wso2
+
+To list instance types
+
+nova-manage instance_type list
+
+To add keypair
+nova keypair-add nova > nova.pem
+
+To boot instance
+nova boot --key_name=nova.pem --flavor=1 --image=97174c3b-6110-40f1-b5a9-9f738d206d32 test1

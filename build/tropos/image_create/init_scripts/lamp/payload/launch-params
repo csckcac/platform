@@ -1,1 +1,0 @@
-TENANT=foo,APP_PATH=/opt/wso2tropos-agent-1.0.0-SNAPSHOT/repository/,CRON_DURATION=5,CONTROLLER_IP=172.15.0.1

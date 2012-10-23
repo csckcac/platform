@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 
 work_dir=""
 new_image=""
@@ -132,12 +132,12 @@ if [[ $action == "create" ]]; then
     fi
 
     echo "Mount the original image"
-    ./image_action.sh action=mount image-template=$image_template image-root=$image_root image-image=$image_image
+    sh ./image_action.sh action=mount image-template=$image_template image-root=$image_root image-image=$image_image
     echo "Original image mounted"
 
     if [[ !( $image_template == "default" ) ]]; then
     	echo "Customizing the original image"
-    	./image_action.sh action=create image-template=$image_template image-root=$image_root software=$software
+    	sh ./image_action.sh action=create image-template=$image_template image-root=$image_root software=$software
     fi
 
 fi
@@ -148,7 +148,7 @@ if [[ $action == "pack" ]]; then
     tar -zcf $new_image ./*
     popd
     echo "Unmounting"
-    ./image_action.sh action=unmount image-template=$image_template image-root=$image_root
+    sh ./image_action.sh action=unmount image-template=$image_template image-root=$image_root
 fi
 echo "Done"
 

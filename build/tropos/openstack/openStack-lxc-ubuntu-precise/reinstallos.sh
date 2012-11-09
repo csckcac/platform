@@ -108,6 +108,7 @@ cat > /etc/nova/nova.conf << EOF
 --novncproxy_base_url=http://${CC_ADDR}:6080/vnc_auto.html
 --vncserver_proxyclient_address=${CC_ADDR}
 --vncserver_listen=${CC_ADDR}
+--rpc_response_timeout=180
 EOF
 
 cat > /etc/nova/nova-compute.conf << EOF

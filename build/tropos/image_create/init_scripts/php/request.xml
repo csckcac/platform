@@ -1,0 +1,19 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:agen="http://agent.cartridge.carbon.wso2.org">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <agen:register>
+        <registrant>
+           <hostName>host_name</hostName>
+           <key>key</key>
+           <portMappings>
+              <primaryPort>primary_port</primaryPort>
+              <proxyPort>proxy_port</proxyPort>
+              <type>type</type>
+           </portMappings>
+        <remoteHost>remote_host</remoteHost>
+           <service>service</service>
+           <tenantId>tenant_id</tenantId>
+        </registrant>
+     </agen:register>
+  </soapenv:Body>
+</soapenv:Envelope>

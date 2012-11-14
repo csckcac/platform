@@ -35,7 +35,7 @@ mysql() {
 	nano zip mysql-server git \
 	apache2-mpm-prefork apache2-utils apache2.2-bin apache2.2-common dbconfig-common fontconfig-config libapache2-mod-php5 \
 	libaprutil1-dbd-sqlite3 libaprutil1-ldap libcap2 libfontconfig1 libgd2-xpm libjpeg-turbo8 libjpeg8 libmcrypt4 \
-	libt1-5 libxpm4 php5-cli php5-common php5-gd php5-mcrypt php5-mysql phpmyadmin ssl-cert ttf-dejavu-core libboost-all-dev
+	libt1-5 libxpm4 php5-cli php5-common php5-gd php5-mcrypt php5-mysql phpmyadmin ssl-cert ttf-dejavu-core libboost-all-dev ruby
 
 	# Be sure to have a new SSL cert for this new LXC host:
 	rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key
@@ -68,13 +68,17 @@ s/          or starting networking)/#          or starting network-manager/
 
 php() {
 
+    cp -f ./init_scripts/php/wso2-openstack-init.sh $ROOTFS/opt/
+    cp -f ./init_scripts/php/get-launch-params.rb $ROOTFS/opt/
+    chroot $ROOTFS mkdir -p /etc/agent/conf
+    cp -f ./init_scripts/php/request.xml $ROOTFS/etc/agent/conf/
 	chroot $ROOTFS apt-get update
 	# Next, all the LAMP packages.  We must first pre-save the password
 	
 	chroot $ROOTFS apt-get install -y \
 	nano zip mysql-client apache2 php5 php5-cli libapache2-mod-php5 php5-gd php5-mysql php-db php-pear \
 	php5-curl curl wget php5-ldap php5-adodb mailutils php5-imap php5-ldap \
-	openssl ssl-cert ldap-utils php5-mcrypt mcrypt ufw fail2ban git libboost-all-dev
+	openssl ssl-cert ldap-utils php5-mcrypt mcrypt ufw fail2ban git libboost-all-dev ruby
 
 	# install gitpython 
 	# chroot $ROOTFS easy_install GitPython
@@ -222,11 +226,13 @@ wso2_carbon_server() {
 
 	#chroot $ROOTFS apt-get update
 	
-	chroot $ROOTFS apt-get install -y \
+	 chroot $ROOTFS apt-get install -y \
 	 nano zip \
 	 wget \
-	 openssl ssl-cert ldap-utils ruby
-   
+	 openssl ssl-cert ldap-utils ruby git
+  
+     # TODO install puppet agent
+
 	# Be sure to have a new SSL cert for this new LXC host:
 	#rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key
 	#chroot $ROOTFS dpkg-reconfigure ssl-cert

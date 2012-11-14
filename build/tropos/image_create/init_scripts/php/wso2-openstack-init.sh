@@ -17,25 +17,11 @@
 
 # ----------------------------------------------------------------------------
 export LOG=/var/log/wso2-openstack.log
-export instance_path=/var/lib/cloud/instance
+instance_path=/var/lib/cloud/instance
 PUBLIC_IP=""
+KEY=`uuidgen`
 CRON_DURATION=1
-PRODUCT_NAME=""
 
-#Check whether if any java processes are running
-if [[ "$(pidof java)" ]]; then
-   # process was found
-   echo "An already running java process is found. Exiting..." >> $LOG
-    if [[ "$(pidof cron)" ]]; then
-        crontab -r
-    fi
-   exit 0;
-else
-   # process not found
-   echo "No java process found. Coninue script" >> $LOG
-fi
-
-echo ---------------------------- >> $LOG
 
 
 if [ ! -d ${instance_path}/payload ]; then
@@ -59,10 +45,9 @@ if [ ! -d ${instance_path}/payload ]; then
 
 fi
 
-
 echo ---------------------------- >> $LOG
-
 echo "getting public ip from metadata service" >> $LOG
+
 wget http://169.254.169.254/latest/meta-data/public-ipv4
 files="`cat public-ipv4`"
 if [[ -z ${files} ]]; then
@@ -104,41 +89,31 @@ do
 done
 
 
-if [ "$ADMIN_USERNAME" = "" ]; then
-	echo Launching with default admin username >> $LOG
-else 
-	cd /opt/${PRODUCT_NAME}/repository/conf
-	find . -name "*user-mgt.xml" | xargs sed -i "s/<UserName>admin<\/UserName>/<UserName>$ADMIN_USERNAME<\/UserName>/g"
-fi
 
-if [ "$ADMIN_PASSWORD" = "" ]; then
-	echo Launching with default admin password >> $LOG
-else 
-	cd /opt/${PRODUCT_NAME}/repository/conf
-	find . -name "*user-mgt.xml" | xargs sed -i "s/<Password>admin<\/Password>/<Password>$ADMIN_PASSWORD<\/Password>/g"
-fi
+cd /etc/agent/conf
 
-# Modifying axis2.xml file member
-	cd /opt/${PRODUCT_NAME}/repository/conf/axis2
+#source /home/ubuntu/.bashrc
 
-	find . -name "axis2.xml" | xargs sed -i "s/<hostName>member_host_name<\/hostName>/<hostName>$MEMBER_HOST<\/hostName>/g"
-	find . -name "axis2.xml" | xargs sed -i "s/<port>member_port<\/port>/<port>$MEMBER_PORT<\/port>/g"
+#log variables..
+### Temp hard-coding vairables..
+#HOST_NAME="php.cloud-test.wso2.com"
+#PRIMARY_PORT="80"
+#PROXY_PORT="8280"
+#TYPE="http"
+#SERVICE="php"
+#TENANT_ID="6"
+#CARTRIDGE_AGENT_EPR="http://172.17.0.1:6060/axis2/services/CartridgeAgentService"
 
-	find . -name "axis2.xml" | xargs sed -i "s/local_member_host<\/parameter>/$PUBLIC_IP<\/parameter>/g"
-	find . -name "axis2.xml" | xargs sed -i "s/local_member_bind_address<\/parameter>/$PRIVATE_IP<\/parameter>/g"
+echo "Logging sys variables .. PUBLIC_IP:$PUBLIC_IP, HOST_NAME:$HOST_NAME, KEY:$KEY, PRIMARY_PORT:$PRIMARY_PORT, PROXY_PORT:$PROXY_PORT, TYPE:$TYPE " >> $LOG
 
-if [[ -d /opt/${PRODUCT_NAME} ]]; then
-	echo "Starting carbon server ..." >> $LOG
-	nohup /opt/${PRODUCT_NAME}/bin/wso2server.sh & >> $LOG
-	sleep 1
-	if [[ "$(pidof java)" ]]; then
-	    echo "Carbon server started" >> $LOG
-	    crontab -r
-    	    rm -f /opt/${PRODUCT_NAME}.zip
-	fi
-else
-
-    echo "Carbon server is not started yet" >> $LOG
-fi
+find . -name "request.xml" | xargs sed -i "s/<remoteHost>remote_host<\/remoteHost>/<remoteHost>$PUBLIC_IP<\/remoteHost>/g"
+find . -name "request.xml" | xargs sed -i "s/<hostName>host_name<\/hostName>/<hostName>$HOST_NAME<\/hostName>/g"
+find . -name "request.xml" | xargs sed -i "s/<key>key<\/key>/<key>$KEY<\/key>/g"
+find . -name "request.xml" | xargs sed -i "s/<primaryPort>primary_port<\/primaryPort>/<primaryPort>$PRIMARY_PORT<\/primaryPort>/g"
+find . -name "request.xml" | xargs sed -i "s/<proxyPort>proxy_port<\/proxyPort>/<proxyPort>$PROXY_PORT<\/proxyPort>/g"
+find . -name "request.xml" | xargs sed -i "s/<type>type<\/type>/<type>$TYPE<\/type>/g"
+find . -name "request.xml" | xargs sed -i "s/<service>service<\/service>/<service>$SERVICE<\/service>/g"
+find . -name "request.xml" | xargs sed -i "s/<tenantId>tenant_id<\/tenantId>/<tenantId>$TENANT_ID<\/tenantId>/g"
 
 
+curl -X POST -H "Content-Type: text/xml"   -d @/etc/agent/conf/request.xml "$CARTRIDGE_AGENT_EPR"  -v 2>> $LOG

@@ -16,17 +16,14 @@ Put the downloaded image into a folder of your choice. You will pass this image 
 
 Now you can mount and customize this image(resize, install new packages etc) using the scripts provided in this folder.
 
-For example to install lamp packages into the ubuntu precise image do the following
-
-stratos-image -t<template> create <path to the original image including name>
-Eg:
-stratos-image -r/opt/lxc -tlamp -n3G create ubuntu-12.04-server-cloudimg-amd64.tar.gz
+stratos-image [optional options] <action> <path to the original image>
 
 Optional arguments
 -r - <image root> folder. Put the new image into <image root>/image folder
 -t - template to customize the image
 -n - The original image will be resized to this size. (in Giga bytes)
 -s - Additional software to copy into the instances /opt folder. If you give more than one software package, separate them by colons(:)
+-v - Image type. One of qcow2 or raw
 
 Mandatory arguments
 <action> - Action is one of create or pack
@@ -37,13 +34,19 @@ When action is create
 When action is pack
 <new image name> - path to original image archive(.tar.gz)
 
+For example to install lamp packages into the ubuntu precise image do the following
+
+stratos-image -t<template> -v<image-type> create <path to the original image including name>
+Eg:
+stratos-image -r/opt/lxc -tlamp -n3 -vqcow2 create /opt/ubuntu-12.04-server-cloudimg-amd64.tar.gz
+
 This command will mount the original image,  resize the image to 3G and install lamp packages.
 
 Now you can pack the image with a new name and unmount the original image using following command
 
-stratos-image -t<template> pack <name of the new image>
+stratos-image -t<template> -v<image-type> pack <name of the new image>
 Eg:
-stratos-image -r/opt/lxc -tlamp pack ubuntu-12.04-server-jetty-cloudimg-amd64.tar.gz
+stratos-image -r/opt/lxc -tlamp -vqcow2 pack ubuntu-12.04-server-jetty-cloudimg-amd64.tar.gz
 
 In the init_scripts/lamp folder you can see that their are lamp specific scripts that will be copied into the instances /opt folder. The init_scripts/lamp/payload folder is a sample payload that would be passed to a lamp instance.
 

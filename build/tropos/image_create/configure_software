@@ -114,6 +114,7 @@ s/          or starting networking)/#          or starting network-manager/
 	
     pushd $ROOTFS/etc
     echo "#!/bin/bash -e
+chmod 755 /opt/wso2-openstack-init.sh
 /opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log
 exit 0
     " > rc.local

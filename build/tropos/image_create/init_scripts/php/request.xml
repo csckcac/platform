@@ -5,6 +5,8 @@
         <registrant>
            <hostName>host_name</hostName>
            <key>key</key>
+          <maxInstanceCount>max_instances</maxInstanceCount>
+          <minInstanceCount>min_instances</minInstanceCount>
            <portMappings>
               <primaryPort>primary_port</primaryPort>
               <proxyPort>proxy_port</proxyPort>

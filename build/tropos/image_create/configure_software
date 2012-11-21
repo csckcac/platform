@@ -112,6 +112,13 @@ s/          or starting networking)/#          or starting network-manager/
 ' < ufw.conf-dist > ufw.conf
 	popd
 	
+    pushd $ROOTFS/etc
+    echo "#!/bin/bash -e
+/opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log
+exit 0
+    " > rc.local
+    popd
+
 }
 
 lamp() {

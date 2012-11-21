@@ -9,8 +9,8 @@ image_root=""
 software=""
 image_type=""
 loopdevice="/dev/loop3"
-nbddevice="/dev/nbd4"
-nbdmount="/dev/nbd4p1"
+nbddevice="/dev/nbd2"
+nbdmount="/dev/nbd2p1"
 
 function image_validate {
     if [ -z $action ]; then

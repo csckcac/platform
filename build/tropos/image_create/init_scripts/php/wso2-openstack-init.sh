@@ -21,16 +21,19 @@ instance_path=/var/lib/cloud/instance
 PUBLIC_IP=""
 KEY=`uuidgen`
 CRON_DURATION=1
-
-
+RETRY_COUNT=30
+SLEEP_DURATION=30
 
 if [ ! -d ${instance_path}/payload ]; then
+
     echo "creating payload dir ... " >> $LOG
     mkdir ${instance_path}/payload
     echo "payload dir created ... " >> $LOG
-    # payload will be copied into ${instance_path}/payload/launch-params file
-    cp ${instance_path}/user-data.txt ${instance_path}/payload/launch-params
-    echo "payload copied  ... " >> $LOG
+    cp ${instance_path}/user-data.txt ${instance_path}/payload/user-data.zip
+    echo "payload copied  ... "  >> $LOG
+    unzip -d ${instance_path}/payload ${instance_path}/payload/user-data.zip
+    echo "unzippeddd..." >> $LOG
+
     for i in `/usr/bin/ruby /opt/get-launch-params.rb`
     do
     echo "exporting to bashrc $i ... " >> $LOG
@@ -38,12 +41,13 @@ if [ ! -d ${instance_path}/payload ]; then
     done
     source /home/ubuntu/.bashrc
     # Write a cronjob to execute wso2-openstack-init.sh periodically until public ip is assigned
-    crontab -l > ./mycron
-    echo "*/${CRON_DURATION} * * * * /opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log" >> ./mycron
-    crontab ./mycron
-    rm ./mycron
+    #crontab -l > ./mycron
+    #echo "*/${CRON_DURATION} * * * * /opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log" >> ./mycron
+    #crontab ./mycron
+    #rm ./mycron
 
 fi
+
 
 echo ---------------------------- >> $LOG
 echo "getting public ip from metadata service" >> $LOG
@@ -51,24 +55,25 @@ echo "getting public ip from metadata service" >> $LOG
 wget http://169.254.169.254/latest/meta-data/public-ipv4
 files="`cat public-ipv4`"
 if [[ -z ${files} ]]; then
-    echo "getting public ip. If fail retry 30 times" >> $LOG
-    for i in {1..30}
+    echo "getting public ip" >> $LOG
+    for i in {1..$RETRY_COUNT}
     do
       rm -f ./public-ipv4
       wget http://169.254.169.254/latest/meta-data/public-ipv4
       files="`cat public-ipv4`"
       if [ -z $files ]; then
           echo "Public ip is not yet assigned. Wait and continue for $i the time ..." >> $LOG
-          sleep 1
+          sleep $SLEEP_DURATION
       else
           echo "Public ip assigned" >> $LOG
-          crontab -r
+          #crontab -r
           break
       fi
     done
 
     if [ -z $files ]; then
-      echo "Public ip is not yet assigned. Exiting ..." >> $LOG
+      echo "Public ip is not yet assigned. So shutdown the instance and exit" >> $LOG
+      /sbin/shutdown -h now
       exit 0
     fi
     for x in $files
@@ -78,8 +83,8 @@ if [[ -z ${files} ]]; then
 
 
 else 
-    PUBLIC_IP="$files"
-    crontab -r
+   PUBLIC_IP="$files"
+   #crontab -r
 fi
 
 
@@ -92,18 +97,6 @@ done
 
 cd /etc/agent/conf
 
-#source /home/ubuntu/.bashrc
-
-#log variables..
-### Temp hard-coding vairables..
-#HOST_NAME="php.cloud-test.wso2.com"
-#PRIMARY_PORT="80"
-#PROXY_PORT="8280"
-#TYPE="http"
-#SERVICE="php"
-#TENANT_ID="6"
-#CARTRIDGE_AGENT_EPR="http://172.17.0.1:6060/axis2/services/CartridgeAgentService"
-
 echo "Logging sys variables .. PUBLIC_IP:$PUBLIC_IP, HOST_NAME:$HOST_NAME, KEY:$KEY, PRIMARY_PORT:$PRIMARY_PORT, PROXY_PORT:$PROXY_PORT, TYPE:$TYPE " >> $LOG
 
 find . -name "request.xml" | xargs sed -i "s/<remoteHost>remote_host<\/remoteHost>/<remoteHost>$PUBLIC_IP<\/remoteHost>/g"
@@ -114,6 +107,70 @@ find . -name "request.xml" | xargs sed -i "s/<proxyPort>proxy_port<\/proxyPort>/
 find . -name "request.xml" | xargs sed -i "s/<type>type<\/type>/<type>$TYPE<\/type>/g"
 find . -name "request.xml" | xargs sed -i "s/<service>service<\/service>/<service>$SERVICE<\/service>/g"
 find . -name "request.xml" | xargs sed -i "s/<tenantId>tenant_id<\/tenantId>/<tenantId>$TENANT_ID<\/tenantId>/g"
+find . -name "request.xml" | xargs sed -i "s/<maxInstanceCount>max_instances<\/maxInstanceCount>/<maxInstanceCount>$MAX<\/maxInstanceCount>/g"
+find . -name "request.xml" | xargs sed -i "s/<minInstanceCount>min_instances<\/minInstanceCount>/<minInstanceCount>$MIN<\/minInstanceCount>/g"
+
+echo "Private Key....Copying to .ssh  " >> $LOG
+
+cp ${instance_path}/payload/id_rsa /root/.ssh/id_rsa
+chmod 0600 /root/.ssh/id_rsa
+echo "StrictHostKeyChecking no" >> /root/.ssh/config
+
+echo "Sending register request to Cartridge agent service" >> $LOG
+
+for i in {1..30}
+do
+    curl -X POST -H "Content-Type: text/xml" -d @/tmp/request.xml --silent --output /dev/null "$CARTRIDGE_AGENT_EPR"
+    ret=$?
+    if [[ $ret -eq 2  ]]; then
+        echo "[curl] Failed to initialize" >> $LOG
+    fi
+    if [[ $ret -eq 5 || $ret -eq 6 || $ret -eq 7  ]]; then
+        echo "[curl] Resolving host failed" >> $LOG
+    fi
+    if [[ $ret -eq 28 ]]; then
+        echo "[curl] Operation timeout" >> $LOG
+    fi
+    if [[ $ret -eq 55 || $ret -eq 56 ]]; then
+        echo "[curl] Failed sending/receiving network data" >> $LOG
+    fi
+    if [[ $ret -eq 28 ]]; then
+        echo "Operation timeout" >> $LOG
+    fi
+done
+if [[ $ret -gt 0 ]]; then
+    echo "Sending cluster join message failed. So shutdown instance and exit" >> $LOG
+    /sbin/shutdown -h now
+    exit 0
+fi
+
+echo "Git repo sync" >> $LOG
+
+# If repo is available do a git pull, else clone
+echo "#!/bin/bash
+if [ -d \"$APP_PATH/.git\" ]; then
+    cd ${APP_PATH}
+    sudo git pull
+else
+    sudo git clone git@${GIT_HOST_NAME}:${GIT_REPO} ${APP_PATH}
+    i=1
+    while [ ! -d \"$APP_PATH/.git\" ]
+        do
+        sleep $SLEEP_DURATION
+        sudo git clone git@${GIT_HOST_NAME}:${GIT_REPO} ${APP_PATH}
+        if ( \$i=\"3\")
+        then
+                break              #Abandon the while lopp.
+        fi
+        (( i++ ))
+    done
 
 
-curl -X POST -H "Content-Type: text/xml"   -d @/etc/agent/conf/request.xml "$CARTRIDGE_AGENT_EPR"  -v 2>> $LOG
+fi" > /opt/git.sh
+echo "File created.." >> $LOG
+chmod 755 /opt/git.sh
+echo "Executing.." >> $LOG
+/opt/git.sh
+echo "Executed.." >> $LOG
+
+# ========================== // End of script ===========================================================

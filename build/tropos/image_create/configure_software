@@ -70,7 +70,6 @@ php() {
 
     cp -f ./init_scripts/php/cc/ssl-cert-snakeoil.pem $ROOTFS/etc/ssl/certs/
     cp -f ./init_scripts/php/cc/ssl-cert-snakeoil.key $ROOTFS/etc/ssl/private/
-    tar -zxf ./init_scripts/php/simplesamlphp.tgz -C $ROOTFS/var/
     cp -f ./init_scripts/php/wso2-openstack-init.sh $ROOTFS/opt/
     cp -f ./init_scripts/php/get-launch-params.rb $ROOTFS/opt/
     chroot $ROOTFS mkdir -p /etc/agent/conf
@@ -101,8 +100,8 @@ php() {
 # adding simplesaml alias to apache
 chroot $ROOTFS cp /etc/apache2/sites-available/default /etc/apache2/sites-available/default-org
 chroot $ROOTFS cp /etc/apache2/sites-available/default-ssl /etc/apache2/sites-available/default-ssl-org
-chroot $ROOTFS cat /etc/apache2/sites-available/default-org | sed -e 's/DocumentRoot \/var\/www/DocumentRoot \/var\/www\n\tAlias \/simplesaml \/var\/simplesamlphp\/www/' > $ROOTFS/etc/apache2/sites-available/default
-chroot $ROOTFS cat /etc/apache2/sites-available/default-ssl-org | sed -e 's/DocumentRoot \/var\/www/DocumentRoot \/var\/www\n\tAlias \/simplesaml \/var\/simplesamlphp\/www/' > $ROOTFS/etc/apache2/sites-available/default-ssl
+chroot $ROOTFS cat /etc/apache2/sites-available/default-org | sed -e 's/DocumentRoot \/var\/www/DocumentRoot \/var\/www\/public\n\tAlias \/simplesaml \/var\/www\/simplesamlphp\/www/' > $ROOTFS/etc/apache2/sites-available/default
+chroot $ROOTFS cat /etc/apache2/sites-available/default-ssl-org | sed -e 's/DocumentRoot \/var\/www/DocumentRoot \/var\/www\/public\n\tAlias \/simplesaml \/var\/www\/simplesamlphp\/www/' > $ROOTFS/etc/apache2/sites-available/default-ssl
 	# Enable HTTPS:
 	chroot $ROOTFS a2enmod ssl
 	chroot $ROOTFS a2ensite default-ssl	

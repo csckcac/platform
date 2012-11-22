@@ -31,7 +31,21 @@ function help {
     echo "            -v : Image type. This is one of qcow2 or row"
     echo ""
     echo "    Usage for action pack:"
-    echo "        stratos-image -r <image root> -t <image template pack <new image archive name in tar.gz format>"
+    echo "        stratos-image -r <image root> -t <image template> pack <new image archive name in tar.gz format>"
+    echo ""
+    echo "            -r : Image root - This is where the base image is mounted. Default is /tmp"
+    echo "            -t : Template for the new image. Default is no template"
+    echo "            -v : Image type. This is one of qcow2 or row"
+    echo ""
+    echo "    Usage for action mount:"
+    echo "        stratos-image -r <image root> -t <image template> mount <path to original image>"
+    echo ""
+    echo "            -r : Image root - This is where the base image is mounted. Default is /tmp"
+    echo "            -t : Template for the new image. Default is no template"
+    echo "            -v : Image type. This is one of qcow2 or row"
+    echo ""
+    echo "    Usage for action unmount:"
+    echo "        stratos-image -r <image root> -t <image template>  unmount"
     echo ""
     echo "            -r : Image root - This is where the base image is mounted. Default is /tmp"
     echo "            -t : Template for the new image. Default is no template"
@@ -46,7 +60,7 @@ if [[ ( -z $action || ( -n $action && $action == "help" ) ) ]]; then
     exit 1
 fi
 
-if [[ ( -z $action || ( -n $action && !( $action == "create" || $action == "pack" ) ) ) ]]; then
+if [[ ( -z $action || ( -n $action && !( $action == "create" || $action == "pack" || $action == "mount" || $action == "unmount" ) ) ) ]]; then
         echo "Mandatory parameter action with value create or pack should be provided"
         echo "    create : Mount the base image and customize it according to the given arguments"
         echo "    pack : Archive the newly created image and unmount the base image"
@@ -70,6 +84,17 @@ fi
 if [[ ( -n $action && $action == "pack" && -z $new_image ) ]]; then
         echo "Usage:"
         echo "    stratos-image -r <image root> -t <image template pack <new image archive name in tar.gz format>"
+        echo ""
+        echo "        -r : Image root - This is where the base image is mounted. Default is /tmp"
+        echo "        -t : Template for the new image. Default is no template"
+        echo "        -v : Image type. qcow2 or raw. Default is qcow2"
+        echo ""
+        exit 1
+fi
+
+if [[ ( -n $action && $action == "mount" && -z $original_image ) ]]; then
+        echo "Usage:"
+        echo "    stratos-image -r <image root> -t <image template> -v <image type> mount <path to original image>"
         echo ""
         echo "        -r : Image root - This is where the base image is mounted. Default is /tmp"
         echo "        -t : Template for the new image. Default is no template"
@@ -116,6 +141,8 @@ if [[ $action == "create" ]]; then
     original_image=$2
 elif [[ $action == "pack" ]]; then
     new_image=$2
+elif [[ $action == "mount" ]]; then
+    original_image=$2
 fi
 
 image_validate
@@ -196,5 +223,43 @@ if [[ $action == "pack" ]]; then
     echo "Unmounting"
     ./image_action.sh action=unmount image-template=$image_template image-root=$image_root image-type=$image_type
 fi
+
+if [[ $action == "mount" ]]; then
+    if [ -d ./$work_dir ]; then
+        rm -rf ./$work_dir
+    fi
+
+    mkdir -p $work_dir
+
+    if [ ! -d $img_dir ]; then
+        mkdir -p $img_dir
+    fi
+
+    pushd $img_dir
+    type=`echo $original_image|awk -F . '{print $NF}'`
+    if [[ $type == "zip" ]]; then
+        zip -rq $original_image
+    elif [[ $type == "gz" || $type == "tgz" ]]; then
+        tar -zxf $original_image
+    else
+        cp -f $original_image ./
+    fi
+    popd
+    echo $img_dir
+    image_image=`ls $img_dir/*.img`
+    echo $image_image
+
+    echo "Mount the image"
+    ./image_action.sh action=mount image-template=$image_template image-root=$image_root image-image=$image_image image-type=$image_type
+    echo "Mounted the image"
+fi
+
+if [[ $action == "unmount" ]]; then
+    echo "Unmount the image"
+
+    ./image_action.sh action=unmount image-template=$image_template image-root=$image_root image-type=$image_type
+    echo "Unmounted the image"
+fi
+
 echo "Done"
 

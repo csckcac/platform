@@ -135,19 +135,18 @@ do
     ret=$?
     if [[ $ret -eq 2  ]]; then
         echo "[curl] Failed to initialize" >> $LOG
-    fi
-    if [[ $ret -eq 5 || $ret -eq 6 || $ret -eq 7  ]]; then
+    elif [[ $ret -eq 5 || $ret -eq 6 || $ret -eq 7  ]]; then
         echo "[curl] Resolving host failed" >> $LOG
-    fi
-    if [[ $ret -eq 28 ]]; then
+    elif [[ $ret -eq 28 ]]; then
         echo "[curl] Operation timeout" >> $LOG
-    fi
-    if [[ $ret -eq 55 || $ret -eq 56 ]]; then
+    elif [[ $ret -eq 55 || $ret -eq 56 ]]; then
         echo "[curl] Failed sending/receiving network data" >> $LOG
-    fi
-    if [[ $ret -eq 28 ]]; then
+    elif [[ $ret -eq 28 ]]; then
         echo "Operation timeout" >> $LOG
+    else
+        break
     fi
+    sleep $SLEEP_DURATION
 done
 if [[ $ret -gt 0 ]]; then
     echo "Sending cluster join message failed. So shutdown instance and exit" >> $LOG

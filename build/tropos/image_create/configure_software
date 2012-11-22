@@ -21,6 +21,9 @@ DEBMIRROR="http://lk.archive.ubuntu.com/ubuntu/"
 
 mysql() {
 
+    cp -f ./init_scripts/mysql/wso2-openstack-init.sh $ROOTFS/opt/
+    cp -f ./init_scripts/mysql/get-launch-params.rb $ROOTFS/opt/
+    chroot $ROOTFS mkdir -p /etc/agent/conf
 
 	# MySQL still prompts.  Bug.
 	#DEBCONF_FRONTEND='noninteractive' 
@@ -63,13 +66,19 @@ s/          or starting networking)/#          or starting network-manager/
 ' < ufw.conf-dist > ufw.conf
 	
 	popd
-	
+    
+    pushd $ROOTFS/etc
+    echo "#!/bin/bash -e
+chmod 755 /opt/wso2-openstack-init.sh
+/opt/wso2-openstack-init.sh > /var/log/wso2-openstack-init.log
+exit 0
+    " > rc.local
+    popd
+
 }
 
 php() {
 
-    cp -f ./init_scripts/php/cc/ssl-cert-snakeoil.pem $ROOTFS/etc/ssl/certs/
-    cp -f ./init_scripts/php/cc/ssl-cert-snakeoil.key $ROOTFS/etc/ssl/private/
     cp -f ./init_scripts/php/wso2-openstack-init.sh $ROOTFS/opt/
     cp -f ./init_scripts/php/get-launch-params.rb $ROOTFS/opt/
     chroot $ROOTFS mkdir -p /etc/agent/conf
@@ -86,22 +95,24 @@ php() {
 
 	# Be sure to have a new SSL cert for this new LXC host:
 	rm -f $ROOTFS/etc/ssl/private/ssl-cert-snakeoil.key
-	chroot $ROOTFS dpkg-reconfigure ssl-cert
+	#chroot $ROOTFS dpkg-reconfigure ssl-cert
+    cp -f ./init_scripts/php/cc/ssl-cert-snakeoil.pem $ROOTFS/etc/ssl/certs/
+    cp -f ./init_scripts/php/cc/ssl-cert-snakeoil.key $ROOTFS/etc/ssl/private/
 
 	# configure apache log write to syslog TODO : Need generic solution
 	chroot $ROOTFS cp /etc/apache2/apache2.conf /etc/apache2/apache2.conf.org
-        chroot $ROOTFS cat /etc/apache2/apache2.conf.org | sed -e 's/^ErrorLog.*/ErrorLog syslog:local2/' > $ROOTFS/etc/apache2/apache2.conf
+    chroot $ROOTFS cat /etc/apache2/apache2.conf.org | sed -e 's/^ErrorLog.*/ErrorLog syslog:local2/' > $ROOTFS/etc/apache2/apache2.conf
 
 	# configure rsyslog TODO : Need generic solution
 	chroot $ROOTFS cp /etc/rsyslog.conf /etc/rsyslog.conf.org
-        chroot $ROOTFS cat /etc/rsyslog.conf.org | sed -e 's/^#$ModLoad\simtcp.*/$ModLoad imtcp/' |  sed -e 's/^\#\$ModLoad\simtcp.*/\$ModLoad imtcp/' | sed -e 's/^\#\$InputTCPServerRun\s514.*/\$InputTCPServerRun 514\nlocal2\.\*        \@\@localhost\:32000/' > $ROOTFS/etc/rsyslog.conf
+    chroot $ROOTFS cat /etc/rsyslog.conf.org | sed -e 's/^#$ModLoad\simtcp.*/$ModLoad imtcp/' |  sed -e 's/^\#\$ModLoad\simtcp.*/\$ModLoad imtcp/' | sed -e 's/^\#\$InputTCPServerRun\s514.*/\$InputTCPServerRun 514\nlocal2\.\*        \@\@localhost\:32000/' > $ROOTFS/etc/rsyslog.conf
 
 
 # adding simplesaml alias to apache
 chroot $ROOTFS cp /etc/apache2/sites-available/default /etc/apache2/sites-available/default-org
 chroot $ROOTFS cp /etc/apache2/sites-available/default-ssl /etc/apache2/sites-available/default-ssl-org
-chroot $ROOTFS cat /etc/apache2/sites-available/default-org | sed -e 's/DocumentRoot \/var\/www/DocumentRoot \/var\/www\/public\n\tAlias \/simplesaml \/var\/www\/simplesamlphp\/www/' > $ROOTFS/etc/apache2/sites-available/default
-chroot $ROOTFS cat /etc/apache2/sites-available/default-ssl-org | sed -e 's/DocumentRoot \/var\/www/DocumentRoot \/var\/www\/public\n\tAlias \/simplesaml \/var\/www\/simplesamlphp\/www/' > $ROOTFS/etc/apache2/sites-available/default-ssl
+chroot $ROOTFS cat /etc/apache2/sites-available/default-org | sed -e 's@DocumentRoot \/var\/www@DocumentRoot \/var\/www\/public\n\tAlias \/simplesaml \/var\/www\/simplesamlphp\/www@' > $ROOTFS/etc/apache2/sites-available/default
+chroot $ROOTFS cat /etc/apache2/sites-available/default-ssl-org | sed -e 's@DocumentRoot \/var\/www@DocumentRoot \/var\/www\/public\n\tAlias \/simplesaml \/var\/www\/simplesamlphp\/www@' > $ROOTFS/etc/apache2/sites-available/default-ssl
 	# Enable HTTPS:
 	chroot $ROOTFS a2enmod ssl
 	chroot $ROOTFS a2ensite default-ssl	

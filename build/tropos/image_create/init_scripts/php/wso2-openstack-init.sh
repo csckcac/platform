@@ -133,7 +133,9 @@ for i in {1..30}
 do
     curl -X POST -H "Content-Type: text/xml" -d @/etc/agent/conf/request.xml --silent --output /dev/null "$CARTRIDGE_AGENT_EPR"
     ret=$?
-    if [[ $ret -eq 2  ]]; then
+    if [[ $ret -eq 0  ]]; then
+        break
+    elif [[ $ret -eq 2  ]]; then
         echo "[curl] Failed to initialize" >> $LOG
     elif [[ $ret -eq 5 || $ret -eq 6 || $ret -eq 7  ]]; then
         echo "[curl] Resolving host failed" >> $LOG
@@ -141,10 +143,8 @@ do
         echo "[curl] Operation timeout" >> $LOG
     elif [[ $ret -eq 55 || $ret -eq 56 ]]; then
         echo "[curl] Failed sending/receiving network data" >> $LOG
-    elif [[ $ret -eq 28 ]]; then
-        echo "Operation timeout" >> $LOG
     else
-        break
+        echo "[curl] Failed for unknown reason" >> $LOG
     fi
     sleep $SLEEP_DURATION
 done

@@ -94,21 +94,32 @@ do
 done
 
 
-
-cd /etc/agent/conf
-
 echo "Logging sys variables .. PUBLIC_IP:$PUBLIC_IP, HOST_NAME:$HOST_NAME, KEY:$KEY, PRIMARY_PORT:$PRIMARY_PORT, PROXY_PORT:$PROXY_PORT, TYPE:$TYPE " >> $LOG
 
-find . -name "request.xml" | xargs sed -i "s/<remoteHost>remote_host<\/remoteHost>/<remoteHost>$PUBLIC_IP<\/remoteHost>/g"
-find . -name "request.xml" | xargs sed -i "s/<hostName>host_name<\/hostName>/<hostName>$HOST_NAME<\/hostName>/g"
-find . -name "request.xml" | xargs sed -i "s/<key>key<\/key>/<key>$KEY<\/key>/g"
-find . -name "request.xml" | xargs sed -i "s/<primaryPort>primary_port<\/primaryPort>/<primaryPort>$PRIMARY_PORT<\/primaryPort>/g"
-find . -name "request.xml" | xargs sed -i "s/<proxyPort>proxy_port<\/proxyPort>/<proxyPort>$PROXY_PORT<\/proxyPort>/g"
-find . -name "request.xml" | xargs sed -i "s/<type>type<\/type>/<type>$TYPE<\/type>/g"
-find . -name "request.xml" | xargs sed -i "s/<service>service<\/service>/<service>$SERVICE<\/service>/g"
-find . -name "request.xml" | xargs sed -i "s/<tenantId>tenant_id<\/tenantId>/<tenantId>$TENANT_ID<\/tenantId>/g"
-find . -name "request.xml" | xargs sed -i "s/<maxInstanceCount>max_instances<\/maxInstanceCount>/<maxInstanceCount>$MAX<\/maxInstanceCount>/g"
-find . -name "request.xml" | xargs sed -i "s/<minInstanceCount>min_instances<\/minInstanceCount>/<minInstanceCount>$MIN<\/minInstanceCount>/g"
+echo "
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:agen="http://agent.cartridge.carbon.wso2.org">
+  <soapenv:Header/>
+  <soapenv:Body>
+     <agen:register>
+        <registrant>
+           <hostName>${HOST_NAME}</hostName>
+           <key>${KEY}</key>
+          <maxInstanceCount>${MAX}</maxInstanceCount>
+          <minInstanceCount>${MIN}</minInstanceCount>
+           <portMappings>
+              <primaryPort>${PRIMARY_PORT}</primaryPort>
+              <proxyPort>${PROXY_PORT}</proxyPort>
+              <type>${TYPE}</type>
+           </portMappings>
+        <remoteHost>${PUBLIC_IP}</remoteHost>
+           <service>${SERVICE}</service>
+           <tenantId>${TENANT_ID}</tenantId>
+        </registrant>
+     </agen:register>
+  </soapenv:Body>
+</soapenv:Envelope>
+" > /etc/agent/conf/request.xml
+
 
 echo "Private Key....Copying to .ssh  " >> $LOG
 
@@ -120,7 +131,7 @@ echo "Sending register request to Cartridge agent service" >> $LOG
 
 for i in {1..30}
 do
-    curl -X POST -H "Content-Type: text/xml" -d @/tmp/request.xml --silent --output /dev/null "$CARTRIDGE_AGENT_EPR"
+    curl -X POST -H "Content-Type: text/xml" -d @/etc/agent/conf/request.xml --silent --output /dev/null "$CARTRIDGE_AGENT_EPR"
     ret=$?
     if [[ $ret -eq 2  ]]; then
         echo "[curl] Failed to initialize" >> $LOG

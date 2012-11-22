@@ -188,6 +188,8 @@ if [[ $action == "pack" ]]; then
         zip -rq $new_image ./*
     elif [[ $type == "gz" || $type == "tgz" ]]; then
         tar -zcf $new_image ./*
+    elif [[ $type == "img" ]]; then
+        mv *.img $new_image
     fi
 
     popd

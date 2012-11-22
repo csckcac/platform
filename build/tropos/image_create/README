@@ -61,3 +61,10 @@ In the init_scripts/carbon folder you can see that their are carbon server insta
 The exact carbon server to be started in the carbon server instance, is decided by the parameters passed in the payload passed to the Carbon instance at load time.
 
 
+Note that you can also just mount an image and without modifying the image using a template, just edit it manually and then unmount it.
+Eg
+sudo ./stratos-image -r/tmp/4 -tphp mount /opt/lxc/original_image/precise-server-cloudimg-amd64-disk1.img
+
+Then edit the image manually and unmount
+
+sudo ./stratos-image -r/tmp/4 -tphp -vqcow2 unmount
